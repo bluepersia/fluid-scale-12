@@ -34,7 +34,7 @@ describe("serializeDocument", () => {
       );
 
       serializeDocAssertionMaster.setQueueFromArray(queue);
-      serializeDocAssertionMaster.assertQueue({ masterIndex: index });
+      serializeDocAssertionMaster.assertQueue({ master: { index } });
     }
   );
 });

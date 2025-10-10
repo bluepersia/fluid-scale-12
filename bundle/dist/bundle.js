@@ -79,20 +79,26 @@ var FluidScale = (() => {
           queueIndex: 0
         };
       };
-      this.assertQueue = ({ errorAlgorithm = "firstOfDeepest", masterIndex, showAllErrors, targetName } = {}) => {
+      this.assertQueue = (options) => {
+        if (!options)
+          options = {};
+        if (!options.errorAlgorithm)
+          options.errorAlgorithm = "firstOfDeepest";
         const assertionQueue = assertionQueues[this.globalKey];
         const verifiedAssertions = /* @__PURE__ */ new Map();
-        console.groupCollapsed(`\u2705 ${this.globalKey} - \u2728${masterIndex ?? this.state.master.index}`);
+        if (!this.state?.master && options?.master === void 0)
+          console.error(`No master indexes set. Provide it via options.`);
+        console.groupCollapsed(`\u2705 ${this.globalKey} - \u2728${options?.master ? printMaster(options.master) : printMaster(this.state?.master)}`);
         let groupedByName = {};
         for (const [, item] of assertionQueue.entries()) {
           if (!groupedByName[item.name])
             groupedByName[item.name] = [];
           groupedByName[item.name].push(item);
         }
-        if (targetName) {
-          if (groupedByName.hasOwnProperty(targetName))
+        if (options.targetName) {
+          if (groupedByName.hasOwnProperty(options.targetName))
             groupedByName = {
-              [targetName]: groupedByName[targetName]
+              [options.targetName]: groupedByName[options.targetName]
             };
         }
         const nameWithHighestIndex = Object.entries(groupedByName).map(([name, items]) => ({
@@ -109,7 +115,7 @@ var FluidScale = (() => {
             if (a.funcIndex === b.funcIndex) {
               return a.branchCount - b.branchCount;
             }
-            if (errorAlgorithm === "firstOfDeepest")
+            if (options?.errorAlgorithm === "firstOfDeepest")
               return a.funcIndex - b.funcIndex;
             else
               return b.funcIndex - a.funcIndex;
@@ -120,7 +126,7 @@ var FluidScale = (() => {
               try {
                 assertion(state, args, result);
               } catch (e) {
-                if (!showAllErrors) {
+                if (!options.showAllErrors) {
                   error = e;
                   break outer;
                 }
@@ -231,6 +237,16 @@ var FluidScale = (() => {
     if (!assertionQueues[globalKey])
       throw Error(`Assertion queue for ${globalKey} not found`);
     return assertionQueues[globalKey];
+  }
+  function printMaster(master) {
+    if (!master)
+      return "";
+    if (master.index !== void 0 && master.step !== void 0)
+      return `Master ${master.index}, step ${master.step}`;
+    else if (master.index !== void 0)
+      return `Master ${master.index}`;
+    else
+      return "";
   }
   var dist_default = AssertionMaster;
 
