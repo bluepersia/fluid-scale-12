@@ -4,7 +4,7 @@ if (process.env.NODE_ENV === "test") {
 }
 
 import AssertionMaster, { AssertionChain } from "gold-sight";
-import { NullRule, SerializeDocMaster } from "./index.types";
+import { NullRule, DocSerializerMaster } from "./index.types";
 import {
   DocumentClone,
   MediaRuleClone,
@@ -41,7 +41,7 @@ type State = {
   rulesIndex: number;
   styleRuleIndex: number;
   mediaRuleIndex: number;
-  master?: SerializeDocMaster;
+  master?: DocSerializerMaster;
 };
 
 const serializeDocAssertions: AssertionChain<State, [Document], DocumentClone> =
@@ -171,7 +171,7 @@ const defaultAssertions = {
 
 class SerializeDocAssertionMaster extends AssertionMaster<
   State,
-  SerializeDocMaster
+  DocSerializerMaster
 > {
   constructor() {
     super(defaultAssertions, "serializeDoc");

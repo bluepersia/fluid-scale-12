@@ -8,8 +8,8 @@ type NullRule = RuleClone & {
   null: true;
 };
 
-type SerializeDocMaster = Master & {
+type DocSerializerMaster = Master & {
   docClone: DocumentClone;
 };
 
-export { SerializeDocMaster, NullRule };
+export { DocSerializerMaster, NullRule };

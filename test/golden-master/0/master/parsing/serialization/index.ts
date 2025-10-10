@@ -1,7 +1,7 @@
-import { SerializeDocMaster } from "../../../../../parsing/serialization/index.types";
+import { DocSerializerMaster } from "../../../../../parsing/serialization/index.types";
 import { docClone } from "./docClone";
 
-const master: SerializeDocMaster = {
+const master: DocSerializerMaster = {
   index: 0,
   docClone,
 };
