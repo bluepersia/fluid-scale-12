@@ -4,7 +4,10 @@
   "description": "A JS interpolator for fluid CSS/HTML",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:types": "tsc -p tsconfig.json",
+    "build:bundle": "node ./scripts/build-bundle.mjs",
+    "build": "npm run build:types && npm run build:bundle",
+    "test": "npm run build && vitest --run --reporter verbose"
   },
   "repository": {
     "type": "git",
@@ -19,6 +22,8 @@
   "devDependencies": {
     "@types/node": "^24.7.1",
     "eslint": "^9.37.0",
-    "typescript": "^5.9.3"
+    "playwright": "^1.56.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   }
 }

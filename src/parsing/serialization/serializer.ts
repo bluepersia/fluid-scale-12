@@ -122,11 +122,57 @@ let serializeMediaRule = (
   return null;
 };
 
+function wrap(
+  serializeDocumentWrapped: (
+    document: Document,
+    ctx: SerializeDocContext
+  ) => DocumentClone,
+  getAccessibleStyleSheetsWrapped: (
+    styleSheets: StyleSheetList
+  ) => CSSStyleSheet[],
+  serializeStyleSheetWrapped: (
+    sheet: CSSStyleSheet,
+    ctx: SerializeDocContext
+  ) => StyleSheetClone,
+  serializeStyleSheetsWrapped: (
+    styleSheets: CSSStyleSheet[],
+    ctx: SerializeDocContext
+  ) => StyleSheetClone[],
+  serializeRulesWrapped: (
+    rules: CSSRuleList,
+    ctx: SerializeDocContext
+  ) => RuleClone[],
+  serializeRuleWrapped: (
+    rule: CSSRule,
+    ctx: SerializeDocContext
+  ) => RuleClone | null,
+  serializeStyleRuleWrapped: (
+    rule: CSSStyleRule,
+    ctx: SerializeDocContext
+  ) => StyleRuleClone | null,
+  serializeMediaRuleWrapped: (
+    rule: CSSMediaRule,
+    ctx: SerializeDocContext
+  ) => MediaRuleClone | null
+) {
+  serializeDocument = serializeDocumentWrapped;
+  getAccessibleStyleSheets = getAccessibleStyleSheetsWrapped;
+  serializeStyleSheet = serializeStyleSheetWrapped;
+  serializeStyleSheets = serializeStyleSheetsWrapped;
+  serializeRules = serializeRulesWrapped;
+  serializeRule = serializeRuleWrapped;
+  serializeStyleRule = serializeStyleRuleWrapped;
+  serializeMediaRule = serializeMediaRuleWrapped;
+}
+
 export {
   serializeDocument,
+  getAccessibleStyleSheets,
   serializeStyleSheet,
+  serializeStyleSheets,
   serializeRules,
   serializeRule,
   serializeStyleRule,
   serializeMediaRule,
+  wrap,
 };
