@@ -437,11 +437,11 @@ var FluidScale = (() => {
     };
   }
   function clearNullsForRules(rules) {
-    return rules.map((rule) => clearNullsForRule(rule)).filter((rule) => rule !== null);
+    return rules.map((rule) => clearNullsForRule(rule)).filter((rule) => rule !== void 0);
   }
   function clearNullsForRule(rule) {
     const isNull = rule.null;
-    if (isNull) return null;
+    if (isNull) return;
     if (rule.type === STYLE_RULE_TYPE) {
       return rule;
     } else if (rule.type === MEDIA_RULE_TYPE) {
@@ -450,7 +450,6 @@ var FluidScale = (() => {
         cssRules: clearNullsForRules(rule.cssRules)
       };
     }
-    return null;
   }
   function getRulesByAbsIndex(docClone, absIndex) {
     let index = 0;
@@ -624,25 +623,20 @@ var FluidScale = (() => {
   };
   var serializeRulesAssertions = {
     "should serialize the rules": (state, args, result) => {
-      const rules = getRulesByAbsIndex(state.master.docClone, state.rulesIndex);
-      expect(result, `rulesIndex: ${state.rulesIndex}`).toEqual(
-        rules ? clearNullsForRules(rules) : void 0
-      );
+      let rules = getRulesByAbsIndex(state.master.docClone, state.rulesIndex);
+      if (rules) rules = clearNullsForRules(rules);
+      expect(result).toEqual(rules);
     }
   };
   var serializeRuleAssertions = {
     "should serialize the rule": (state, args, result) => {
-      const masterRule = getRuleByAbsIndex(
-        state.master.docClone,
-        state.ruleIndex
-      );
+      let masterRule = getRuleByAbsIndex(state.master.docClone, state.ruleIndex);
       if (result === null) {
         expect(masterRule.null).toBeTruthy();
         return;
       }
-      expect(result).toEqual(
-        masterRule ? clearNullsForRule(masterRule) : void 0
-      );
+      if (masterRule) masterRule = clearNullsForRule(masterRule);
+      expect(result).toEqual(masterRule);
     }
   };
   var serializeStyleRuleAssertions = {
@@ -660,7 +654,7 @@ var FluidScale = (() => {
   };
   var serializeMediaRuleAssertions = {
     "should serialize the media rule": (state, args, result) => {
-      const masterRule = getMediaRuleByAbsIndex(
+      let masterRule = getMediaRuleByAbsIndex(
         state.master.docClone,
         state.mediaRuleIndex
       );
@@ -668,9 +662,8 @@ var FluidScale = (() => {
         expect(masterRule.null).toBeTruthy();
         return;
       }
-      expect(result).toEqual(
-        masterRule ? clearNullsForRule(masterRule) : void 0
-      );
+      if (masterRule) masterRule = clearNullsForRule(masterRule);
+      expect(result).toEqual(masterRule);
     }
   };
   var defaultAssertions = {

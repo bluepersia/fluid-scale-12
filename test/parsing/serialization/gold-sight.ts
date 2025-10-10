@@ -92,11 +92,11 @@ const serializeRulesAssertions: AssertionChain<
   RuleClone[]
 > = {
   "should serialize the rules": (state, args, result) => {
-    const rules = getRulesByAbsIndex(state.master!.docClone, state.rulesIndex);
+    let rules = getRulesByAbsIndex(state.master!.docClone, state.rulesIndex);
 
-    expect(result, `rulesIndex: ${state.rulesIndex}`).toEqual(
-      rules ? clearNullsForRules(rules) : undefined
-    );
+    if (rules) rules = clearNullsForRules(rules);
+
+    expect(result).toEqual(rules);
   },
 };
 
@@ -106,18 +106,16 @@ const serializeRuleAssertions: AssertionChain<
   RuleClone | null
 > = {
   "should serialize the rule": (state, args, result) => {
-    const masterRule = getRuleByAbsIndex(
-      state.master!.docClone,
-      state.ruleIndex
-    );
+    let masterRule = getRuleByAbsIndex(state.master!.docClone, state.ruleIndex);
 
     if (result === null) {
       expect((masterRule as NullRule).null).toBeTruthy();
       return;
     }
-    expect(result).toEqual(
-      masterRule ? clearNullsForRule(masterRule) : undefined
-    );
+
+    if (masterRule) masterRule = clearNullsForRule(masterRule);
+
+    expect(result).toEqual(masterRule);
   },
 };
 
@@ -145,7 +143,7 @@ const serializeMediaRuleAssertions: AssertionChain<
   MediaRuleClone | null
 > = {
   "should serialize the media rule": (state, args, result) => {
-    const masterRule = getMediaRuleByAbsIndex(
+    let masterRule = getMediaRuleByAbsIndex(
       state.master!.docClone,
       state.mediaRuleIndex
     );
@@ -153,9 +151,10 @@ const serializeMediaRuleAssertions: AssertionChain<
       expect((masterRule as NullRule).null).toBeTruthy();
       return;
     }
-    expect(result).toEqual(
-      masterRule ? clearNullsForRule(masterRule) : undefined
-    );
+
+    if (masterRule) masterRule = clearNullsForRule(masterRule);
+
+    expect(result).toEqual(masterRule);
   },
 };
 

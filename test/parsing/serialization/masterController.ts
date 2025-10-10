@@ -31,12 +31,12 @@ function clearNullsForStyleSheet(sheet: StyleSheetClone): StyleSheetClone {
 function clearNullsForRules(rules: RuleClone[]): RuleClone[] {
   return rules
     .map((rule) => clearNullsForRule(rule))
-    .filter((rule) => rule !== null);
+    .filter((rule) => rule !== undefined);
 }
 
-function clearNullsForRule(rule: RuleClone): RuleClone | null {
+function clearNullsForRule(rule: RuleClone): RuleClone | undefined {
   const isNull = (rule as NullRule).null;
-  if (isNull) return null;
+  if (isNull) return;
   if (rule.type === STYLE_RULE_TYPE) {
     return rule;
   } else if (rule.type === MEDIA_RULE_TYPE) {
@@ -45,7 +45,6 @@ function clearNullsForRule(rule: RuleClone): RuleClone | null {
       cssRules: clearNullsForRules((rule as MediaRuleClone).cssRules),
     } as MediaRuleClone;
   }
-  return null;
 }
 
 function getRulesByAbsIndex(docClone: DocumentClone, absIndex: number) {
