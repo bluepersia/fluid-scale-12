@@ -29,6 +29,18 @@ type SerializeDocContext = {
   isBrowser: boolean;
 };
 
+type CloneStylePropContext = SerializeDocContext & {
+  styleResults: StyleResults;
+};
+
+type ApplyExplicitPropsFromShorthandContext = CloneStylePropContext & {
+  shorthandOuterMap: Map<number, Map<number, string[]>>;
+};
+
+type StyleResults = {
+  style: Record<string, string>;
+  specialProps: Record<string, string>;
+};
 export {
   DocumentClone,
   StyleSheetClone,
@@ -36,4 +48,7 @@ export {
   StyleRuleClone,
   MediaRuleClone,
   SerializeDocContext,
+  StyleResults,
+  CloneStylePropContext,
+  ApplyExplicitPropsFromShorthandContext,
 };

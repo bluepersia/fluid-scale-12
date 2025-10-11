@@ -1,3 +1,4 @@
+import { splitBySpaces } from "../../utils/stringHelpers";
 import {
   DocumentClone,
   StyleSheetClone,
@@ -5,6 +6,9 @@ import {
   StyleRuleClone,
   MediaRuleClone,
   SerializeDocContext,
+  StyleResults,
+  CloneStylePropContext,
+  ApplyExplicitPropsFromShorthandContext,
 } from "./serializer.types";
 import {
   STYLE_RULE_TYPE,
@@ -79,23 +83,7 @@ let serializeStyleRule = (
   rule: CSSStyleRule,
   ctx: SerializeDocContext
 ): StyleRuleClone | null => {
-  const { isBrowser } = ctx;
-  const style: Record<string, string> = {};
-  const specialProps: Record<string, string> = {};
-
-  for (let i = 0; i < rule.style.length; i++) {
-    const prop = rule.style[i];
-
-    if (FLUID_PROPERTY_NAMES.has(prop)) {
-      if (SHORTHAND_PROPERTIES[prop]) {
-        if (isBrowser) continue; //Browser automatically handles shorthand properties
-      } else {
-        style[prop] = rule.style.getPropertyValue(prop);
-      }
-    } else if (SPECIAL_PROPERTIES.has(prop)) {
-      specialProps[prop] = rule.style.getPropertyValue(prop);
-    }
-  }
+  const { style, specialProps } = cloneStyleProps(rule, ctx);
   if (Object.keys(style).length <= 0) return null;
   return {
     type: STYLE_RULE_TYPE,
@@ -105,6 +93,90 @@ let serializeStyleRule = (
   } as StyleRuleClone;
 };
 
+let cloneStyleProps = (
+  rule: CSSStyleRule,
+  ctx: SerializeDocContext
+): StyleResults => {
+  let styleResults: StyleResults = { style: {}, specialProps: {} };
+
+  for (let i = 0; i < rule.style.length; i++) {
+    const prop = rule.style[i];
+    styleResults = cloneStyleProp(rule, prop, { ...ctx, styleResults });
+  }
+  return styleResults;
+};
+
+let cloneStyleProp = (
+  rule: CSSStyleRule,
+  prop: string,
+  ctx: CloneStylePropContext
+): StyleResults => {
+  let { styleResults } = ctx;
+
+  styleResults = { ...styleResults };
+
+  if (FLUID_PROPERTY_NAMES.has(prop)) {
+    styleResults.style = cloneFluidProp(rule, prop, ctx);
+  } else if (SPECIAL_PROPERTIES.has(prop)) {
+    const specialProps = (styleResults.specialProps = {
+      ...styleResults.specialProps,
+    });
+    specialProps[prop] = rule.style.getPropertyValue(prop);
+  }
+  return styleResults;
+};
+
+let cloneFluidProp = (
+  rule: CSSStyleRule,
+  prop: string,
+  ctx: CloneStylePropContext
+): Record<string, string> => {
+  let {
+    styleResults: { style },
+  } = ctx;
+  const { isBrowser } = ctx;
+
+  const shorthandOuterMap = SHORTHAND_PROPERTIES[prop];
+  if (shorthandOuterMap) {
+    if (isBrowser) return style; //Browser automatically handles shorthand properties
+
+    style = applyExplicitPropsFromShorthand(rule, prop, {
+      ...ctx,
+      shorthandOuterMap,
+    });
+  } else {
+    style = { ...style };
+    style[prop] = rule.style.getPropertyValue(prop);
+  }
+  return style;
+};
+
+let applyExplicitPropsFromShorthand = (
+  rule: CSSStyleRule,
+  prop: string,
+  ctx: ApplyExplicitPropsFromShorthandContext
+): Record<string, string> => {
+  const { shorthandOuterMap } = ctx;
+  let {
+    styleResults: { style },
+  } = ctx;
+
+  style = { ...style };
+  const shorthandValues = splitBySpaces(rule.style.getPropertyValue(prop));
+  const mapLength = shorthandValues.length;
+  const shorthandInnerMap = shorthandOuterMap.get(mapLength);
+  if (shorthandInnerMap) {
+    for (let j = 0; j < shorthandValues.length; j++) {
+      const shorthandValue = shorthandValues[j];
+      const properties = shorthandInnerMap.get(j);
+      if (properties) {
+        for (const explicitProp of properties)
+          style[explicitProp] = shorthandValue;
+      }
+    }
+  }
+  return style;
+};
 let serializeMediaRule = (
   rule: CSSMediaRule,
   ctx: SerializeDocContext
@@ -153,7 +225,26 @@ function wrap(
   serializeMediaRuleWrapped: (
     rule: CSSMediaRule,
     ctx: SerializeDocContext
-  ) => MediaRuleClone | null
+  ) => MediaRuleClone | null,
+  cloneStylePropsWrapped: (
+    rule: CSSStyleRule,
+    ctx: SerializeDocContext
+  ) => StyleResults,
+  cloneStylePropWrapped: (
+    rule: CSSStyleRule,
+    prop: string,
+    ctx: CloneStylePropContext
+  ) => StyleResults,
+  cloneFluidPropWrapped: (
+    rule: CSSStyleRule,
+    prop: string,
+    ctx: CloneStylePropContext
+  ) => Record<string, string>,
+  applyExplicitPropsFromShorthandWrapped: (
+    rule: CSSStyleRule,
+    prop: string,
+    ctx: ApplyExplicitPropsFromShorthandContext
+  ) => Record<string, string>
 ) {
   serializeDocument = serializeDocumentWrapped;
   getAccessibleStyleSheets = getAccessibleStyleSheetsWrapped;
@@ -163,6 +254,10 @@ function wrap(
   serializeRule = serializeRuleWrapped;
   serializeStyleRule = serializeStyleRuleWrapped;
   serializeMediaRule = serializeMediaRuleWrapped;
+  cloneStyleProps = cloneStylePropsWrapped;
+  cloneStyleProp = cloneStylePropWrapped;
+  cloneFluidProp = cloneFluidPropWrapped;
+  applyExplicitPropsFromShorthand = applyExplicitPropsFromShorthandWrapped;
 }
 
 export {
@@ -174,5 +269,9 @@ export {
   serializeRule,
   serializeStyleRule,
   serializeMediaRule,
+  cloneStyleProps,
+  cloneStyleProp,
+  cloneFluidProp,
+  applyExplicitPropsFromShorthand,
   wrap,
 };

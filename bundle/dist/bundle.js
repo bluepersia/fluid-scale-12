@@ -524,6 +524,80 @@ var FluidScale = (() => {
       }
     }
   }
+  function normalizeDoc(docClone) {
+    return {
+      styleSheets: normalizeStyleSheets(docClone.styleSheets)
+    };
+  }
+  function normalizeStyleSheets(styleSheets) {
+    return styleSheets.map(normalizeStyleSheet);
+  }
+  function normalizeStyleSheet(sheet) {
+    return {
+      cssRules: normalizeRules(sheet.cssRules)
+    };
+  }
+  function normalizeRules(rules) {
+    return rules.map(normalizeRule);
+  }
+  function normalizeRule(rule) {
+    if (rule.type === STYLE_RULE_TYPE) {
+      const styleRule = rule;
+      return {
+        ...rule,
+        selectorText: normalizeSelector(styleRule.selectorText),
+        style: normalizeStyle(styleRule.style)
+      };
+    } else if (rule.type === MEDIA_RULE_TYPE) {
+      return {
+        ...rule,
+        cssRules: rule.cssRules.map(normalizeRule)
+      };
+    }
+    return rule;
+  }
+  function normalizeStyle(style) {
+    return Object.fromEntries(
+      Object.entries(style).map(([key, value]) => [key, normalizeZero(value)])
+    );
+  }
+  function normalizeZero(input) {
+    return input.replace(
+      /(?<![\d.])0+(?:\.0+)?(?![\d.])(?!(px|em|rem|%|vh|vw|vmin|vmax|ch|ex|cm|mm|in|pt|pc)\b)/g,
+      "0px"
+    );
+  }
+  function normalizeSelector(selector) {
+    return selector.replace(/\*::(before|after)\b/g, "::$1").replace(/\s*,\s*/g, ", ").replace(/\s+/g, " ").trim();
+  }
+
+  // src/utils/stringHelpers.ts
+  function splitBySpaces(value) {
+    let depth = 0;
+    let currentValue = "";
+    const result = [];
+    for (const char of value) {
+      if (char === " ") {
+        if (depth === 0) {
+          result.push(currentValue);
+          currentValue = "";
+        } else {
+          currentValue += char;
+        }
+      } else {
+        if (char === "(") {
+          depth++;
+        } else if (char === ")") {
+          depth--;
+        }
+        currentValue += char;
+      }
+    }
+    if (currentValue) {
+      result.push(currentValue);
+    }
+    return result;
+  }
 
   // src/parsing/serialization/serializer.ts
   var serializeDocument = (document, ctx) => {
@@ -560,21 +634,7 @@ var FluidScale = (() => {
     return rule.type === STYLE_RULE_TYPE ? serializeStyleRule(rule, ctx) : serializeMediaRule(rule, ctx);
   };
   var serializeStyleRule = (rule, ctx) => {
-    const { isBrowser } = ctx;
-    const style = {};
-    const specialProps = {};
-    for (let i = 0; i < rule.style.length; i++) {
-      const prop = rule.style[i];
-      if (FLUID_PROPERTY_NAMES.has(prop)) {
-        if (SHORTHAND_PROPERTIES[prop]) {
-          if (isBrowser) continue;
-        } else {
-          style[prop] = rule.style.getPropertyValue(prop);
-        }
-      } else if (SPECIAL_PROPERTIES.has(prop)) {
-        specialProps[prop] = rule.style.getPropertyValue(prop);
-      }
-    }
+    const { style, specialProps } = cloneStyleProps(rule, ctx);
     if (Object.keys(style).length <= 0) return null;
     return {
       type: STYLE_RULE_TYPE,
@@ -582,6 +642,66 @@ var FluidScale = (() => {
       style,
       specialProps
     };
+  };
+  var cloneStyleProps = (rule, ctx) => {
+    let styleResults = { style: {}, specialProps: {} };
+    for (let i = 0; i < rule.style.length; i++) {
+      const prop = rule.style[i];
+      styleResults = cloneStyleProp(rule, prop, { ...ctx, styleResults });
+    }
+    return styleResults;
+  };
+  var cloneStyleProp = (rule, prop, ctx) => {
+    let { styleResults } = ctx;
+    styleResults = { ...styleResults };
+    if (FLUID_PROPERTY_NAMES.has(prop)) {
+      styleResults.style = cloneFluidProp(rule, prop, ctx);
+    } else if (SPECIAL_PROPERTIES.has(prop)) {
+      const specialProps = styleResults.specialProps = {
+        ...styleResults.specialProps
+      };
+      specialProps[prop] = rule.style.getPropertyValue(prop);
+    }
+    return styleResults;
+  };
+  var cloneFluidProp = (rule, prop, ctx) => {
+    let {
+      styleResults: { style }
+    } = ctx;
+    const { isBrowser } = ctx;
+    const shorthandOuterMap = SHORTHAND_PROPERTIES[prop];
+    if (shorthandOuterMap) {
+      if (isBrowser) return style;
+      style = applyExplicitPropsFromShorthand(rule, prop, {
+        ...ctx,
+        shorthandOuterMap
+      });
+    } else {
+      style = { ...style };
+      style[prop] = rule.style.getPropertyValue(prop);
+    }
+    return style;
+  };
+  var applyExplicitPropsFromShorthand = (rule, prop, ctx) => {
+    const { shorthandOuterMap } = ctx;
+    let {
+      styleResults: { style }
+    } = ctx;
+    style = { ...style };
+    const shorthandValues = splitBySpaces(rule.style.getPropertyValue(prop));
+    const mapLength = shorthandValues.length;
+    const shorthandInnerMap = shorthandOuterMap.get(mapLength);
+    if (shorthandInnerMap) {
+      for (let j = 0; j < shorthandValues.length; j++) {
+        const shorthandValue = shorthandValues[j];
+        const properties = shorthandInnerMap.get(j);
+        if (properties) {
+          for (const explicitProp of properties)
+            style[explicitProp] = shorthandValue;
+        }
+      }
+    }
+    return style;
   };
   var serializeMediaRule = (rule, ctx) => {
     const match = rule.media.mediaText.match(/\(min-width:\s*(\d+)px\)/);
@@ -595,7 +715,7 @@ var FluidScale = (() => {
     }
     return null;
   };
-  function wrap(serializeDocumentWrapped, getAccessibleStyleSheetsWrapped, serializeStyleSheetWrapped, serializeStyleSheetsWrapped, serializeRulesWrapped, serializeRuleWrapped, serializeStyleRuleWrapped, serializeMediaRuleWrapped) {
+  function wrap(serializeDocumentWrapped, getAccessibleStyleSheetsWrapped, serializeStyleSheetWrapped, serializeStyleSheetsWrapped, serializeRulesWrapped, serializeRuleWrapped, serializeStyleRuleWrapped, serializeMediaRuleWrapped, cloneStylePropsWrapped, cloneStylePropWrapped, cloneFluidPropWrapped, applyExplicitPropsFromShorthandWrapped) {
     serializeDocument = serializeDocumentWrapped;
     getAccessibleStyleSheets = getAccessibleStyleSheetsWrapped;
     serializeStyleSheet = serializeStyleSheetWrapped;
@@ -604,33 +724,51 @@ var FluidScale = (() => {
     serializeRule = serializeRuleWrapped;
     serializeStyleRule = serializeStyleRuleWrapped;
     serializeMediaRule = serializeMediaRuleWrapped;
+    cloneStyleProps = cloneStylePropsWrapped;
+    cloneStyleProp = cloneStylePropWrapped;
+    cloneFluidProp = cloneFluidPropWrapped;
+    applyExplicitPropsFromShorthand = applyExplicitPropsFromShorthandWrapped;
   }
 
-  // test/parsing/serialization/gold-sight.ts
+  // test/utils/vitest.ts
   var expect;
   if (false) {
     expect = null.expect;
   }
+  function toBeEqualDefined(actual, expected, msg) {
+    expect(actual, msg).toBeDefined();
+    expect(actual, msg).toEqual(expected);
+  }
+
+  // test/parsing/serialization/gold-sight.ts
+  var expect2;
+  if (false) {
+    expect2 = null.expect;
+  }
   var serializeDocAssertions = {
     "should serialize the document": (state, args, result) => {
-      expect(result).toEqual(clearNullsForDoc(state.master.docClone));
+      result = normalizeDoc(result);
+      expect2(result).toEqual(clearNullsForDoc(state.master.docClone));
     }
   };
   var getAccessibleStyleSheetsAssertions = {
     "should get the accessible style sheets": (state, args, result) => {
-      expect(result.length).toBe(state.master.docClone.styleSheets.length);
+      expect2(result.length).toBe(state.master.docClone.styleSheets.length);
     }
   };
   var serializeStyleSheetsAssertions = {
     "should serialize the style sheets": (state, args, result) => {
-      expect(result).toEqual(
+      result = normalizeStyleSheets(result);
+      expect2(result).toEqual(
         clearNullsForStyleSheets(state.master.docClone.styleSheets)
       );
     }
   };
   var serializeStyleSheetAssertions = {
     "should serialize the style sheet": (state, args, result) => {
-      expect(result).toEqual(
+      result = normalizeStyleSheet(result);
+      toBeEqualDefined(
+        result,
         clearNullsForStyleSheet(
           state.master.docClone.styleSheets[state.sheetIndex]
         )
@@ -639,47 +777,133 @@ var FluidScale = (() => {
   };
   var serializeRulesAssertions = {
     "should serialize the rules": (state, args, result) => {
+      result = normalizeRules(result);
       let rules = getRulesByAbsIndex(state.master.docClone, state.rulesIndex);
       if (rules) rules = clearNullsForRules(rules);
-      expect(result).toEqual(rules);
+      toBeEqualDefined(result, rules);
     }
   };
   var serializeRuleAssertions = {
     "should serialize the rule": (state, args, result) => {
+      result = result ? normalizeRule(result) : null;
       let masterRule = getRuleByAbsIndex(state.master.docClone, state.ruleIndex);
       if (result === null) {
-        expect(masterRule.null).toBeTruthy();
+        expect2(masterRule.null).toBeTruthy();
         return;
       }
       if (masterRule) masterRule = clearNullsForRule(masterRule);
-      expect(result).toEqual(masterRule);
+      toBeEqualDefined(result, masterRule);
     }
   };
   var serializeStyleRuleAssertions = {
     "should serialize the style rule": (state, args, result) => {
+      result = result ? normalizeRule(result) : null;
       const masterRule = getStyleRuleByAbsIndex(
         state.master.docClone,
         state.styleRuleIndex
       );
       if (result === null) {
-        expect(masterRule.null).toBeTruthy();
+        expect2(masterRule.null).toBeTruthy();
         return;
       }
-      expect(result).toEqual(masterRule);
+      toBeEqualDefined(result, masterRule);
     }
   };
   var serializeMediaRuleAssertions = {
     "should serialize the media rule": (state, args, result) => {
+      result = result ? normalizeRule(result) : null;
       let masterRule = getMediaRuleByAbsIndex(
         state.master.docClone,
         state.mediaRuleIndex
       );
       if (result === null) {
-        expect(masterRule.null).toBeTruthy();
+        expect2(masterRule.null).toBeTruthy();
         return;
       }
       if (masterRule) masterRule = clearNullsForRule(masterRule);
-      expect(result).toEqual(masterRule);
+      toBeEqualDefined(result, masterRule);
+    }
+  };
+  var cloneStylePropsAssertions = {
+    "should clone the style props": (state, args, result) => {
+      let { style, specialProps } = result;
+      style = normalizeStyle(style);
+      const masterRule = getStyleRuleByAbsIndex(
+        state.master.docClone,
+        state.styleRuleIndex - 1
+      );
+      if (Object.keys(style).length <= 0) {
+        expect2(masterRule.null).toBeTruthy();
+        return;
+      }
+      expect2(style).toEqual(masterRule.style);
+      expect2(specialProps).toEqual(masterRule.specialProps);
+    }
+  };
+  var cloneStylePropAssertions = {
+    "should clone the style prop": (state, args, result) => {
+      const [rule, prop, ctx] = args;
+      const {
+        isBrowser,
+        styleResults: { style: styleArg }
+      } = ctx;
+      let { style, specialProps } = result;
+      style = normalizeStyle(style);
+      let masterRule = getStyleRuleByAbsIndex(
+        state.master.docClone,
+        state.styleRuleIndex - 1
+      );
+      if (FLUID_PROPERTY_NAMES.has(prop)) {
+        assertFluidProp(prop, { isBrowser, style, masterRule, styleArg });
+      } else if (SPECIAL_PROPERTIES.has(prop)) {
+        expect2(specialProps[prop]).toEqual(masterRule.specialProps[prop]);
+      }
+    }
+  };
+  function assertFluidProp(prop, ctx) {
+    const { isBrowser, style, masterRule, styleArg } = ctx;
+    if (SHORTHAND_PROPERTIES[prop]) {
+      if (isBrowser) return;
+      expect2(style).not.toEqual(styleArg);
+      expect2(masterRule.style).toMatchObject(style);
+    } else {
+      toBeEqualDefined(style[prop], masterRule.style[prop]);
+    }
+  }
+  var cloneFluidPropAssertions = {
+    "should clone the fluid prop": (state, args, result) => {
+      const [rule, prop, ctx] = args;
+      const {
+        isBrowser,
+        styleResults: { style: styleArg }
+      } = ctx;
+      const masterRule = getStyleRuleByAbsIndex(
+        state.master.docClone,
+        state.styleRuleIndex - 1
+      );
+      result = normalizeStyle(result);
+      assertFluidProp(prop, {
+        isBrowser,
+        style: result,
+        masterRule,
+        styleArg
+      });
+    }
+  };
+  var applyExplicitPropsFromShorthandAssertions = {
+    "should apply the explicit props from shorthand": (state, args, result) => {
+      const [rule, prop, ctx] = args;
+      const {
+        isBrowser,
+        styleResults: { style: styleArg }
+      } = ctx;
+      const masterRule = getStyleRuleByAbsIndex(
+        state.master.docClone,
+        state.styleRuleIndex - 1
+      );
+      result = normalizeStyle(result);
+      expect2(result).not.toEqual(styleArg);
+      expect2(masterRule.style).toMatchObject(result);
     }
   };
   var defaultAssertions = {
@@ -690,7 +914,11 @@ var FluidScale = (() => {
     serializeRules: serializeRulesAssertions,
     serializeRule: serializeRuleAssertions,
     serializeStyleRule: serializeStyleRuleAssertions,
-    serializeMediaRule: serializeMediaRuleAssertions
+    serializeMediaRule: serializeMediaRuleAssertions,
+    cloneStyleProps: cloneStylePropsAssertions,
+    cloneStyleProp: cloneStylePropAssertions,
+    cloneFluidProp: cloneFluidPropAssertions,
+    applyExplicitPropsFromShorthand: applyExplicitPropsFromShorthandAssertions
   };
   var SerializeDocAssertionMaster = class extends dist_default {
     constructor() {
@@ -733,6 +961,13 @@ var FluidScale = (() => {
           state.mediaRuleIndex++;
         }
       });
+      this.cloneStyleProps = this.wrapFn(cloneStyleProps, "cloneStyleProps");
+      this.cloneStyleProp = this.wrapFn(cloneStyleProp, "cloneStyleProp");
+      this.cloneFluidProp = this.wrapFn(cloneFluidProp, "cloneFluidProp");
+      this.applyExplicitPropsFromShorthand = this.wrapFn(
+        applyExplicitPropsFromShorthand,
+        "applyExplicitPropsFromShorthand"
+      );
     }
     newState() {
       return {
@@ -754,7 +989,11 @@ var FluidScale = (() => {
       serializeDocAssertionMaster.serializeRules,
       serializeDocAssertionMaster.serializeRule,
       serializeDocAssertionMaster.serializeStyleRule,
-      serializeDocAssertionMaster.serializeMediaRule
+      serializeDocAssertionMaster.serializeMediaRule,
+      serializeDocAssertionMaster.cloneStyleProps,
+      serializeDocAssertionMaster.cloneStyleProp,
+      serializeDocAssertionMaster.cloneFluidProp,
+      serializeDocAssertionMaster.applyExplicitPropsFromShorthand
     );
   }
 

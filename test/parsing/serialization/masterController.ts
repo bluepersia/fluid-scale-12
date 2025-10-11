@@ -2,6 +2,7 @@ import {
   DocumentClone,
   MediaRuleClone,
   RuleClone,
+  StyleRuleClone,
   StyleSheetClone,
 } from "../../../src/parsing/serialization/serializer.types";
 import {
@@ -79,17 +80,20 @@ function getRuleByAbsIndex(docClone: DocumentClone, absIndex: number) {
   }
 }
 
-function getStyleRuleByAbsIndex(docClone: DocumentClone, absIndex: number) {
+function getStyleRuleByAbsIndex(
+  docClone: DocumentClone,
+  absIndex: number
+): StyleRuleClone | undefined {
   let index = 0;
   for (const sheet of docClone.styleSheets) {
     for (const rule of sheet.cssRules) {
       if (rule.type === STYLE_RULE_TYPE) {
-        if (index === absIndex) return rule;
+        if (index === absIndex) return rule as StyleRuleClone;
         index++;
       } else if (rule.type === MEDIA_RULE_TYPE) {
         for (const childRule of (rule as MediaRuleClone).cssRules) {
           if (childRule.type === STYLE_RULE_TYPE) {
-            if (index === absIndex) return childRule;
+            if (index === absIndex) return childRule as StyleRuleClone;
             index++;
           }
         }
@@ -110,6 +114,74 @@ function getMediaRuleByAbsIndex(docClone: DocumentClone, absIndex: number) {
   }
 }
 
+function normalizeDoc(docClone: DocumentClone): DocumentClone {
+  return {
+    styleSheets: normalizeStyleSheets(docClone.styleSheets),
+  };
+}
+
+function normalizeStyleSheets(
+  styleSheets: StyleSheetClone[]
+): StyleSheetClone[] {
+  return styleSheets.map(normalizeStyleSheet);
+}
+
+function normalizeStyleSheet(sheet: StyleSheetClone): StyleSheetClone {
+  return {
+    cssRules: normalizeRules(sheet.cssRules),
+  };
+}
+
+function normalizeRules(rules: RuleClone[]): RuleClone[] {
+  return rules.map(normalizeRule);
+}
+
+function normalizeRule(rule: RuleClone): RuleClone {
+  if (rule.type === STYLE_RULE_TYPE) {
+    const styleRule = rule as StyleRuleClone;
+    return {
+      ...rule,
+      selectorText: normalizeSelector(styleRule.selectorText),
+      style: normalizeStyle(styleRule.style),
+    } as StyleRuleClone;
+  } else if (rule.type === MEDIA_RULE_TYPE) {
+    return {
+      ...rule,
+      cssRules: (rule as MediaRuleClone).cssRules.map(normalizeRule),
+    } as MediaRuleClone;
+  }
+  return rule;
+}
+
+function normalizeStyle(style: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(style).map(([key, value]) => [key, normalizeZero(value)])
+  );
+}
+
+/** Nornalize all zeros to '0px' for conistency */
+function normalizeZero(input: string): string {
+  return input.replace(
+    /(?<![\d.])0+(?:\.0+)?(?![\d.])(?!(px|em|rem|%|vh|vw|vmin|vmax|ch|ex|cm|mm|in|pt|pc)\b)/g,
+    "0px"
+  );
+}
+
+/** Normalize the selector for consistency:
+ * 1) Replace *::before and *::after with ::before and ::after
+ * 2) Normalize spacing around commas
+ * 3) Replace multiple spaces with a single space
+ * 4) Trim the selector
+ */
+
+function normalizeSelector(selector: string): string {
+  return selector
+    .replace(/\*::(before|after)\b/g, "::$1")
+    .replace(/\s*,\s*/g, ", ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export {
   getRulesByAbsIndex,
   getStyleRuleByAbsIndex,
@@ -120,4 +192,11 @@ export {
   clearNullsForRules,
   clearNullsForRule,
   getRuleByAbsIndex,
+  normalizeDoc,
+  normalizeStyleSheet,
+  normalizeStyleSheets,
+  normalizeRule,
+  normalizeRules,
+  normalizeStyle,
+  normalizeSelector,
 };
