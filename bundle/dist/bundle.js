@@ -180,10 +180,12 @@ var FluidScale = (() => {
         const result = fn(...args);
         this.state.callStack.pop();
         const convertedResult = processors?.resultConverter ? processors.resultConverter(result) : result;
+        if (processors?.resultConverter)
+          console.log(convertedResult);
         const assertionData = {
           state: this.state,
           funcIndex,
-          result: deepClone(convertedResult),
+          result: processors?.skipDeepClone ? convertedResult : deepClone(convertedResult),
           name,
           branchCount,
           args: convertedArgs,

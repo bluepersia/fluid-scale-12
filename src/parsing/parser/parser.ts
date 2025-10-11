@@ -137,6 +137,7 @@ let batchRule = (
     newBatchState.currentBatch.rules.push(rule);
   } else if (rule.type === MEDIA_RULE_TYPE) {
     const { minWidth, cssRules } = rule as MediaRuleClone;
+    if (cssRules.length <= 0) return batchState;
     newBatchState.currentBatch = null;
     newBatchState.batches.push({
       rules: cssRules,

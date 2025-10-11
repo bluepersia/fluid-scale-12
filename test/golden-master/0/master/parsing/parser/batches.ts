@@ -19,11 +19,6 @@ const ruleBatches: RuleBatch[][] = [
         (rule) => rule.type === STYLE_RULE_TYPE && !(rule as NullRule).null
       ),
     },
-    {
-      width: 375,
-      isMediaQuery: true,
-      rules: [],
-    },
   ],
   [
     {

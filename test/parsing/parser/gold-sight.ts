@@ -29,6 +29,7 @@ import {
   MEDIA_RULE_TYPE,
   STYLE_RULE_TYPE,
 } from "../../../src/parsing/serialization/serializerConsts";
+import { deepClone } from "../../utils/deepCloner";
 
 let expect;
 if (process.env.NODE_ENV === "test") {
@@ -99,7 +100,16 @@ const batchRuleAssertions: AssertionChain<
   BatchState
 > = {
   "should batch the rule": (state, args, result) => {
-    const [rule, , baselineWidth] = args;
+    const [rule, batchState] = args;
+
+    if (rule.type === MEDIA_RULE_TYPE) {
+      const { cssRules } = rule as MediaRuleClone;
+      if (cssRules.length <= 0) {
+        expect(result).toBe(batchState);
+        return;
+      }
+    }
+
     const lastBatchIndex = result.batches.length - 1;
     const lastBatch = result.batches[lastBatchIndex];
     const lastRuleIndex = lastBatch.rules.length - 1;
@@ -107,14 +117,10 @@ const batchRuleAssertions: AssertionChain<
     const masterBatch =
       state.master!.ruleBatches[state.sheetIndex - 1][lastBatchIndex];
 
-    if (lastRuleIndex > -1) {
-      toBeEqualDefined(
-        lastBatch.rules[lastRuleIndex],
-        masterBatch.rules[lastRuleIndex]
-      );
-    } else {
-      expect(lastBatch.rules).toEqual(masterBatch.rules);
-    }
+    toBeEqualDefined(
+      lastBatch.rules[lastRuleIndex],
+      masterBatch.rules[lastRuleIndex]
+    );
 
     if (rule.type === MEDIA_RULE_TYPE) expect(result.currentBatch).toBeNull();
     else if (rule.type === STYLE_RULE_TYPE)
@@ -125,11 +131,13 @@ const batchRuleAssertions: AssertionChain<
 const cloneBatchStateAssertions: AssertionChain<
   State,
   [BatchState],
-  BatchState
+  [BatchState, BatchState]
 > = {
   "should clone the batch state": (state, args, result) => {
-    expect(result).not.toBe(args[0]);
-    expect(result).toEqual(args[0]);
+    const [arg] = args;
+
+    expect(result[0]).not.toBe(arg);
+    expect(result[1]).toEqual(arg);
   },
 };
 
@@ -174,9 +182,16 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
 
   batchRules = this.wrapFn(batchRules, "batchRules");
 
-  batchRule = this.wrapFn(batchRule, "batchRule");
+  batchRule = this.wrapFn(batchRule, "batchRule", {
+    skipDeepClone: true,
+  });
 
-  cloneBatchState = this.wrapFn(cloneBatchState, "cloneBatchState");
+  cloneBatchState = this.wrapFn(cloneBatchState, "cloneBatchState", {
+    resultConverter: (result) => {
+      return [result, deepClone(result)];
+    },
+    skipDeepClone: true,
+  });
 }
 
 const parseDocAssertionMaster = new ParseDocAssertionMaster();
