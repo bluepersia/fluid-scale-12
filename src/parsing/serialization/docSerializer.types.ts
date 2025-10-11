@@ -1,4 +1,4 @@
-import { MEDIA_RULE_TYPE, STYLE_RULE_TYPE } from "./serializerConsts";
+import { MEDIA_RULE_TYPE, STYLE_RULE_TYPE } from "./docSerializerConsts";
 
 type DocumentClone = {
   styleSheets: StyleSheetClone[];

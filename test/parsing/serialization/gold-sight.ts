@@ -19,7 +19,7 @@ import {
   StyleResults,
   StyleRuleClone,
   StyleSheetClone,
-} from "../../../src/parsing/serialization/serializer.types";
+} from "../../../src/parsing/serialization/docSerializer.types";
 import {
   clearNullsForDoc,
   clearNullsForRule,
@@ -51,12 +51,12 @@ import {
   serializeStyleSheet,
   serializeStyleSheets,
   wrap,
-} from "../../../src/parsing/serialization/serializer";
+} from "../../../src/parsing/serialization/docSerializer";
 import {
   FLUID_PROPERTY_NAMES,
   SHORTHAND_PROPERTIES,
   SPECIAL_PROPERTIES,
-} from "../../../src/parsing/serialization/serializerConsts";
+} from "../../../src/parsing/serialization/docSerializerConsts";
 import { makeTestMessage, toBeEqualDefined } from "../../utils/vitest";
 
 type State = {

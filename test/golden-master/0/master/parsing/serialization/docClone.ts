@@ -3,7 +3,7 @@ import {
   MediaRuleClone,
   RuleClone,
   StyleRuleClone,
-} from "../../../../../../src/parsing/serialization/serializer.types";
+} from "../../../../../../src/parsing/serialization/docSerializer.types";
 import { NullRule } from "../../../../../parsing/serialization/index.types";
 
 const docClone: DocumentClone = {

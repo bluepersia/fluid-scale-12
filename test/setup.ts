@@ -4,11 +4,13 @@ import { fileURLToPath } from "url";
 import { PlaywrightPage } from "./index.types";
 import { generateJSDOMDocument } from "../src/parsing/json-builder";
 import { wrapAll as wrapAllSerializeDoc } from "./parsing/serialization/gold-sight";
+import { wrapAll as wrapAllParseDoc } from "./parsing/parser/gold-sight";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 wrapAllSerializeDoc();
+wrapAllParseDoc();
 
 type PlaywrightBlueprint = {
   htmlFilePath: string;
