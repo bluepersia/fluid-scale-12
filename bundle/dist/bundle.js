@@ -69,7 +69,7 @@ var FluidScale = (() => {
   // ../GoldSight/dist/index.js
   var assertionQueues = {};
   var AssertionMaster = class {
-    constructor(assertionChains, globalKey) {
+    constructor(assertionChains, globalKey, globalOptions) {
       this.resetState = () => {
         this._state = {
           ...this.newState(),
@@ -80,10 +80,11 @@ var FluidScale = (() => {
         };
       };
       this.assertQueue = (options) => {
-        if (!options)
-          options = {};
-        if (!options.errorAlgorithm)
-          options.errorAlgorithm = "firstOfDeepest";
+        options = {
+          errorAlgorithm: "firstOfDeepest",
+          ...this._globalOptions?.assert || {},
+          ...options || {}
+        };
         const assertionQueue = assertionQueues[this.globalKey];
         const verifiedAssertions = /* @__PURE__ */ new Map();
         if (!this.state?.master && options?.master === void 0)
@@ -151,6 +152,7 @@ var FluidScale = (() => {
       };
       this.assertionChains = assertionChains;
       this._globalKey = globalKey;
+      this._globalOptions = globalOptions;
       assertionQueues[globalKey] = /* @__PURE__ */ new Map();
     }
     get globalKey() {
@@ -170,6 +172,13 @@ var FluidScale = (() => {
         const convertedArgs = processors?.argsConverter ? processors.argsConverter(args) : args;
         if (processors?.pre)
           processors.pre(this.state, convertedArgs);
+        const deepCloneOpts = {
+          result: true,
+          args: false,
+          ...this._globalOptions?.deepClone || {},
+          ...processors?.deepClone || {}
+        };
+        const argsClone = deepCloneOpts.args ? deepClone(convertedArgs) : convertedArgs;
         const parentId = this.state.callStack[this.state.callStack.length - 1] ?? -1;
         let funcIndex = parentId + 1;
         const queueIndex = this.state.queueIndex;
@@ -180,15 +189,13 @@ var FluidScale = (() => {
         const result = fn(...args);
         this.state.callStack.pop();
         const convertedResult = processors?.resultConverter ? processors.resultConverter(result) : result;
-        if (processors?.resultConverter)
-          console.log(convertedResult);
         const assertionData = {
           state: this.state,
           funcIndex,
-          result: processors?.skipDeepClone ? convertedResult : deepClone(convertedResult),
+          result: deepCloneOpts.result ? deepClone(convertedResult) : convertedResult,
           name,
           branchCount,
-          args: convertedArgs,
+          args: argsClone,
           postOp: () => {
           }
         };
@@ -252,7 +259,7 @@ var FluidScale = (() => {
   }
   var dist_default = AssertionMaster;
 
-  // src/parsing/serialization/serializerConsts.ts
+  // src/parsing/serialization/docSerializerConsts.ts
   var STYLE_RULE_TYPE = 1;
   var MEDIA_RULE_TYPE = 4;
   var FLUID_PROPERTY_NAMES = /* @__PURE__ */ new Set([
@@ -601,7 +608,7 @@ var FluidScale = (() => {
     return result;
   }
 
-  // src/parsing/serialization/serializer.ts
+  // src/parsing/serialization/docSerializer.ts
   var serializeDocument = (document, ctx) => {
     const serializedDoc = {
       styleSheets: serializeStyleSheets(

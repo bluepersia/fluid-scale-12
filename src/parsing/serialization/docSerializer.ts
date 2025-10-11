@@ -9,14 +9,14 @@ import {
   StyleResults,
   CloneStylePropContext,
   ApplyExplicitPropsFromShorthandContext,
-} from "./serializer.types";
+} from "./docSerializer.types";
 import {
   STYLE_RULE_TYPE,
   MEDIA_RULE_TYPE,
   SHORTHAND_PROPERTIES,
   FLUID_PROPERTY_NAMES,
   SPECIAL_PROPERTIES,
-} from "./serializerConsts";
+} from "./docSerializerConsts";
 
 let serializeDocument = (
   document: Document,

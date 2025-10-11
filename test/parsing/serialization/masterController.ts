@@ -4,11 +4,11 @@ import {
   RuleClone,
   StyleRuleClone,
   StyleSheetClone,
-} from "../../../src/parsing/serialization/serializer.types";
+} from "../../../src/parsing/serialization/docSerializer.types";
 import {
   MEDIA_RULE_TYPE,
   STYLE_RULE_TYPE,
-} from "../../../src/parsing/serialization/serializerConsts";
+} from "../../../src/parsing/serialization/docSerializerConsts";
 import { NullRule } from "./index.types";
 
 function clearNullsForDoc(docClone: DocumentClone) {

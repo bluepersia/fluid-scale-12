@@ -1,4 +1,4 @@
-import { RuleClone } from "../serialization/serializer.types";
+import { RuleClone } from "../serialization/docSerializer.types";
 
 type ParseDocResults = {
   breakpoints: number[];

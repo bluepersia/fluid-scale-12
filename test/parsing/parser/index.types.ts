@@ -1,5 +1,5 @@
-import { RuleBatch } from "../../../src/parsing/parser/parser.types";
-import { DocumentClone } from "../../../src/parsing/serialization/serializer.types";
+import { RuleBatch } from "../../../src/parsing/parser/docParser.types";
+import { DocumentClone } from "../../../src/parsing/serialization/docSerializer.types";
 import { Master } from "../../golden-master/index.types";
 
 type ParseDocMaster = Master & {

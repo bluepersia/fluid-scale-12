@@ -3,18 +3,18 @@ import {
   MediaRuleClone,
   RuleClone,
   StyleSheetClone,
-} from "../serialization/serializer.types";
+} from "../serialization/docSerializer.types";
 import {
   MEDIA_RULE_TYPE,
   STYLE_RULE_TYPE,
-} from "../serialization/serializerConsts";
+} from "../serialization/docSerializerConsts";
 import {
   BatchState,
   DocResultState,
   FluidData,
   ParseDocResults,
   RuleBatch,
-} from "./parser.types";
+} from "./docParser.types";
 
 let parseDocument = (docClone: DocumentClone): ParseDocResults => {
   const { breakpoints, globalBaselineWidth } = parseMediaRules(

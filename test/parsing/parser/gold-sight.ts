@@ -5,14 +5,14 @@ import {
   MediaRuleClone,
   RuleClone,
   StyleSheetClone,
-} from "../../../src/parsing/serialization/serializer.types";
+} from "../../../src/parsing/serialization/docSerializer.types";
 import {
   BatchState,
   DocResultState,
   FluidData,
   ParseDocResults,
   RuleBatch,
-} from "../../../src/parsing/parser/parser.types";
+} from "../../../src/parsing/parser/docParser.types";
 import {
   batchRule,
   batchRules,
@@ -23,13 +23,13 @@ import {
   parseStyleSheet,
   parseStyleSheets,
   wrap,
-} from "../../../src/parsing/parser/parser";
+} from "../../../src/parsing/parser/docParser";
 import { makeTestMessage, toBeEqualDefined } from "../../utils/vitest";
 import {
   MEDIA_RULE_TYPE,
   STYLE_RULE_TYPE,
-} from "../../../src/parsing/serialization/serializerConsts";
-import { deepClone } from "../../utils/deepCloner";
+} from "../../../src/parsing/serialization/docSerializerConsts";
+import { deepClone } from "../../utils/objectCloner";
 
 let expect;
 if (process.env.NODE_ENV === "test") {
@@ -131,13 +131,22 @@ const batchRuleAssertions: AssertionChain<
 const cloneBatchStateAssertions: AssertionChain<
   State,
   [BatchState],
-  [BatchState, BatchState]
+  [BatchState, RuleBatch[], RuleBatch, BatchState]
 > = {
   "should clone the batch state": (state, args, result) => {
     const [arg] = args;
 
-    expect(result[0]).not.toBe(arg);
-    expect(result[1]).toEqual(arg);
+    const [ref, batchesRef, currentBatchRef, clone] = result;
+    expect(ref).not.toBe(arg);
+    expect(clone).toEqual(arg);
+
+    if (arg.currentBatch === null) expect(currentBatchRef).toBeNull();
+    else {
+      expect(currentBatchRef).not.toBe(arg.currentBatch);
+      expect(currentBatchRef!.rules).not.toBe(arg.currentBatch!.rules);
+    }
+
+    expect(batchesRef).not.toBe(arg.batches);
   },
 };
 
@@ -183,14 +192,18 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
   batchRules = this.wrapFn(batchRules, "batchRules");
 
   batchRule = this.wrapFn(batchRule, "batchRule", {
-    skipDeepClone: true,
+    deepClone: {
+      result: false,
+    },
   });
 
   cloneBatchState = this.wrapFn(cloneBatchState, "cloneBatchState", {
     resultConverter: (result) => {
-      return [result, deepClone(result)];
+      return [result, result.batches, result.currentBatch, deepClone(result)];
     },
-    skipDeepClone: true,
+    deepClone: {
+      result: false,
+    },
   });
 }
 

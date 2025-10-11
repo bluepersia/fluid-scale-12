@@ -5,6 +5,6 @@ import {
 } from "../../test/parsing/serialization/gold-sight";
 wrapAllSerializeDoc();
 
-import { serializeDocument } from "../../src/parsing/serialization/serializer";
+import { serializeDocument } from "../../src/parsing/serialization/docSerializer";
 
 export { getQueue, serializeDocAssertionMaster, serializeDocument };

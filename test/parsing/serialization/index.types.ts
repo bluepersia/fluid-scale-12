@@ -2,7 +2,7 @@ import {
   DocumentClone,
   RuleClone,
   StyleRuleClone,
-} from "../../../src/parsing/serialization/serializer.types";
+} from "../../../src/parsing/serialization/docSerializer.types";
 import { Master } from "../../golden-master/index.types";
 
 type NullRule = RuleClone & {

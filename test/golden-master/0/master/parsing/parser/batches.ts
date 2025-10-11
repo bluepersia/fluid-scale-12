@@ -1,12 +1,12 @@
-import { RuleBatch } from "../../../../../../src/parsing/parser/parser.types";
+import { RuleBatch } from "../../../../../../src/parsing/parser/docParser.types";
 import {
   MediaRuleClone,
   StyleRuleClone,
-} from "../../../../../../src/parsing/serialization/serializer.types";
+} from "../../../../../../src/parsing/serialization/docSerializer.types";
 import {
   MEDIA_RULE_TYPE,
   STYLE_RULE_TYPE,
-} from "../../../../../../src/parsing/serialization/serializerConsts";
+} from "../../../../../../src/parsing/serialization/docSerializerConsts";
 import { NullRule } from "../../../../../parsing/serialization/index.types";
 import { docClone } from "../serialization/docClone";
 
