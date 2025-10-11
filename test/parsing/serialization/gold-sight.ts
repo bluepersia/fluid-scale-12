@@ -293,7 +293,6 @@ const applyExplicitPropsFromShorthandAssertions: AssertionChain<
   "should apply the explicit props from shorthand": (state, args, result) => {
     const [rule, prop, ctx] = args;
     const {
-      isBrowser,
       styleResults: { style: styleArg },
     } = ctx;
 

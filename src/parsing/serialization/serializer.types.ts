@@ -33,7 +33,10 @@ type CloneStylePropContext = SerializeDocContext & {
   styleResults: StyleResults;
 };
 
-type ApplyExplicitPropsFromShorthandContext = CloneStylePropContext & {
+type ApplyExplicitPropsFromShorthandContext = Pick<
+  CloneStylePropContext,
+  "styleResults"
+> & {
   shorthandOuterMap: Map<number, Map<number, string[]>>;
 };
 
