@@ -18,6 +18,7 @@ import {
   ParseNextBatchContext,
   ParseNextRuleContext,
   ParsePropertyContext,
+  ParseSelectorContext,
   RuleBatch,
 } from "./docParser.types";
 import { parseBatches, wrap as wrapFluidDataPatcher } from "./fluidDataPatcher";
@@ -197,6 +198,11 @@ function wrap(
     styleSheet: StyleSheetClone,
     globalBaselineWidth: number
   ) => number,
+  parseSelectorWrapped: (
+    styleRule: StyleRuleClone,
+    selector: string,
+    ctx: ParseSelectorContext
+  ) => FluidData,
   parsePropertyWrapped: (
     styleRule: StyleRuleClone,
     property: string,
@@ -230,6 +236,7 @@ function wrap(
   cloneBatchState = cloneBatchStateWrapped;
   determineBaselineWidth = determineBaselineWidthWrapped;
   wrapFluidDataPatcher(
+    parseSelectorWrapped,
     parsePropertyWrapped,
     parseNextBatchWrapped,
     parseNextRuleWrapped,

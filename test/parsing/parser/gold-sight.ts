@@ -17,6 +17,7 @@ import {
   ParseNextBatchContext,
   ParseNextRuleContext,
   ParsePropertyContext,
+  ParseSelectorContext,
   RuleBatch,
 } from "../../../src/parsing/parser/docParser.types";
 import {
@@ -43,6 +44,7 @@ import {
   parseNextBatch,
   parseNextRule,
   parseProperty,
+  parseSelector,
 } from "../../../src/parsing/parser/fluidDataPatcher";
 
 let expect;
@@ -165,6 +167,35 @@ function assertFluidRangeInsertion(
     ]
   );
 }
+const parseSelectorAssertions: AssertionChain<
+  State,
+  [StyleRuleClone, string, ParseSelectorContext],
+  FluidData
+> = {
+  "should parse the selector": (state, args, result, allAssertions) => {
+    const [rule, selector, ctx] = args;
+
+    const { fluidData, batchIndex } = ctx;
+
+    const propertyAssertions = allAssertions.filter(
+      ({ name, args, result: propertyResult }) =>
+        name === "parseProperty" &&
+        args[2].selector === selector &&
+        args[2].fluidData !== propertyResult &&
+        args[2].batchIndex === batchIndex
+    );
+
+    for (const propertyAssertion of propertyAssertions) {
+      const [, property] = propertyAssertion.args;
+
+      assertFluidRangeInsertion(
+        result,
+        { fluidData, anchor: getAnchor(selector), selector, property },
+        state
+      );
+    }
+  },
+};
 
 const parsePropertyAssertions: AssertionChain<
   State,
@@ -325,6 +356,7 @@ const defaultAssertions = {
   batchRules: batchRulesAssertions,
   batchRule: batchRuleAssertions,
   cloneBatchState: cloneBatchStateAssertions,
+  parseSelector: parseSelectorAssertions,
   parseProperty: parsePropertyAssertions,
   parseNextBatch: parseNextBatchAssertions,
   parseNextRule: parseNextRuleAssertions,
@@ -370,6 +402,8 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
     },
   });
 
+  parseSelector = this.wrapFn(parseSelector, "parseSelector");
+
   parseProperty = this.wrapFn(parseProperty, "parseProperty");
 
   parseNextBatch = this.wrapFn(parseNextBatch, "parseNextBatch");
@@ -406,6 +440,7 @@ function wrapAll() {
     parseDocAssertionMaster.batchRule,
     parseDocAssertionMaster.cloneBatchState,
     parseDocAssertionMaster.determineBaselineWidth,
+    parseDocAssertionMaster.parseSelector,
     parseDocAssertionMaster.parseProperty,
     parseDocAssertionMaster.parseNextBatch,
     parseDocAssertionMaster.parseNextRule,
