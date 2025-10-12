@@ -144,11 +144,20 @@ const batchRuleAssertions: AssertionChain<
 
 function assertFluidRangeInsertion(
   result: FluidData,
-  ctx: Pick<InsertFluidDataContext, "anchor" | "selector" | "property">,
+  ctx: Pick<
+    InsertFluidDataContext,
+    "anchor" | "selector" | "property" | "fluidData"
+  >,
   state: State
 ) {
-  const { anchor, selector, property } = ctx;
+  const { anchor, selector, property, fluidData } = ctx;
   const rangesResult = result[anchor][selector][property].ranges;
+
+  const argsRanges = fluidData[anchor]?.[selector]?.[property]?.ranges;
+
+  if (argsRanges)
+    expect(rangesResult.length).toBeGreaterThan(argsRanges.length);
+
   toBeEqualDefined(
     rangesResult[rangesResult.length - 1],
     state.master!.fluidData[anchor][selector][property].ranges[
