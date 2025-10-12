@@ -2,6 +2,7 @@ import {
   DocumentClone,
   MediaRuleClone,
   RuleClone,
+  StyleRuleClone,
   StyleSheetClone,
 } from "../serialization/docSerializer.types";
 import {
@@ -14,6 +15,7 @@ import {
   FluidData,
   InsertFluidDataContext,
   ParseDocResults,
+  ParseNextRuleContext,
   RuleBatch,
 } from "./docParser.types";
 import { parseBatches, wrap as wrapFluidDataPatcher } from "./fluidDataPatcher";
@@ -193,6 +195,10 @@ function wrap(
     styleSheet: StyleSheetClone,
     globalBaselineWidth: number
   ) => number,
+  parseNextRuleWrapped: (
+    nextStyleRule: StyleRuleClone,
+    ctx: ParseNextRuleContext
+  ) => FluidData,
   insertFluidDataWrapped: (
     fluidData: FluidData,
     ctx: InsertFluidDataContext
@@ -212,7 +218,11 @@ function wrap(
   batchRule = batchRuleWrapped;
   cloneBatchState = cloneBatchStateWrapped;
   determineBaselineWidth = determineBaselineWidthWrapped;
-  wrapFluidDataPatcher(insertFluidDataWrapped, cloneFluidDataWrapped);
+  wrapFluidDataPatcher(
+    parseNextRuleWrapped,
+    insertFluidDataWrapped,
+    cloneFluidDataWrapped
+  );
 }
 
 export { wrap };

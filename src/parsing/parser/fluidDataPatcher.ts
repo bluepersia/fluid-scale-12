@@ -116,10 +116,10 @@ function parseNextBatch(
   return fluidData;
 }
 
-function parseNextRule(
+let parseNextRule = (
   nextStyleRule: StyleRuleClone,
   ctx: ParseNextRuleContext
-): FluidData {
+): FluidData => {
   const { fluidData, property, selector } = ctx;
 
   const maxValue = nextStyleRule.style[property];
@@ -129,7 +129,7 @@ function parseNextRule(
   const anchor = selectorParts[selectorParts.length - 1];
 
   return insertFluidData(fluidData, { ...ctx, anchor, maxValue });
-}
+};
 
 function getAnchor(selector: string) {
   const selectorParts = selector.split(" ");
@@ -223,6 +223,10 @@ function parseFluidValue(strValue: string): FluidValue {
 }
 
 function wrap(
+  parseNextRuleWrapped: (
+    nextStyleRule: StyleRuleClone,
+    ctx: ParseNextRuleContext
+  ) => FluidData,
   insertFluidDataWrapped: (
     fluidData: FluidData,
     ctx: InsertFluidDataContext
@@ -234,12 +238,14 @@ function wrap(
     property: string
   ) => FluidData
 ) {
+  parseNextRule = parseNextRuleWrapped;
   insertFluidData = insertFluidDataWrapped;
   cloneFluidData = cloneFluidDataWrapped;
 }
 
 export {
   parseBatches,
+  parseNextRule,
   insertFluidData,
   cloneFluidData,
   parseFluidValue2D,

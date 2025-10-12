@@ -36,7 +36,9 @@ import {
 import { deepClone } from "../../utils/objectCloner";
 import {
   cloneFluidData,
+  getAnchor,
   insertFluidData,
+  parseNextRule,
 } from "../../../src/parsing/parser/fluidDataPatcher";
 
 let expect;
@@ -158,6 +160,17 @@ const parseNextRuleAssertions: AssertionChain<
 > = {
   "should parse the next rule": (state, args, result) => {
     const [rule, ctx] = args;
+
+    const { selector, property, fluidData } = ctx;
+
+    if (!rule.style[property]) {
+      expect(result).toBe(fluidData);
+      return;
+    }
+
+    const anchor = getAnchor(selector);
+
+    assertFluidRangeInsertion(result, { ...ctx, anchor }, state);
   },
 };
 
@@ -259,6 +272,7 @@ const defaultAssertions = {
   batchRules: batchRulesAssertions,
   batchRule: batchRuleAssertions,
   cloneBatchState: cloneBatchStateAssertions,
+  parseNextRule: parseNextRuleAssertions,
   insertFluidData: insertFluidDataAssertions,
   cloneFluidData: cloneFluidDataAssertions,
 };
@@ -301,6 +315,8 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
     },
   });
 
+  parseNextRule = this.wrapFn(parseNextRule, "parseNextRule");
+
   insertFluidData = this.wrapFn(insertFluidData, "insertFluidData");
 
   cloneFluidData = this.wrapFn(cloneFluidData, "cloneFluidData", {
@@ -331,6 +347,7 @@ function wrapAll() {
     parseDocAssertionMaster.batchRule,
     parseDocAssertionMaster.cloneBatchState,
     parseDocAssertionMaster.determineBaselineWidth,
+    parseDocAssertionMaster.parseNextRule,
     parseDocAssertionMaster.insertFluidData,
     parseDocAssertionMaster.cloneFluidData
   );
