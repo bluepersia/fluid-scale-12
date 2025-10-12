@@ -16,6 +16,7 @@ import {
   ParseDocResults,
   ParseNextBatchContext,
   ParseNextRuleContext,
+  ParsePropertyContext,
   RuleBatch,
 } from "../../../src/parsing/parser/docParser.types";
 import {
@@ -41,6 +42,7 @@ import {
   insertFluidData,
   parseNextBatch,
   parseNextRule,
+  parseProperty,
 } from "../../../src/parsing/parser/fluidDataPatcher";
 
 let expect;
@@ -154,6 +156,26 @@ function assertFluidRangeInsertion(
     ]
   );
 }
+
+const parsePropertyAssertions: AssertionChain<
+  State,
+  [StyleRuleClone, string, ParsePropertyContext],
+  FluidData
+> = {
+  "should parse the property": (state, args, result) => {
+    const [, property, ctx] = args;
+
+    const { fluidData, selector } = ctx;
+
+    if (result === fluidData) {
+      return;
+    }
+
+    const anchor = getAnchor(selector);
+
+    assertFluidRangeInsertion(result, { ...ctx, anchor, property }, state);
+  },
+};
 
 const parseNextBatchAssertions: AssertionChain<
   State,
@@ -294,8 +316,9 @@ const defaultAssertions = {
   batchRules: batchRulesAssertions,
   batchRule: batchRuleAssertions,
   cloneBatchState: cloneBatchStateAssertions,
-  parseNextRule: parseNextRuleAssertions,
+  parseProperty: parsePropertyAssertions,
   parseNextBatch: parseNextBatchAssertions,
+  parseNextRule: parseNextRuleAssertions,
   insertFluidData: insertFluidDataAssertions,
   cloneFluidData: cloneFluidDataAssertions,
 };
@@ -338,9 +361,11 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
     },
   });
 
-  parseNextRule = this.wrapFn(parseNextRule, "parseNextRule");
+  parseProperty = this.wrapFn(parseProperty, "parseProperty");
 
   parseNextBatch = this.wrapFn(parseNextBatch, "parseNextBatch");
+
+  parseNextRule = this.wrapFn(parseNextRule, "parseNextRule");
 
   insertFluidData = this.wrapFn(insertFluidData, "insertFluidData");
 
@@ -372,6 +397,7 @@ function wrapAll() {
     parseDocAssertionMaster.batchRule,
     parseDocAssertionMaster.cloneBatchState,
     parseDocAssertionMaster.determineBaselineWidth,
+    parseDocAssertionMaster.parseProperty,
     parseDocAssertionMaster.parseNextBatch,
     parseDocAssertionMaster.parseNextRule,
     parseDocAssertionMaster.insertFluidData,

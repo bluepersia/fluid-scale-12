@@ -226,6 +226,11 @@ function parseFluidValue(strValue: string): FluidValue {
 }
 
 function wrap(
+  parsePropertyWrapped: (
+    styleRule: StyleRuleClone,
+    property: string,
+    ctx: ParsePropertyContext
+  ) => FluidData,
   parseNextBatchWrapped: (
     nextBatch: RuleBatch,
     ctx: ParseNextBatchContext
@@ -245,6 +250,7 @@ function wrap(
     property: string
   ) => FluidData
 ) {
+  parseProperty = parsePropertyWrapped;
   parseNextBatch = parseNextBatchWrapped;
   parseNextRule = parseNextRuleWrapped;
   insertFluidData = insertFluidDataWrapped;
@@ -252,6 +258,7 @@ function wrap(
 }
 
 export {
+  parseProperty,
   parseBatches,
   parseNextBatch,
   parseNextRule,
