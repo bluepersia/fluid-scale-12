@@ -78,6 +78,7 @@ let parseStyleSheet = (
 
   batches = batches;
   return docResultState;
+  //return parseBatches(batches, docResultState);
 };
 
 let batchStyleSheet = (

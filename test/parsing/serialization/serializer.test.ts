@@ -3,7 +3,7 @@ import { masterCollection } from "./masterCollection";
 import { PlaywrightPage } from "../../index.types";
 import { initPlaywrightPages, teardownPlaywrightPages } from "../../setup";
 import { AssertionBlueprint } from "gold-sight";
-import { serializeDocAssertionMaster } from "./gold-sight";
+import { serializeDocAssertionMaster } from "./gold-sight/gold-sight";
 import { JSDOMDocs } from "../../setup";
 import { serializeDocument } from "../../../bundle/src/bundle";
 
@@ -28,7 +28,7 @@ describe("serializeDocument", () => {
           (window as any).serializeDocAssertionMaster.master = master;
           (window as any).serializeDocument(document, { isBrowser: true });
 
-          const queue = (window as any).getQueue("serializeDoc");
+          const queue = (window as any).serializeDocAssertionMaster.getQueue();
 
           return Array.from(queue.entries());
         },

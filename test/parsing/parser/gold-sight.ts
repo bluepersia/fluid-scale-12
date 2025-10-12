@@ -191,18 +191,11 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
 
   batchRules = this.wrapFn(batchRules, "batchRules");
 
-  batchRule = this.wrapFn(batchRule, "batchRule", {
-    deepClone: {
-      result: false,
-    },
-  });
+  batchRule = this.wrapFn(batchRule, "batchRule");
 
   cloneBatchState = this.wrapFn(cloneBatchState, "cloneBatchState", {
     resultConverter: (result) => {
       return [result, result.batches, result.currentBatch, deepClone(result)];
-    },
-    deepClone: {
-      result: false,
     },
   });
 }

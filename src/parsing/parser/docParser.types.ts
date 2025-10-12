@@ -54,6 +54,33 @@ type RuleBatch = {
   isMediaQuery: boolean;
 };
 
+type ParseBatchContext = {
+  docResultState: DocResultState;
+  batchIndex: number;
+  batches: RuleBatch[];
+};
+
+type ParseStyleRuleContext = ParseBatchContext & {
+  fluidData: FluidData;
+  orderID: number;
+};
+type ParseSelectorContext = ParseStyleRuleContext;
+
+type ParsePropertyContext = ParseSelectorContext & {
+  selector: string;
+};
+type ParseNextBatchContext = ParsePropertyContext & {
+  property: string;
+  minValue: string;
+  nextBatchIndex: number;
+};
+type ParseNextRuleContext = ParseNextBatchContext;
+
+type InsertFluidDataContext = ParseNextRuleContext & {
+  anchor: string;
+  maxValue: string;
+};
+
 export {
   ParseDocResults,
   FluidData,
@@ -65,4 +92,11 @@ export {
   DocResultState,
   BatchState,
   RuleBatch,
+  ParseBatchContext,
+  InsertFluidDataContext,
+  ParseNextRuleContext,
+  ParseNextBatchContext,
+  ParsePropertyContext,
+  ParseSelectorContext,
+  ParseStyleRuleContext,
 };
