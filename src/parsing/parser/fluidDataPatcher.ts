@@ -21,7 +21,11 @@ let parseBatches = (
   docResultState: DocResultState
 ): DocResultState => {
   for (const [batchIndex, batch] of batches.entries()) {
-    docResultState = parseBatch(batch, { docResultState, batchIndex, batches });
+    docResultState = parseBatch(batch, {
+      docResultState,
+      batchIndex,
+      batches,
+    });
   }
   return docResultState;
 };
