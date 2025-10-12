@@ -177,7 +177,7 @@ function cloneFluidData(
   return newFluidData;
 }
 
-let parseFluidValue2D = (value: string): FluidValue[][] => {
+function parseFluidValue2D(value: string): FluidValue[][] {
   let depth = 0;
   let currentValue = "";
   let values: FluidValue[][] = [];
@@ -196,7 +196,7 @@ let parseFluidValue2D = (value: string): FluidValue[][] => {
   values.push(parseFluidValue1D(currentValue.trim()));
 
   return values;
-};
+}
 
 function parseFluidValue1D(value: string): FluidValue[] {
   const values: string[] = splitBySpaces(value);
