@@ -4,6 +4,7 @@ import {
   DocumentClone,
   MediaRuleClone,
   RuleClone,
+  StyleRuleClone,
   StyleSheetClone,
 } from "../../../src/parsing/serialization/docSerializer.types";
 import {
@@ -13,6 +14,7 @@ import {
   FluidRange,
   InsertFluidDataContext,
   ParseDocResults,
+  ParseNextRuleContext,
   RuleBatch,
 } from "../../../src/parsing/parser/docParser.types";
 import {
@@ -148,6 +150,16 @@ function assertFluidRangeInsertion(
     ]
   );
 }
+
+const parseNextRuleAssertions: AssertionChain<
+  State,
+  [StyleRuleClone, ParseNextRuleContext],
+  FluidData
+> = {
+  "should parse the next rule": (state, args, result) => {
+    const [rule, ctx] = args;
+  },
+};
 
 const insertFluidDataAssertions: AssertionChain<
   State,

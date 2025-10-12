@@ -131,6 +131,11 @@ function parseNextRule(
   return insertFluidData(fluidData, { ...ctx, anchor, maxValue });
 }
 
+function getAnchor(selector: string) {
+  const selectorParts = selector.split(" ");
+  return selectorParts[selectorParts.length - 1];
+}
+
 let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
   const { anchor, selector, property, minValue, maxValue } = ctx;
   const { orderID, batchIndex, nextBatchIndex } = ctx;
@@ -240,5 +245,6 @@ export {
   parseFluidValue2D,
   parseFluidValue1D,
   parseFluidValue,
+  getAnchor,
   wrap,
 };
