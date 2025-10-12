@@ -8,6 +8,7 @@ import {
   FluidValueSingle,
   InsertFluidDataContext,
   ParseBatchContext,
+  ParseBatchesContext,
   ParseNextBatchContext,
   ParseNextRuleContext,
   ParsePropertyContext,
@@ -18,10 +19,12 @@ import {
 
 let parseBatches = (
   batches: RuleBatch[],
-  docResultState: DocResultState
+  ctx: ParseBatchesContext
 ): DocResultState => {
+  let { docResultState } = ctx;
   for (const [batchIndex, batch] of batches.entries()) {
     docResultState = parseBatch(batch, {
+      ...ctx,
       docResultState,
       batchIndex,
       batches,
@@ -231,7 +234,7 @@ function parseFluidValue(strValue: string): FluidValue {
 function wrap(
   parseBatchesWrapped: (
     batches: RuleBatch[],
-    ctx: DocResultState
+    ctx: ParseBatchesContext
   ) => DocResultState,
   parseBatchWrapped: (
     batch: RuleBatch,

@@ -54,8 +54,14 @@ type RuleBatch = {
   isMediaQuery: boolean;
 };
 
-type ParseBatchContext = {
+type ParseStyleSheetContext = {
+  sheetIndex: number;
   docResultState: DocResultState;
+  globalBaselineWidth: number;
+};
+type ParseBatchesContext = ParseStyleSheetContext;
+
+type ParseBatchContext = ParseBatchesContext & {
   batchIndex: number;
   batches: RuleBatch[];
 };
@@ -99,4 +105,6 @@ export {
   ParsePropertyContext,
   ParseSelectorContext,
   ParseStyleRuleContext,
+  ParseStyleSheetContext,
+  ParseBatchesContext,
 };

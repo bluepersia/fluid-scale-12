@@ -15,12 +15,14 @@ import {
   FluidData,
   InsertFluidDataContext,
   ParseBatchContext,
+  ParseBatchesContext,
   ParseDocResults,
   ParseNextBatchContext,
   ParseNextRuleContext,
   ParsePropertyContext,
   ParseSelectorContext,
   ParseStyleRuleContext,
+  ParseStyleSheetContext,
   RuleBatch,
 } from "./docParser.types";
 import { parseBatches, wrap as wrapFluidDataPatcher } from "./fluidDataPatcher";
@@ -67,12 +69,12 @@ let parseStyleSheets = (
     orderID: 0,
   };
 
-  for (const styleSheet of styleSheets) {
-    docResultState = parseStyleSheet(
-      styleSheet,
+  for (const [sheetIndex, styleSheet] of styleSheets.entries()) {
+    docResultState = parseStyleSheet(styleSheet, {
+      sheetIndex,
       docResultState,
-      globalBaselineWidth
-    );
+      globalBaselineWidth,
+    });
   }
 
   return docResultState.fluidData;
@@ -80,12 +82,12 @@ let parseStyleSheets = (
 
 let parseStyleSheet = (
   styleSheet: StyleSheetClone,
-  docResultState: DocResultState,
-  globalBaselineWidth: number
+  ctx: ParseStyleSheetContext
 ): DocResultState => {
+  const { globalBaselineWidth } = ctx;
   const batches = batchStyleSheet(styleSheet, globalBaselineWidth);
 
-  return parseBatches(batches, docResultState);
+  return parseBatches(batches, ctx);
 };
 
 let batchStyleSheet = (
@@ -182,8 +184,7 @@ function wrap(
   ) => FluidData,
   parseStyleSheetWrapped: (
     styleSheet: StyleSheetClone,
-    docResultState: DocResultState,
-    globalBaselineWidth: number
+    ctx: ParseStyleSheetContext
   ) => DocResultState,
   batchStyleSheetWrapped: (
     styleSheet: StyleSheetClone,
@@ -202,7 +203,7 @@ function wrap(
   ) => number,
   parseBatchesWrapped: (
     batches: RuleBatch[],
-    ctx: DocResultState
+    ctx: ParseBatchesContext
   ) => DocResultState,
   parseBatchWrapped: (
     batch: RuleBatch,
