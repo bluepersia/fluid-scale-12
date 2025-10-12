@@ -1,4 +1,7 @@
-import AssertionMaster, { AssertionChain } from "gold-sight";
+import AssertionMaster, {
+  AssertionChain,
+  AssertionChainForFunc,
+} from "gold-sight";
 import {
   AssertChildFluidInsertionsContext,
   ParseDocMaster,
@@ -69,31 +72,25 @@ export type State = {
   master?: ParseDocMaster;
 };
 
-const parseDocAssertions: AssertionChain<
-  State,
-  [DocumentClone],
-  ParseDocResults
-> = {
+const parseDocAssertions: AssertionChainForFunc<State, typeof parseDocument> = {
   "should parse the document": (state, args, result) => {
     expect(result.breakpoints).toEqual(state.master!.breakpoints);
     expect(result.fluidData).toEqual(state.master!.fluidData);
   },
 };
 
-const parseStyleSheetsAssertions: AssertionChain<
+const parseStyleSheetsAssertions: AssertionChainForFunc<
   State,
-  [StyleSheetClone[]],
-  FluidData
+  typeof parseStyleSheets
 > = {
   "should parse the style sheets": (state, args, result) => {
     expect(result).toEqual(state.master!.fluidData);
   },
 };
 
-const parseStyleSheetAssertions: AssertionChain<
+const parseStyleSheetAssertions: AssertionChainForFunc<
   State,
-  [StyleSheetClone, ParseStyleSheetContext],
-  DocResultState
+  typeof parseStyleSheet
 > = {
   "should parse the style sheet": (state, args, result, allAssertions) => {
     const [, ctx] = args;
@@ -112,38 +109,31 @@ const parseStyleSheetAssertions: AssertionChain<
   },
 };
 
-const batchStyleSheetAssertions: AssertionChain<
+const batchStyleSheetAssertions: AssertionChainForFunc<
   State,
-  [StyleSheetClone],
-  RuleBatch[]
+  typeof batchStyleSheet
 > = {
   "should batch the style sheet": (state, args, result) => {
     toBeEqualDefined(result, state.master!.ruleBatches[state.sheetIndex - 1]);
   },
 };
 
-const determineBaselineWidthAssertions: AssertionChain<
+const determineBaselineWidthAssertions: AssertionChainForFunc<
   State,
-  [StyleSheetClone],
-  number
+  typeof determineBaselineWidth
 > = {
   "should determine the baseline width": (state, args, result) => {
     expect(result).toBe(state.master!.baselineWidths[state.sheetIndex - 1]);
   },
 };
 
-const batchRulesAssertions: AssertionChain<State, [RuleClone[]], RuleBatch[]> =
-  {
-    "should batch the rules": (state, args, result) => {
-      toBeEqualDefined(result, state.master!.ruleBatches[state.sheetIndex - 1]);
-    },
-  };
+const batchRulesAssertions: AssertionChainForFunc<State, typeof batchRules> = {
+  "should batch the rules": (state, args, result) => {
+    toBeEqualDefined(result, state.master!.ruleBatches[state.sheetIndex - 1]);
+  },
+};
 
-const batchRuleAssertions: AssertionChain<
-  State,
-  [RuleClone, BatchState, number],
-  BatchState
-> = {
+const batchRuleAssertions: AssertionChainForFunc<State, typeof batchRule> = {
   "should batch the rule": (state, args, result) => {
     const [rule, batchState] = args;
 
@@ -235,10 +225,9 @@ function assertChildFluidInsertions(
   }
 }
 
-const parseBatchesAssertions: AssertionChain<
+const parseBatchesAssertions: AssertionChainForFunc<
   State,
-  [RuleBatch[], ParseBatchesContext],
-  DocResultState
+  typeof parseBatches
 > = {
   "should parse the batches": (state, args, result, allAssertions) => {
     const [batches, ctx] = args;
@@ -262,11 +251,7 @@ const parseBatchesAssertions: AssertionChain<
   },
 };
 
-const parseBatchAssertions: AssertionChain<
-  State,
-  [RuleBatch, ParseBatchContext],
-  DocResultState
-> = {
+const parseBatchAssertions: AssertionChainForFunc<State, typeof parseBatch> = {
   "should parse the batch": (state, args, result, allAssertions) => {
     const [batch, ctx] = args;
 
@@ -289,10 +274,9 @@ const parseBatchAssertions: AssertionChain<
   },
 };
 
-const parseStyleRuleAssertions: AssertionChain<
+const parseStyleRuleAssertions: AssertionChainForFunc<
   State,
-  [StyleRuleClone, ParseStyleRuleContext],
-  FluidData
+  typeof parseStyleRule
 > = {
   "should parse the style rule": (state, args, result, allAssertions) => {
     const [rule, ctx] = args;
@@ -308,10 +292,9 @@ const parseStyleRuleAssertions: AssertionChain<
     );
   },
 };
-const parseSelectorAssertions: AssertionChain<
+const parseSelectorAssertions: AssertionChainForFunc<
   State,
-  [StyleRuleClone, string, ParseSelectorContext],
-  FluidData
+  typeof parseSelector
 > = {
   "should parse the selector": (state, args, result, allAssertions) => {
     const [rule, selector, ctx] = args;
@@ -330,10 +313,9 @@ const parseSelectorAssertions: AssertionChain<
   },
 };
 
-const parsePropertyAssertions: AssertionChain<
+const parsePropertyAssertions: AssertionChainForFunc<
   State,
-  [StyleRuleClone, string, ParsePropertyContext],
-  FluidData
+  typeof parseProperty
 > = {
   "should parse the property": (state, args, result) => {
     const [, property, ctx] = args;
@@ -350,10 +332,9 @@ const parsePropertyAssertions: AssertionChain<
   },
 };
 
-const parseNextBatchAssertions: AssertionChain<
+const parseNextBatchAssertions: AssertionChainForFunc<
   State,
-  [RuleBatch, ParseNextBatchContext],
-  FluidData
+  typeof parseNextBatch
 > = {
   "should parse the next rule batch": (state, args, result) => {
     const [, ctx] = args;
@@ -370,10 +351,9 @@ const parseNextBatchAssertions: AssertionChain<
   },
 };
 
-const parseNextRuleAssertions: AssertionChain<
+const parseNextRuleAssertions: AssertionChainForFunc<
   State,
-  [StyleRuleClone, ParseNextRuleContext],
-  FluidData
+  typeof parseNextRule
 > = {
   "should parse the next rule": (state, args, result) => {
     const [rule, ctx] = args;
@@ -391,10 +371,9 @@ const parseNextRuleAssertions: AssertionChain<
   },
 };
 
-const insertFluidDataAssertions: AssertionChain<
+const insertFluidDataAssertions: AssertionChainForFunc<
   State,
-  [FluidData, InsertFluidDataContext],
-  FluidData
+  typeof insertFluidData
 > = {
   "should insert the fluid data": (state, args, result) => {
     const [, ctx] = args;
