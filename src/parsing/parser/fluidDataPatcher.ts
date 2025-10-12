@@ -90,13 +90,16 @@ let parseProperty = (
   ) {
     const nextBatch = batches[nextBatchIndex];
     if (!nextBatch.isMediaQuery) return fluidData;
-    fluidData = parseNextBatch(nextBatch, {
+    const newFluidData = parseNextBatch(nextBatch, {
       ...ctx,
       minValue,
       property,
       fluidData,
       nextBatchIndex,
     });
+    if (newFluidData !== fluidData) {
+      return newFluidData;
+    }
   }
   return fluidData;
 };
