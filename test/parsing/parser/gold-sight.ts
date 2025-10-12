@@ -24,7 +24,7 @@ import {
   parseStyleSheets,
   wrap,
 } from "../../../src/parsing/parser/docParser";
-import { makeTestMessage, toBeEqualDefined } from "../../utils/vitest";
+import { toBeEqualDefined } from "../../utils/vitest";
 import {
   MEDIA_RULE_TYPE,
   STYLE_RULE_TYPE,
@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === "test") {
   expect = (await import("vitest")).expect;
 }
 
-export type State = {
+type State = {
   sheetIndex: number;
   master?: ParseDocMaster;
 };
