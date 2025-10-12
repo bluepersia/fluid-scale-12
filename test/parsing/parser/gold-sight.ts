@@ -27,6 +27,7 @@ import {
   ParsePropertyContext,
   ParseSelectorContext,
   ParseStyleRuleContext,
+  ParseStyleSheetContext,
   RuleBatch,
 } from "../../../src/parsing/parser/docParser.types";
 import {
@@ -58,6 +59,7 @@ import {
   parseSelector,
   parseStyleRule,
 } from "../../../src/parsing/parser/fluidDataPatcher";
+import { countStyleRulesInSheet } from "./masterController";
 
 let expect;
 if (process.env.NODE_ENV === "test") {
@@ -84,15 +86,31 @@ const parseStyleSheetsAssertions: AssertionChain<
   [StyleSheetClone[]],
   FluidData
 > = {
-  "should parse the style sheets": (state, args, result) => {},
+  "should parse the style sheets": (state, args, result) => {
+    expect(result).toEqual(state.master!.fluidData);
+  },
 };
 
 const parseStyleSheetAssertions: AssertionChain<
   State,
-  [StyleSheetClone],
+  [StyleSheetClone, ParseStyleSheetContext],
   DocResultState
 > = {
-  "should parse the style sheet": (state, args, result) => {},
+  "should parse the style sheet": (state, args, result, allAssertions) => {
+    const [, ctx] = args;
+
+    const {
+      docResultState: { fluidData, orderID },
+    } = ctx;
+
+    assertChildFluidInsertions(
+      (assertion) => assertion.args[2].sheetIndex === ctx.sheetIndex,
+      allAssertions,
+      { result: result.fluidData, state, prevFluidData: fluidData }
+    );
+
+    expect(result.orderID).toBe(orderID + 1 * countStyleRulesInSheet(args[0]));
+  },
 };
 
 const batchStyleSheetAssertions: AssertionChain<
@@ -198,8 +216,6 @@ function assertChildFluidInsertions(
       requirement(assertion)
     );
   });
-
-  console.log(propertyAssertions.length);
 
   for (const propertyAssertion of propertyAssertions) {
     const [, property, propertyCtx] = propertyAssertion.args;
