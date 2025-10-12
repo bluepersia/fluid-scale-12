@@ -323,10 +323,9 @@ const parseSelectorAssertions: AssertionChain<
     assertChildFluidInsertions(
       (assertion) =>
         assertion.args[2].selector === selector &&
-        assertion.args[0].rule === rule &&
+        assertion.args[0] === rule &&
         assertion.args[2].batchIndex === batchIndex &&
-        assertion.args[2].batches === batches &&
-        assertion.args[0] === rule,
+        assertion.args[2].batches === batches,
       allAssertions,
       { result, state, prevFluidData: fluidData }
     );
