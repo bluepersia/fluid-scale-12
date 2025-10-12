@@ -15,6 +15,7 @@ import {
   ParseDocResults,
   RuleBatch,
 } from "./docParser.types";
+import { wrap as wrapFluidDataPatcher } from "./fluidDataPatcher";
 
 let parseDocument = (docClone: DocumentClone): ParseDocResults => {
   const { breakpoints, globalBaselineWidth } = parseMediaRules(
@@ -192,7 +193,13 @@ function wrap(
   determineBaselineWidthWrapped: (
     styleSheet: StyleSheetClone,
     globalBaselineWidth: number
-  ) => number
+  ) => number,
+  cloneFluidDataWrapped: (
+    fluidData: FluidData,
+    anchor: string,
+    selector: string,
+    property: string
+  ) => FluidData
 ) {
   parseDocument = parseDocumentWrapped;
   parseStyleSheets = parseStyleSheetsWrapped;
@@ -202,6 +209,7 @@ function wrap(
   batchRule = batchRuleWrapped;
   cloneBatchState = cloneBatchStateWrapped;
   determineBaselineWidth = determineBaselineWidthWrapped;
+  wrapFluidDataPatcher(cloneFluidDataWrapped);
 }
 
 export { wrap };

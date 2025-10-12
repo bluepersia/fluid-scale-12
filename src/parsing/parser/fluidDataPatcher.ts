@@ -156,12 +156,12 @@ function insertFluidData(fluidData: FluidData, ctx: InsertFluidDataContext) {
   return newFluidData;
 }
 
-function cloneFluidData(
+let cloneFluidData = (
   fluidData: FluidData,
   anchor: string,
   selector: string,
   property: string
-): FluidData {
+): FluidData => {
   const newFluidData = { ...fluidData };
   if (newFluidData[anchor]) newFluidData[anchor] = { ...newFluidData[anchor] };
   if (newFluidData[anchor]?.[selector])
@@ -175,7 +175,7 @@ function cloneFluidData(
     ];
   }
   return newFluidData;
-}
+};
 
 function parseFluidValue2D(value: string): FluidValue[][] {
   let depth = 0;
@@ -216,4 +216,22 @@ function parseFluidValue(strValue: string): FluidValue {
   } as FluidValueSingle;
 }
 
-export { parseBatches, parseFluidValue2D, parseFluidValue1D, parseFluidValue };
+function wrap(
+  cloneFluidDataWrapped: (
+    fluidData: FluidData,
+    anchor: string,
+    selector: string,
+    property: string
+  ) => FluidData
+) {
+  cloneFluidData = cloneFluidDataWrapped;
+}
+
+export {
+  parseBatches,
+  cloneFluidData,
+  parseFluidValue2D,
+  parseFluidValue1D,
+  parseFluidValue,
+  wrap,
+};

@@ -30,6 +30,7 @@ import {
   STYLE_RULE_TYPE,
 } from "../../../src/parsing/serialization/docSerializerConsts";
 import { deepClone } from "../../utils/objectCloner";
+import { cloneFluidData } from "../../../src/parsing/parser/fluidDataPatcher";
 
 let expect;
 if (process.env.NODE_ENV === "test") {
@@ -150,6 +151,47 @@ const cloneBatchStateAssertions: AssertionChain<
   },
 };
 
+const cloneFluidDataAssertions: AssertionChain<
+  State,
+  [FluidData, FluidData, any, any, any, any, string, string, string],
+  FluidData
+> = {
+  "should clone the fluid data": (state, args, result) => {
+    const [
+      srcClone,
+      fluidDataRef,
+      anchorRef,
+      selectorRef,
+      propertyRef,
+      rangesRef,
+      anchor,
+      selector,
+      property,
+    ] = args;
+
+    expect(result).not.toBe(fluidDataRef);
+
+    if (srcClone[anchor]) {
+      expect(result[anchor]).not.toBe(anchorRef);
+
+      if (srcClone[anchor][selector]) {
+        expect(result[anchor][selector]).not.toBe(selectorRef);
+
+        if (srcClone[anchor][selector][property]) {
+          expect(result[anchor][selector][property]).not.toBe(propertyRef);
+          expect(result[anchor][selector][property].ranges).not.toBe(rangesRef);
+        } else {
+          expect(result[anchor][selector][property]).toBeUndefined();
+        }
+      } else {
+        expect(result[anchor][selector]).toBeUndefined();
+      }
+    } else {
+      expect(result[anchor]).toBeUndefined();
+    }
+  },
+};
+
 const defaultAssertions = {
   parseDocument: parseDocAssertions,
   parseStyleSheets: parseStyleSheetsAssertions,
@@ -159,6 +201,7 @@ const defaultAssertions = {
   batchRules: batchRulesAssertions,
   batchRule: batchRuleAssertions,
   cloneBatchState: cloneBatchStateAssertions,
+  cloneFluidData: cloneFluidDataAssertions,
 };
 
 class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
@@ -198,6 +241,8 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
       return [result, result.batches, result.currentBatch, deepClone(result)];
     },
   });
+
+  cloneFluidData = this.wrapFn(cloneFluidData, "cloneFluidData");
 }
 
 const parseDocAssertionMaster = new ParseDocAssertionMaster();
@@ -211,7 +256,8 @@ function wrapAll() {
     parseDocAssertionMaster.batchRules,
     parseDocAssertionMaster.batchRule,
     parseDocAssertionMaster.cloneBatchState,
-    parseDocAssertionMaster.determineBaselineWidth
+    parseDocAssertionMaster.determineBaselineWidth,
+    parseDocAssertionMaster.cloneFluidData
   );
 }
 
