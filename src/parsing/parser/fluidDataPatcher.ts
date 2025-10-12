@@ -198,12 +198,12 @@ let parseFluidValue2D = (value: string): FluidValue[][] => {
   return values;
 };
 
-let parseFluidValue1D = (value: string): FluidValue[] => {
+function parseFluidValue1D(value: string): FluidValue[] {
   const values: string[] = splitBySpaces(value);
   return values.map(parseFluidValue);
-};
+}
 
-let parseFluidValue = (strValue: string): FluidValue => {
+function parseFluidValue(strValue: string): FluidValue {
   const value = parseFloat(strValue);
 
   // Match any alphabetic characters after the number
@@ -214,6 +214,6 @@ let parseFluidValue = (strValue: string): FluidValue => {
     value,
     unit,
   } as FluidValueSingle;
-};
+}
 
 export { parseBatches, parseFluidValue2D, parseFluidValue1D, parseFluidValue };
