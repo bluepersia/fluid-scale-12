@@ -8,6 +8,7 @@ import {
   parseFluidValue1D,
   parseFluidValue2D,
 } from "../../../src/parsing/parser/fluidDataPatcher";
+import { splitSelectors } from "../../../../FluidScaleB5/src/parse/parse";
 
 describe("parseDocument", () => {
   test.each(masterCollection)("should parse the document", (master) => {
@@ -105,6 +106,33 @@ describe("make fluid value", () => {
     (testCase) => {
       const { value, expected } = testCase;
       const result = parseFluidValue2D(value);
+
+      expect(result).toEqual(expected);
+    }
+  );
+});
+
+describe("splitSelectors", () => {
+  const splitSelectorsTests = [
+    {
+      selectors: ".product-card__price--actual, .product-card__price--original",
+      expected: [
+        ".product-card__price--actual",
+        ".product-card__price--original",
+      ],
+    },
+    {
+      selectors: ".product-card__price--actual",
+      expected: [".product-card__price--actual"],
+    },
+  ];
+
+  test.each(splitSelectorsTests)(
+    "should split selectors",
+    (propertyExpectations) => {
+      const { selectors, expected } = propertyExpectations;
+
+      const result = splitSelectors(selectors);
 
       expect(result).toEqual(expected);
     }

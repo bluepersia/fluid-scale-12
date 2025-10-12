@@ -47,11 +47,15 @@ let parseStyleRule = (
   ctx: ParseStyleRuleContext
 ): FluidData => {
   let { fluidData } = ctx;
-  for (const selector of styleRule.selectorText.split(",")) {
+  for (const selector of splitSelector(styleRule.selectorText)) {
     fluidData = parseSelector(styleRule, selector, { ...ctx, fluidData });
   }
   return fluidData;
 };
+
+function splitSelector(selector: string): string[] {
+  return selector.split(",").map((selector) => selector.trim());
+}
 
 let parseSelector = (
   styleRule: StyleRuleClone,
@@ -105,7 +109,7 @@ function parseNextBatch(
   for (const nextRule of nextBatch.rules) {
     if (nextRule.type !== STYLE_RULE_TYPE) continue;
     const nextStyleRule = nextRule as StyleRuleClone;
-    if (!nextStyleRule.selectorText.split(",").includes(selector)) continue;
+    if (!splitSelector(nextStyleRule.selectorText).includes(selector)) continue;
     fluidData = parseNextRule(nextStyleRule, { ...ctx, fluidData });
   }
   return fluidData;
@@ -160,9 +164,9 @@ function cloneFluidData(
 ): FluidData {
   const newFluidData = { ...fluidData };
   if (newFluidData[anchor]) newFluidData[anchor] = { ...newFluidData[anchor] };
-  if (newFluidData[anchor][selector])
+  if (newFluidData[anchor]?.[selector])
     newFluidData[anchor][selector] = { ...newFluidData[anchor][selector] };
-  if (newFluidData[anchor][selector][property]) {
+  if (newFluidData[anchor]?.[selector]?.[property]) {
     newFluidData[anchor][selector][property] = {
       ...newFluidData[anchor][selector][property],
     };
