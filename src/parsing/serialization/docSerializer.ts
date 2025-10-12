@@ -83,7 +83,7 @@ let serializeStyleRule = (
   rule: CSSStyleRule,
   ctx: SerializeDocContext
 ): StyleRuleClone | null => {
-  const { style, specialProps } = cloneStyleProps(rule, ctx);
+  const { style, specialProps } = serializeStyleProps(rule, ctx);
   if (Object.keys(style).length <= 0) return null;
   return {
     type: STYLE_RULE_TYPE,
@@ -93,7 +93,7 @@ let serializeStyleRule = (
   } as StyleRuleClone;
 };
 
-let cloneStyleProps = (
+let serializeStyleProps = (
   rule: CSSStyleRule,
   ctx: SerializeDocContext
 ): StyleResults => {
@@ -101,12 +101,12 @@ let cloneStyleProps = (
 
   for (let i = 0; i < rule.style.length; i++) {
     const prop = rule.style[i];
-    styleResults = cloneStyleProp(rule, prop, { ...ctx, styleResults });
+    styleResults = serializeStyleProp(rule, prop, { ...ctx, styleResults });
   }
   return styleResults;
 };
 
-let cloneStyleProp = (
+let serializeStyleProp = (
   rule: CSSStyleRule,
   prop: string,
   ctx: CloneStylePropContext
@@ -116,7 +116,7 @@ let cloneStyleProp = (
   styleResults = { ...styleResults };
 
   if (FLUID_PROPERTY_NAMES.has(prop)) {
-    styleResults.style = cloneFluidProp(rule, prop, ctx);
+    styleResults.style = serializeFluidProp(rule, prop, ctx);
   } else if (SPECIAL_PROPERTIES.has(prop)) {
     const specialProps = (styleResults.specialProps = {
       ...styleResults.specialProps,
@@ -126,7 +126,7 @@ let cloneStyleProp = (
   return styleResults;
 };
 
-let cloneFluidProp = (
+let serializeFluidProp = (
   rule: CSSStyleRule,
   prop: string,
   ctx: CloneStylePropContext
@@ -226,16 +226,16 @@ function wrap(
     rule: CSSMediaRule,
     ctx: SerializeDocContext
   ) => MediaRuleClone | null,
-  cloneStylePropsWrapped: (
+  serializeStylePropsWrapped: (
     rule: CSSStyleRule,
     ctx: SerializeDocContext
   ) => StyleResults,
-  cloneStylePropWrapped: (
+  serializeStylePropWrapped: (
     rule: CSSStyleRule,
     prop: string,
     ctx: CloneStylePropContext
   ) => StyleResults,
-  cloneFluidPropWrapped: (
+  serializeFluidPropWrapped: (
     rule: CSSStyleRule,
     prop: string,
     ctx: CloneStylePropContext
@@ -254,9 +254,9 @@ function wrap(
   serializeRule = serializeRuleWrapped;
   serializeStyleRule = serializeStyleRuleWrapped;
   serializeMediaRule = serializeMediaRuleWrapped;
-  cloneStyleProps = cloneStylePropsWrapped;
-  cloneStyleProp = cloneStylePropWrapped;
-  cloneFluidProp = cloneFluidPropWrapped;
+  serializeStyleProps = serializeStylePropsWrapped;
+  serializeStyleProp = serializeStylePropWrapped;
+  serializeFluidProp = serializeFluidPropWrapped;
   applyExplicitPropsFromShorthand = applyExplicitPropsFromShorthandWrapped;
 }
 
@@ -269,9 +269,9 @@ export {
   serializeRule,
   serializeStyleRule,
   serializeMediaRule,
-  cloneStyleProps,
-  cloneStyleProp,
-  cloneFluidProp,
+  serializeStyleProp,
+  serializeStyleProps,
+  serializeFluidProp,
   applyExplicitPropsFromShorthand,
   wrap,
 };

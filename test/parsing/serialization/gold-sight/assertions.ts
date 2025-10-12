@@ -8,15 +8,8 @@ import { AssertFluidPropContext, NullRule } from "../index.types";
 import { State } from "./gold-sight";
 
 import {
-  ApplyExplicitPropsFromShorthandContext,
-  CloneStylePropContext,
-  DocumentClone,
   MediaRuleClone,
-  RuleClone,
-  SerializeDocContext,
-  StyleResults,
   StyleRuleClone,
-  StyleSheetClone,
 } from "../../../../src/parsing/serialization/docSerializer.types";
 import {
   clearNullsForDoc,
@@ -44,9 +37,9 @@ import {
 import { toBeEqualDefined } from "../../../utils/vitest";
 import {
   applyExplicitPropsFromShorthand,
-  cloneFluidProp,
-  cloneStyleProp,
-  cloneStyleProps,
+  serializeFluidProp,
+  serializeStyleProp,
+  serializeStyleProps,
   getAccessibleStyleSheets,
   serializeDocument,
   serializeMediaRule,
@@ -176,9 +169,9 @@ const serializeMediaRuleAssertions: AssertionChainForFunc<
   },
 };
 
-const cloneStylePropsAssertions: AssertionChainForFunc<
+const serializeStylePropsAssertions: AssertionChainForFunc<
   State,
-  typeof cloneStyleProps
+  typeof serializeStyleProps
 > = {
   "should clone the style props": (state, args, result) => {
     let { style, specialProps } = result;
@@ -200,9 +193,9 @@ const cloneStylePropsAssertions: AssertionChainForFunc<
   },
 };
 
-const cloneStylePropAssertions: AssertionChainForFunc<
+const serializeStylePropAssertions: AssertionChainForFunc<
   State,
-  typeof cloneStyleProp
+  typeof serializeStyleProp
 > = {
   "should clone the style prop": (state, args, result) => {
     const [rule, prop, ctx] = args;
@@ -239,9 +232,9 @@ function assertFluidProp(prop: string, ctx: AssertFluidPropContext) {
   }
 }
 
-const cloneFluidPropAssertions: AssertionChainForFunc<
+const serializeFluidPropAssertions: AssertionChainForFunc<
   State,
-  typeof cloneFluidProp
+  typeof serializeFluidProp
 > = {
   "should clone the fluid prop": (state, args, result) => {
     const [rule, prop, ctx] = args;
@@ -297,9 +290,9 @@ const defaultAssertions = {
   serializeRule: serializeRuleAssertions,
   serializeStyleRule: serializeStyleRuleAssertions,
   serializeMediaRule: serializeMediaRuleAssertions,
-  cloneStyleProps: cloneStylePropsAssertions,
-  cloneStyleProp: cloneStylePropAssertions,
-  cloneFluidProp: cloneFluidPropAssertions,
+  serializeStyleProps: serializeStylePropsAssertions,
+  serializeStyleProp: serializeStylePropAssertions,
+  serializeFluidProp: serializeFluidPropAssertions,
   applyExplicitPropsFromShorthand: applyExplicitPropsFromShorthandAssertions,
 };
 
