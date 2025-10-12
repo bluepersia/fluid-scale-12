@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === "test") {
   expect = (await import("vitest")).expect;
 }
 
-type State = {
+export type State = {
   sheetIndex: number;
   master?: ParseDocMaster;
 };
