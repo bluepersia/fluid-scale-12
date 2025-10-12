@@ -20,6 +20,7 @@ import {
   FluidRange,
   InsertFluidDataContext,
   ParseBatchContext,
+  ParseBatchesContext,
   ParseDocResults,
   ParseNextBatchContext,
   ParseNextRuleContext,
@@ -220,13 +221,15 @@ function assertChildFluidInsertions(
 
 const parseBatchesAssertions: AssertionChain<
   State,
-  [RuleBatch[], DocResultState],
+  [RuleBatch[], ParseBatchesContext],
   DocResultState
 > = {
   "should parse the batches": (state, args, result, allAssertions) => {
-    const [batches, docResultState] = args;
+    const [batches, ctx] = args;
 
-    const { orderID, fluidData } = docResultState;
+    const {
+      docResultState: { orderID, fluidData },
+    } = ctx;
 
     assertChildFluidInsertions(
       (assertion) => assertion.args[2].batches === batches,
