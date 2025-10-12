@@ -1,5 +1,11 @@
-import AssertionMaster, { AssertionChain } from "gold-sight";
-import { ParseDocMaster } from "./index.types";
+import AssertionMaster, {
+  AssertionBlueprint,
+  AssertionChain,
+} from "gold-sight";
+import {
+  AssertChildFluidInsertionsContext,
+  ParseDocMaster,
+} from "./index.types";
 import {
   DocumentClone,
   MediaRuleClone,
@@ -44,6 +50,7 @@ import {
   getAnchor,
   insertFluidData,
   parseBatch,
+  parseBatches,
   parseNextBatch,
   parseNextRule,
   parseProperty,
@@ -56,7 +63,7 @@ if (process.env.NODE_ENV === "test") {
   expect = (await import("vitest")).expect;
 }
 
-type State = {
+export type State = {
   sheetIndex: number;
   master?: ParseDocMaster;
 };
@@ -176,6 +183,66 @@ function assertFluidRangeInsertion(
   );
 }
 
+function assertChildFluidInsertions(
+  requirement: (assertion: AssertionBlueprint) => boolean,
+  allAssertions: AssertionBlueprint[],
+  ctx: AssertChildFluidInsertionsContext
+) {
+  const { result, state, prevFluidData } = ctx;
+
+  const propertyAssertions = allAssertions.filter((assertion) => {
+    return (
+      assertion.name === "parseProperty" &&
+      assertion.args[2].fluidData !== assertion.result &&
+      requirement(assertion)
+    );
+  });
+
+  console.log(propertyAssertions.length);
+
+  for (const propertyAssertion of propertyAssertions) {
+    const [, property, propertyCtx] = propertyAssertion.args;
+
+    const { selector } = propertyCtx;
+
+    assertFluidRangeInsertion(
+      result,
+      {
+        fluidData: prevFluidData,
+        anchor: getAnchor(selector),
+        selector,
+        property,
+      },
+      state
+    );
+  }
+}
+
+const parseBatchesAssertions: AssertionChain<
+  State,
+  [RuleBatch[], DocResultState],
+  DocResultState
+> = {
+  "should parse the batches": (state, args, result, allAssertions) => {
+    const [batches, docResultState] = args;
+
+    const { orderID, fluidData } = docResultState;
+
+    assertChildFluidInsertions(
+      (assertion) => assertion.args[2].batches === batches,
+      allAssertions,
+      { result: result.fluidData, state, prevFluidData: fluidData }
+    );
+
+    const ruleCount = batches.reduce(
+      (acc, batch) => acc + batch.rules.length,
+      0
+    );
+
+    expect(result.orderID).toBe(orderID + 1 * ruleCount);
+  },
+};
+
 const parseBatchAssertions: AssertionChain<
   State,
   [RuleBatch, ParseBatchContext],
@@ -190,26 +257,13 @@ const parseBatchAssertions: AssertionChain<
       batches,
     } = ctx;
 
-    const propertyAssertions = allAssertions.filter(
-      ({ name, args, result: propertyResult }) =>
-        name === "parseProperty" &&
-        args[2].fluidData !== propertyResult &&
-        args[2].batchIndex === batchIndex &&
-        args[2].batches === batches
+    assertChildFluidInsertions(
+      (assertion) =>
+        assertion.args[2].batchIndex === batchIndex &&
+        assertion.args[2].batches === batches,
+      allAssertions,
+      { result: result.fluidData, state, prevFluidData: fluidData }
     );
-
-    for (const propertyAssertion of propertyAssertions) {
-      const [, property, propertyCtx] = propertyAssertion.args;
-
-      const { selector } = propertyCtx;
-
-      console.log(selector, result.fluidData);
-      assertFluidRangeInsertion(
-        result.fluidData,
-        { ...ctx, fluidData, anchor: getAnchor(selector), selector, property },
-        state
-      );
-    }
 
     const ruleCount = batch.rules.length;
     expect(result.orderID).toBe(orderID + 1 * ruleCount);
@@ -225,26 +279,14 @@ const parseStyleRuleAssertions: AssertionChain<
     const [rule, ctx] = args;
     const { fluidData, batchIndex, batches } = ctx;
 
-    const propertyAssertions = allAssertions.filter(
-      ({ name, args, result: propertyResult }) =>
-        name === "parseProperty" &&
-        args[0] === rule &&
-        args[2].fluidData !== propertyResult &&
-        args[2].batchIndex === batchIndex &&
-        args[2].batches === batches
+    assertChildFluidInsertions(
+      (assertion) =>
+        assertion.args[2].batchIndex === batchIndex &&
+        assertion.args[2].batches === batches &&
+        assertion.args[0] === rule,
+      allAssertions,
+      { result, state, prevFluidData: fluidData }
     );
-
-    for (const propertyAssertion of propertyAssertions) {
-      const [, property, propertyCtx] = propertyAssertion.args;
-
-      const { selector } = propertyCtx;
-
-      assertFluidRangeInsertion(
-        result,
-        { ...ctx, fluidData, anchor: getAnchor(selector), selector, property },
-        state
-      );
-    }
   },
 };
 const parseSelectorAssertions: AssertionChain<
@@ -257,24 +299,16 @@ const parseSelectorAssertions: AssertionChain<
 
     const { fluidData, batchIndex, batches } = ctx;
 
-    const propertyAssertions = allAssertions.filter(
-      ({ name, args, result: propertyResult }) =>
-        name === "parseProperty" &&
-        args[2].selector === selector &&
-        args[2].fluidData !== propertyResult &&
-        args[2].batchIndex === batchIndex &&
-        args[2].batches === batches
+    assertChildFluidInsertions(
+      (assertion) =>
+        assertion.args[2].selector === selector &&
+        assertion.args[0].rule === rule &&
+        assertion.args[2].batchIndex === batchIndex &&
+        assertion.args[2].batches === batches &&
+        assertion.args[0] === rule,
+      allAssertions,
+      { result, state, prevFluidData: fluidData }
     );
-
-    for (const propertyAssertion of propertyAssertions) {
-      const [, property] = propertyAssertion.args;
-
-      assertFluidRangeInsertion(
-        result,
-        { fluidData, anchor: getAnchor(selector), selector, property },
-        state
-      );
-    }
   },
 };
 
@@ -437,6 +471,7 @@ const defaultAssertions = {
   batchRules: batchRulesAssertions,
   batchRule: batchRuleAssertions,
   cloneBatchState: cloneBatchStateAssertions,
+  parseBatches: parseBatchesAssertions,
   parseBatch: parseBatchAssertions,
   parseStyleRule: parseStyleRuleAssertions,
   parseSelector: parseSelectorAssertions,
@@ -485,6 +520,8 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
     },
   });
 
+  parseBatches = this.wrapFn(parseBatches, "parseBatches");
+
   parseBatch = this.wrapFn(parseBatch, "parseBatch");
 
   parseStyleRule = this.wrapFn(parseStyleRule, "parseStyleRule");
@@ -527,6 +564,7 @@ function wrapAll() {
     parseDocAssertionMaster.batchRule,
     parseDocAssertionMaster.cloneBatchState,
     parseDocAssertionMaster.determineBaselineWidth,
+    parseDocAssertionMaster.parseBatches,
     parseDocAssertionMaster.parseBatch,
     parseDocAssertionMaster.parseStyleRule,
     parseDocAssertionMaster.parseSelector,

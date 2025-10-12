@@ -4,6 +4,7 @@ import {
 } from "../../../src/parsing/parser/docParser.types";
 import { DocumentClone } from "../../../src/parsing/serialization/docSerializer.types";
 import { Master } from "../../golden-master/index.types";
+import { State } from "./gold-sight";
 
 type ParseDocMaster = Master & {
   breakpoints: number[];
@@ -13,4 +14,10 @@ type ParseDocMaster = Master & {
   fluidData: FluidData;
 };
 
-export { ParseDocMaster };
+type AssertChildFluidInsertionsContext = {
+  result: FluidData;
+  state: State;
+  prevFluidData: FluidData;
+};
+
+export { ParseDocMaster, AssertChildFluidInsertionsContext };

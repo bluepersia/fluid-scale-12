@@ -200,6 +200,10 @@ function wrap(
     styleSheet: StyleSheetClone,
     globalBaselineWidth: number
   ) => number,
+  parseBatchesWrapped: (
+    batches: RuleBatch[],
+    ctx: DocResultState
+  ) => DocResultState,
   parseBatchWrapped: (
     batch: RuleBatch,
     ctx: ParseBatchContext
@@ -246,6 +250,7 @@ function wrap(
   cloneBatchState = cloneBatchStateWrapped;
   determineBaselineWidth = determineBaselineWidthWrapped;
   wrapFluidDataPatcher(
+    parseBatchesWrapped,
     parseBatchWrapped,
     parseStyleRuleWrapped,
     parseSelectorWrapped,
