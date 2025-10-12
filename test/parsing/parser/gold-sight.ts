@@ -14,6 +14,7 @@ import {
   FluidRange,
   InsertFluidDataContext,
   ParseDocResults,
+  ParseNextBatchContext,
   ParseNextRuleContext,
   RuleBatch,
 } from "../../../src/parsing/parser/docParser.types";
@@ -38,6 +39,7 @@ import {
   cloneFluidData,
   getAnchor,
   insertFluidData,
+  parseNextBatch,
   parseNextRule,
 } from "../../../src/parsing/parser/fluidDataPatcher";
 
@@ -152,6 +154,26 @@ function assertFluidRangeInsertion(
     ]
   );
 }
+
+const parseNextBatchAssertions: AssertionChain<
+  State,
+  [RuleBatch, ParseNextBatchContext],
+  FluidData
+> = {
+  "should parse the next rule batch": (state, args, result) => {
+    const [, ctx] = args;
+
+    const { fluidData, selector } = ctx;
+
+    if (result === fluidData) {
+      return;
+    }
+
+    const anchor = getAnchor(selector);
+
+    assertFluidRangeInsertion(result, { ...ctx, anchor }, state);
+  },
+};
 
 const parseNextRuleAssertions: AssertionChain<
   State,
@@ -273,6 +295,7 @@ const defaultAssertions = {
   batchRule: batchRuleAssertions,
   cloneBatchState: cloneBatchStateAssertions,
   parseNextRule: parseNextRuleAssertions,
+  parseNextBatch: parseNextBatchAssertions,
   insertFluidData: insertFluidDataAssertions,
   cloneFluidData: cloneFluidDataAssertions,
 };
@@ -317,6 +340,8 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
 
   parseNextRule = this.wrapFn(parseNextRule, "parseNextRule");
 
+  parseNextBatch = this.wrapFn(parseNextBatch, "parseNextBatch");
+
   insertFluidData = this.wrapFn(insertFluidData, "insertFluidData");
 
   cloneFluidData = this.wrapFn(cloneFluidData, "cloneFluidData", {
@@ -347,6 +372,7 @@ function wrapAll() {
     parseDocAssertionMaster.batchRule,
     parseDocAssertionMaster.cloneBatchState,
     parseDocAssertionMaster.determineBaselineWidth,
+    parseDocAssertionMaster.parseNextBatch,
     parseDocAssertionMaster.parseNextRule,
     parseDocAssertionMaster.insertFluidData,
     parseDocAssertionMaster.cloneFluidData

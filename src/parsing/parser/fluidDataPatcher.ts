@@ -89,7 +89,7 @@ let parseProperty = (
     nextBatchIndex++
   ) {
     const nextBatch = batches[nextBatchIndex];
-
+    if (!nextBatch.isMediaQuery) return fluidData;
     fluidData = parseNextBatch(nextBatch, {
       ...ctx,
       minValue,
@@ -101,20 +101,23 @@ let parseProperty = (
   return fluidData;
 };
 
-function parseNextBatch(
+let parseNextBatch = (
   nextBatch: RuleBatch,
   ctx: ParseNextBatchContext
-): FluidData {
-  let { fluidData } = ctx;
+): FluidData => {
+  const { fluidData } = ctx;
   const { selector } = ctx;
   for (const nextRule of nextBatch.rules) {
     if (nextRule.type !== STYLE_RULE_TYPE) continue;
     const nextStyleRule = nextRule as StyleRuleClone;
     if (!splitSelector(nextStyleRule.selectorText).includes(selector)) continue;
-    fluidData = parseNextRule(nextStyleRule, { ...ctx, fluidData });
+    const newFluidData = parseNextRule(nextStyleRule, { ...ctx, fluidData });
+    if (newFluidData !== fluidData) {
+      return newFluidData;
+    }
   }
   return fluidData;
-}
+};
 
 let parseNextRule = (
   nextStyleRule: StyleRuleClone,
@@ -223,6 +226,10 @@ function parseFluidValue(strValue: string): FluidValue {
 }
 
 function wrap(
+  parseNextBatchWrapped: (
+    nextBatch: RuleBatch,
+    ctx: ParseNextBatchContext
+  ) => FluidData,
   parseNextRuleWrapped: (
     nextStyleRule: StyleRuleClone,
     ctx: ParseNextRuleContext
@@ -238,6 +245,7 @@ function wrap(
     property: string
   ) => FluidData
 ) {
+  parseNextBatch = parseNextBatchWrapped;
   parseNextRule = parseNextRuleWrapped;
   insertFluidData = insertFluidDataWrapped;
   cloneFluidData = cloneFluidDataWrapped;
@@ -245,6 +253,7 @@ function wrap(
 
 export {
   parseBatches,
+  parseNextBatch,
   parseNextRule,
   insertFluidData,
   cloneFluidData,
