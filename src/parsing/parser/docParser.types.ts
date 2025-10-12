@@ -2,6 +2,7 @@ import { RuleClone } from "../serialization/docSerializer.types";
 
 type ParseDocResults = {
   breakpoints: number[];
+  fluidData: FluidData;
 };
 
 type FluidData = {

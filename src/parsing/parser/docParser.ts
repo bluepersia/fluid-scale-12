@@ -32,9 +32,13 @@ let parseDocument = (docClone: DocumentClone): ParseDocResults => {
     docClone.styleSheets
   );
 
-  parseStyleSheets(docClone.styleSheets, breakpoints, globalBaselineWidth);
+  const fluidData = parseStyleSheets(
+    docClone.styleSheets,
+    breakpoints,
+    globalBaselineWidth
+  );
 
-  return { breakpoints };
+  return { breakpoints, fluidData };
 };
 
 function parseMediaRules(styleSheets: StyleSheetClone[]) {
