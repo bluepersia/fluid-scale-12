@@ -134,6 +134,21 @@ const batchRuleAssertions: AssertionChain<
   },
 };
 
+function assertFluidRangeInsertion(
+  result: FluidData,
+  ctx: Pick<InsertFluidDataContext, "anchor" | "selector" | "property">,
+  state: State
+) {
+  const { anchor, selector, property } = ctx;
+  const rangesResult = result[anchor][selector][property].ranges;
+  toBeEqualDefined(
+    rangesResult[rangesResult.length - 1],
+    state.master!.fluidData[anchor][selector][property].ranges[
+      rangesResult.length - 1
+    ]
+  );
+}
+
 const insertFluidDataAssertions: AssertionChain<
   State,
   [FluidData, InsertFluidDataContext],
@@ -141,16 +156,8 @@ const insertFluidDataAssertions: AssertionChain<
 > = {
   "should insert the fluid data": (state, args, result) => {
     const [, ctx] = args;
-    const { anchor, selector, property } = ctx;
 
-    const rangesResult = result[anchor][selector][property].ranges;
-
-    toBeEqualDefined(
-      rangesResult[rangesResult.length - 1],
-      state.master!.fluidData[anchor][selector][property].ranges[
-        rangesResult.length - 1
-      ]
-    );
+    assertFluidRangeInsertion(result, ctx, state);
   },
 };
 

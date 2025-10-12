@@ -89,6 +89,7 @@ let parseProperty = (
     nextBatchIndex++
   ) {
     const nextBatch = batches[nextBatchIndex];
+
     fluidData = parseNextBatch(nextBatch, {
       ...ctx,
       minValue,
