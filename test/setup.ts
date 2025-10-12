@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { PlaywrightPage } from "./index.types";
 import { generateJSDOMDocument } from "../src/parsing/json-builder";
-import { wrapAll as wrapAllSerializeDoc } from "./parsing/serialization/gold-sight";
+import { wrapAll as wrapAllSerializeDoc } from "./parsing/serialization/gold-sight/gold-sight";
 import { wrapAll as wrapAllParseDoc } from "./parsing/parser/gold-sight";
 
 const __filename = fileURLToPath(import.meta.url);

@@ -3,12 +3,10 @@ if (process.env.NODE_ENV === "test") {
   expect = (await import("vitest")).expect;
 }
 
-import AssertionMaster, { AssertionChain } from "gold-sight";
-import {
-  AssertFluidPropContext,
-  NullRule,
-  SerializeDocMaster,
-} from "./index.types";
+import { AssertionChain } from "gold-sight";
+import { AssertFluidPropContext, NullRule } from "../index.types";
+import { State } from "./gold-sight";
+
 import {
   ApplyExplicitPropsFromShorthandContext,
   CloneStylePropContext,
@@ -19,7 +17,7 @@ import {
   StyleResults,
   StyleRuleClone,
   StyleSheetClone,
-} from "../../../src/parsing/serialization/docSerializer.types";
+} from "../../../../src/parsing/serialization/docSerializer.types";
 import {
   clearNullsForDoc,
   clearNullsForRule,
@@ -36,37 +34,14 @@ import {
   normalizeRules,
   normalizeRule,
   normalizeStyle,
-} from "./masterController";
-import {
-  applyExplicitPropsFromShorthand,
-  cloneFluidProp,
-  cloneStyleProp,
-  cloneStyleProps,
-  getAccessibleStyleSheets,
-  serializeDocument,
-  serializeMediaRule,
-  serializeRule,
-  serializeRules,
-  serializeStyleRule,
-  serializeStyleSheet,
-  serializeStyleSheets,
-  wrap,
-} from "../../../src/parsing/serialization/docSerializer";
+} from "../masterController";
+
 import {
   FLUID_PROPERTY_NAMES,
   SHORTHAND_PROPERTIES,
   SPECIAL_PROPERTIES,
-} from "../../../src/parsing/serialization/docSerializerConsts";
-import { makeTestMessage, toBeEqualDefined } from "../../utils/vitest";
-
-type State = {
-  sheetIndex: number;
-  ruleIndex: number;
-  rulesIndex: number;
-  styleRuleIndex: number;
-  mediaRuleIndex: number;
-  master?: SerializeDocMaster;
-};
+} from "../../../../src/parsing/serialization/docSerializerConsts";
+import { toBeEqualDefined } from "../../../utils/vitest";
 
 const serializeDocAssertions: AssertionChain<State, [Document], DocumentClone> =
   {
@@ -323,98 +298,4 @@ const defaultAssertions = {
   applyExplicitPropsFromShorthand: applyExplicitPropsFromShorthandAssertions,
 };
 
-class SerializeDocAssertionMaster extends AssertionMaster<
-  State,
-  SerializeDocMaster
-> {
-  constructor() {
-    super(defaultAssertions, "serializeDoc");
-  }
-  newState(): State {
-    return {
-      sheetIndex: 0,
-      ruleIndex: 0,
-      rulesIndex: 0,
-      styleRuleIndex: 0,
-      mediaRuleIndex: 0,
-    };
-  }
-
-  serializeDocument = this.wrapTopFn(serializeDocument, "serializeDocument");
-
-  getAccessibleStyleSheets = this.wrapFn(
-    getAccessibleStyleSheets,
-    "getAccessibleStyleSheets"
-  );
-
-  serializeStyleSheets = this.wrapFn(
-    serializeStyleSheets,
-    "serializeStyleSheets"
-  );
-
-  serializeStyleSheet = this.wrapFn(
-    serializeStyleSheet,
-    "serializeStyleSheet",
-    {
-      post: (state) => {
-        state.sheetIndex++;
-      },
-    }
-  );
-
-  serializeRules = this.wrapFn(serializeRules, "serializeRules", {
-    post: (state) => {
-      state.rulesIndex++;
-    },
-  });
-
-  serializeRule = this.wrapFn(serializeRule, "serializeRule", {
-    post: (state) => {
-      state.ruleIndex++;
-    },
-  });
-
-  serializeStyleRule = this.wrapFn(serializeStyleRule, "serializeStyleRule", {
-    post: (state) => {
-      state.styleRuleIndex++;
-    },
-  });
-
-  serializeMediaRule = this.wrapFn(serializeMediaRule, "serializeMediaRule", {
-    post: (state) => {
-      state.mediaRuleIndex++;
-    },
-  });
-
-  cloneStyleProps = this.wrapFn(cloneStyleProps, "cloneStyleProps");
-
-  cloneStyleProp = this.wrapFn(cloneStyleProp, "cloneStyleProp");
-
-  cloneFluidProp = this.wrapFn(cloneFluidProp, "cloneFluidProp");
-
-  applyExplicitPropsFromShorthand = this.wrapFn(
-    applyExplicitPropsFromShorthand,
-    "applyExplicitPropsFromShorthand"
-  );
-}
-
-const serializeDocAssertionMaster = new SerializeDocAssertionMaster();
-
-function wrapAll() {
-  wrap(
-    serializeDocAssertionMaster.serializeDocument,
-    serializeDocAssertionMaster.getAccessibleStyleSheets,
-    serializeDocAssertionMaster.serializeStyleSheet,
-    serializeDocAssertionMaster.serializeStyleSheets,
-    serializeDocAssertionMaster.serializeRules,
-    serializeDocAssertionMaster.serializeRule,
-    serializeDocAssertionMaster.serializeStyleRule,
-    serializeDocAssertionMaster.serializeMediaRule,
-    serializeDocAssertionMaster.cloneStyleProps,
-    serializeDocAssertionMaster.cloneStyleProp,
-    serializeDocAssertionMaster.cloneFluidProp,
-    serializeDocAssertionMaster.applyExplicitPropsFromShorthand
-  );
-}
-
-export { serializeDocAssertionMaster, wrapAll };
+export default defaultAssertions;
