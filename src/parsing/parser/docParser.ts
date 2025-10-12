@@ -15,7 +15,6 @@ import {
   ParseDocResults,
   RuleBatch,
 } from "./docParser.types";
-import { parseBatches } from "./fluidDataPatcher";
 
 let parseDocument = (docClone: DocumentClone): ParseDocResults => {
   const { breakpoints, globalBaselineWidth } = parseMediaRules(
@@ -77,7 +76,9 @@ let parseStyleSheet = (
 ): DocResultState => {
   let batches = batchStyleSheet(styleSheet, globalBaselineWidth);
 
-  return parseBatches(batches, docResultState);
+  batches = batches;
+  return docResultState;
+  //return parseBatches(batches, docResultState);
 };
 
 let batchStyleSheet = (
