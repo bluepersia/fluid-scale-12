@@ -153,18 +153,22 @@ function assertFluidRangeInsertion(
   state: State
 ) {
   const { anchor, selector, property, fluidData } = ctx;
-  const rangesResult = result[anchor][selector][property].ranges;
+  const propResult = result[anchor][selector][property];
+  const rangesResult = propResult.ranges;
 
   const argsRanges = fluidData[anchor]?.[selector]?.[property]?.ranges;
+
+  const masterProp = state.master!.fluidData[anchor][selector][property];
+
+  expect(propResult.metaData.orderID).toBe(masterProp.metaData.orderID);
+  expect(propResult.metaData.property).toBe(masterProp.metaData.property);
 
   if (argsRanges)
     expect(rangesResult.length).toBeGreaterThan(argsRanges.length);
 
   toBeEqualDefined(
     rangesResult[rangesResult.length - 1],
-    state.master!.fluidData[anchor][selector][property].ranges[
-      rangesResult.length - 1
-    ]
+    masterProp.ranges[rangesResult.length - 1]
   );
 }
 const parseSelectorAssertions: AssertionChain<
