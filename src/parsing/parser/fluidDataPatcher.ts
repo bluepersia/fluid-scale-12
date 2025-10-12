@@ -130,7 +130,7 @@ function parseNextRule(
   return insertFluidData(fluidData, { ...ctx, anchor, maxValue });
 }
 
-function insertFluidData(fluidData: FluidData, ctx: InsertFluidDataContext) {
+let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
   const { anchor, selector, property, minValue, maxValue } = ctx;
   const { orderID, batchIndex, nextBatchIndex } = ctx;
   const newFluidData = cloneFluidData(fluidData, anchor, selector, property);
@@ -154,7 +154,7 @@ function insertFluidData(fluidData: FluidData, ctx: InsertFluidDataContext) {
   });
 
   return newFluidData;
-}
+};
 
 let cloneFluidData = (
   fluidData: FluidData,
@@ -217,6 +217,10 @@ function parseFluidValue(strValue: string): FluidValue {
 }
 
 function wrap(
+  insertFluidDataWrapped: (
+    fluidData: FluidData,
+    ctx: InsertFluidDataContext
+  ) => FluidData,
   cloneFluidDataWrapped: (
     fluidData: FluidData,
     anchor: string,
@@ -224,11 +228,13 @@ function wrap(
     property: string
   ) => FluidData
 ) {
+  insertFluidData = insertFluidDataWrapped;
   cloneFluidData = cloneFluidDataWrapped;
 }
 
 export {
   parseBatches,
+  insertFluidData,
   cloneFluidData,
   parseFluidValue2D,
   parseFluidValue1D,

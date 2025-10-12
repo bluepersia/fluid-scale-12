@@ -11,6 +11,7 @@ import {
   DocResultState,
   FluidData,
   FluidRange,
+  InsertFluidDataContext,
   ParseDocResults,
   RuleBatch,
 } from "../../../src/parsing/parser/docParser.types";
@@ -31,7 +32,10 @@ import {
   STYLE_RULE_TYPE,
 } from "../../../src/parsing/serialization/docSerializerConsts";
 import { deepClone } from "../../utils/objectCloner";
-import { cloneFluidData } from "../../../src/parsing/parser/fluidDataPatcher";
+import {
+  cloneFluidData,
+  insertFluidData,
+} from "../../../src/parsing/parser/fluidDataPatcher";
 
 let expect;
 if (process.env.NODE_ENV === "test") {
@@ -130,6 +134,26 @@ const batchRuleAssertions: AssertionChain<
   },
 };
 
+const insertFluidDataAssertions: AssertionChain<
+  State,
+  [FluidData, InsertFluidDataContext],
+  FluidData
+> = {
+  "should insert the fluid data": (state, args, result) => {
+    const [, ctx] = args;
+    const { anchor, selector, property } = ctx;
+
+    const rangesResult = result[anchor][selector][property].ranges;
+
+    toBeEqualDefined(
+      rangesResult[rangesResult.length - 1],
+      state.master!.fluidData[anchor][selector][property].ranges[
+        rangesResult.length - 1
+      ]
+    );
+  },
+};
+
 const cloneBatchStateAssertions: AssertionChain<
   State,
   [BatchState],
@@ -216,6 +240,7 @@ const defaultAssertions = {
   batchRules: batchRulesAssertions,
   batchRule: batchRuleAssertions,
   cloneBatchState: cloneBatchStateAssertions,
+  insertFluidData: insertFluidDataAssertions,
   cloneFluidData: cloneFluidDataAssertions,
 };
 
@@ -257,6 +282,8 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
     },
   });
 
+  insertFluidData = this.wrapFn(insertFluidData, "insertFluidData");
+
   cloneFluidData = this.wrapFn(cloneFluidData, "cloneFluidData", {
     resultConverter: (result, args) => {
       const [fluidDataArg, anchorArg, selectorArg, propertyArg] = args;
@@ -285,6 +312,7 @@ function wrapAll() {
     parseDocAssertionMaster.batchRule,
     parseDocAssertionMaster.cloneBatchState,
     parseDocAssertionMaster.determineBaselineWidth,
+    parseDocAssertionMaster.insertFluidData,
     parseDocAssertionMaster.cloneFluidData
   );
 }
