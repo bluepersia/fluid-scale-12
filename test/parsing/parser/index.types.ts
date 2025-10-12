@@ -1,3 +1,4 @@
+import { AssertionBlueprintForFunc } from "gold-sight";
 import {
   FluidData,
   RuleBatch,
@@ -5,6 +6,7 @@ import {
 import { DocumentClone } from "../../../src/parsing/serialization/docSerializer.types";
 import { Master } from "../../golden-master/index.types";
 import { State } from "./gold-sight";
+import { parseProperty } from "../../../src/parsing/parser/fluidDataPatcher";
 
 type ParseDocMaster = Master & {
   breakpoints: number[];
@@ -20,4 +22,13 @@ type AssertChildFluidInsertionsContext = {
   prevFluidData: FluidData;
 };
 
-export { ParseDocMaster, AssertChildFluidInsertionsContext };
+type ParsePropertyAssertionBlueprint = AssertionBlueprintForFunc<
+  State,
+  typeof parseProperty
+>;
+
+export {
+  ParseDocMaster,
+  AssertChildFluidInsertionsContext,
+  ParsePropertyAssertionBlueprint,
+};

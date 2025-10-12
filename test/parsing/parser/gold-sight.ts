@@ -1,10 +1,8 @@
-import AssertionMaster, {
-  AssertionBlueprint,
-  AssertionChain,
-} from "gold-sight";
+import AssertionMaster, { AssertionChain } from "gold-sight";
 import {
   AssertChildFluidInsertionsContext,
   ParseDocMaster,
+  ParsePropertyAssertionBlueprint,
 } from "./index.types";
 import {
   DocumentClone,
@@ -205,8 +203,8 @@ function assertFluidRangeInsertion(
 }
 
 function assertChildFluidInsertions(
-  requirement: (assertion: AssertionBlueprint) => boolean,
-  allAssertions: AssertionBlueprint[],
+  requirement: (assertion: ParsePropertyAssertionBlueprint) => boolean,
+  allAssertions: ParsePropertyAssertionBlueprint[],
   ctx: AssertChildFluidInsertionsContext
 ) {
   const { result, state, prevFluidData } = ctx;
