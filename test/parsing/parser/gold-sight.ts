@@ -188,6 +188,7 @@ function assertFluidRangeInsertion(
   const rangesResult = propResult.ranges;
 
   const argsRanges = fluidData[anchor]?.[selector]?.[property]?.ranges;
+  const argRangesLength = argsRanges?.length ?? 0;
 
   const masterProp = state.master!.fluidData[anchor][selector][property];
 
@@ -198,8 +199,8 @@ function assertFluidRangeInsertion(
     expect(rangesResult.length).toBeGreaterThan(argsRanges.length);
 
   toBeEqualDefined(
-    rangesResult[rangesResult.length - 1],
-    masterProp.ranges[rangesResult.length - 1]
+    rangesResult[argRangesLength],
+    masterProp.ranges[argRangesLength]
   );
 }
 
