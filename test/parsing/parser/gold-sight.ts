@@ -10,6 +10,7 @@ import {
   BatchState,
   DocResultState,
   FluidData,
+  FluidRange,
   ParseDocResults,
   RuleBatch,
 } from "../../../src/parsing/parser/docParser.types";
@@ -151,43 +152,57 @@ const cloneBatchStateAssertions: AssertionChain<
   },
 };
 
+type CloneFluidDataResults = {
+  result: FluidData;
+  resultClone: FluidData;
+  anchorRef: string;
+  selectorRef: string;
+  propertyRef: string;
+  rangesRef: FluidRange[];
+};
+
 const cloneFluidDataAssertions: AssertionChain<
   State,
-  [FluidData, FluidData, any, any, any, any, string, string, string],
-  FluidData
+  [FluidData, string, string, string],
+  CloneFluidDataResults
 > = {
-  "should clone the fluid data": (state, args, result) => {
-    const [
-      srcClone,
-      fluidDataRef,
+  "should clone the fluid data": (state, args, results) => {
+    const [fluidDataArg, anchorArg, selectorArg, propertyArg] = args;
+
+    const {
+      result,
+      resultClone,
       anchorRef,
       selectorRef,
       propertyRef,
       rangesRef,
-      anchor,
-      selector,
-      property,
-    ] = args;
+    } = results;
 
-    expect(result).not.toBe(fluidDataRef);
+    expect(result).not.toBe(fluidDataArg);
 
-    if (srcClone[anchor]) {
-      expect(result[anchor]).not.toBe(anchorRef);
+    if (fluidDataArg[anchorArg]) {
+      expect(anchorRef).not.toBe(fluidDataArg[anchorArg]);
 
-      if (srcClone[anchor][selector]) {
-        expect(result[anchor][selector]).not.toBe(selectorRef);
+      if (fluidDataArg[anchorArg][selectorArg]) {
+        expect(selectorRef).not.toBe(fluidDataArg[anchorArg][selectorArg]);
 
-        if (srcClone[anchor][selector][property]) {
-          expect(result[anchor][selector][property]).not.toBe(propertyRef);
-          expect(result[anchor][selector][property].ranges).not.toBe(rangesRef);
+        if (fluidDataArg[anchorArg][selectorArg][propertyArg]) {
+          expect(propertyRef).not.toBe(
+            fluidDataArg[anchorArg][selectorArg][propertyArg]
+          );
+          expect(rangesRef).not.toBe(
+            fluidDataArg[anchorArg][selectorArg][propertyArg].ranges
+          );
         } else {
-          expect(result[anchor][selector][property]).toBeUndefined();
+          expect(
+            resultClone[anchorArg][selectorArg][propertyArg]
+          ).toBeUndefined();
         }
       } else {
-        expect(result[anchor][selector]).toBeUndefined();
+        expect(resultClone[anchorArg][selectorArg]).toBeUndefined();
       }
     } else {
-      expect(result[anchor]).toBeUndefined();
+      expect(resultClone[anchorArg]).toBeUndefined();
     }
   },
 };
@@ -242,7 +257,20 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
     },
   });
 
-  cloneFluidData = this.wrapFn(cloneFluidData, "cloneFluidData");
+  cloneFluidData = this.wrapFn(cloneFluidData, "cloneFluidData", {
+    resultConverter: (result, args) => {
+      const [fluidDataArg, anchorArg, selectorArg, propertyArg] = args;
+
+      return {
+        result,
+        resultClone: deepClone(result),
+        anchorRef: result[anchorArg],
+        selectorRef: result[anchorArg]?.[selectorArg],
+        propertyRef: result[anchorArg]?.[selectorArg]?.[propertyArg],
+        rangesRef: result[anchorArg]?.[selectorArg]?.[propertyArg]?.ranges,
+      };
+    },
+  });
 }
 
 const parseDocAssertionMaster = new ParseDocAssertionMaster();
