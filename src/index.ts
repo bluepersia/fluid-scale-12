@@ -5,6 +5,7 @@ import {
   getState,
   wrap as wrapEngine,
   insertFluidPropertiesForAnchor,
+  observeElements,
 } from "./engine";
 import { parseDocument } from "./parsing/parser/docParser";
 import { serializeDocument } from "./parsing/serialization/docSerializer";
@@ -18,6 +19,7 @@ let addElements = (els: Node[]): void => {
   const { allEls } = globalState;
   const toAddEls = addElementsToEngine(htmlEls, allEls, globalState);
   addElementsToState(toAddEls);
+  observeElements(toAddEls.map((el) => el.el));
 };
 
 let init = (): void => {

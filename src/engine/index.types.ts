@@ -7,7 +7,10 @@ import {
 type GlobalState = {
   breakpoints: number[];
   fluidData: FluidData;
+  elsObserving: Set<HTMLElement>;
   allEls: Map<HTMLElement, ElementState>;
+  visibleEls: Set<ElementState>;
+  hiddenEls: Set<ElementState>;
 };
 
 type ElementState = {

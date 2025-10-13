@@ -2,10 +2,7 @@ let expect;
 if (process.env.NODE_ENV === "test") {
   expect = (await import("vitest")).expect;
 }
-import AssertionMaster, {
-  AssertionChain,
-  AssertionChainForFunc,
-} from "gold-sight";
+import AssertionMaster, { AssertionChain } from "gold-sight";
 import {
   EngineMaster,
   SerializedElement,
@@ -28,7 +25,7 @@ import {
   serializeElement,
   serializeElementState,
 } from "./serialization";
-import { convertToFlat, fillDocWithNullRanges } from "./masterController";
+import { convertToFlat } from "./masterController";
 
 type State = {
   master?: EngineMaster;
@@ -43,20 +40,37 @@ function assertElementStateStructureToDocStructure(
   expect(goldenStruct).toEqual(convertToFlat(state.master!.docStructure));
 }
 
-const initAssertionChain: AssertionChain<State, [], SerializedElementState[]> =
+const initAssertionChain: AssertionChain<
+  State,
+  [],
   {
-    "should initialize the engine": (state, args, result) => {
-      assertElementStateStructureToDocStructure(result, state);
-    },
-  };
+    docStructure: SerializedElementState[];
+    elsObserving: string[];
+  }
+> = {
+  "should initialize the engine": (state, args, result) => {
+    assertElementStateStructureToDocStructure(result.docStructure, state);
+
+    expect(result.elsObserving).toEqual(
+      Object.keys(state.master!.docStructure)
+    );
+  },
+};
 
 const addElementsAssertionChain: AssertionChain<
   State,
   [Node[]],
-  SerializedElementState[]
+  {
+    docStructure: SerializedElementState[];
+    elsObserving: string[];
+  }
 > = {
   "should add elements to the engine (index)": (state, args, result) => {
-    assertElementStateStructureToDocStructure(result, state);
+    assertElementStateStructureToDocStructure(result.docStructure, state);
+
+    expect(result.elsObserving).toEqual(
+      Object.keys(state.master!.docStructure)
+    );
   },
 };
 
@@ -131,7 +145,12 @@ class EngineAssertionMaster extends AssertionMaster<State, EngineMaster> {
     resultConverter: () => {
       const globalState = getState();
       const { allEls } = globalState;
-      return Array.from(allEls.values()).map(serializeElementState);
+      return {
+        docStructure: Array.from(allEls.values()).map(serializeElementState),
+        elsObserving: Array.from(globalState.elsObserving).map(
+          (el) => el.dataset.goldenId
+        ),
+      };
     },
   });
 
@@ -161,7 +180,12 @@ class EngineAssertionMaster extends AssertionMaster<State, EngineMaster> {
     resultConverter: () => {
       const globalState = getState();
       const { allEls } = globalState;
-      return Array.from(allEls.values()).map(serializeElementState);
+      return {
+        docStructure: Array.from(allEls.values()).map(serializeElementState),
+        elsObserving: Array.from(globalState.elsObserving).map(
+          (el) => el.dataset.goldenId
+        ),
+      };
     },
   });
 

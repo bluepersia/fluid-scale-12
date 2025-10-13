@@ -12,6 +12,15 @@ const __dirname = path.dirname(__filename);
 wrapAllSerializeDoc();
 wrapAllParseDoc();
 
+class IntersectionObserverMock {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+(global as any).IntersectionObserver = IntersectionObserverMock;
+
 type PlaywrightBlueprint = {
   htmlFilePath: string;
   addCss: string[];

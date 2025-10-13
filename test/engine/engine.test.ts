@@ -55,14 +55,3 @@ describe("init", () => {
     parseDocAssertionMaster.assertQueue({ master: { index } });
   });
 });
-
-describe("insertFluidPropertiesForAnchor", () => {
-  test.each(masterCollection)(
-    "should insert fluid properties for anchor",
-    async (master) => {
-      const { index } = master;
-      const { page } = playwrightPages[index];
-      await page.evaluate((master) => {});
-    }
-  );
-});
