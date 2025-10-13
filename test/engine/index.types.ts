@@ -1,7 +1,7 @@
-import { FluidPropertyData } from "../../src/parsing/parser/docParser.types";
+import { FluidProperty } from "../../src/engine/index.types";
 
 type RuntimeGoldenDoc = {
-  [goldenId: string]: FluidPropertyData[];
+  [goldenId: string]: FluidProperty[];
 };
 
 export type { RuntimeGoldenDoc };
