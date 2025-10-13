@@ -12,6 +12,15 @@ const __dirname = path.dirname(__filename);
 wrapAllSerializeDoc();
 wrapAllParseDoc();
 
+class IntersectionObserverMock {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+(global as any).IntersectionObserver = IntersectionObserverMock;
+
 type PlaywrightBlueprint = {
   htmlFilePath: string;
   addCss: string[];
@@ -61,6 +70,16 @@ async function initPlaywrightPages(): Promise<PlaywrightPage[]> {
         // prettier-ignore
         // @ts-expect-error global from IIFE bundle
         window.serializeDocAssertionMaster = window.FluidScale.serializeDocAssertionMaster;
+
+        (window as any).parseDocAssertionMaster = (
+          window as any
+        ).FluidScale.parseDocAssertionMaster;
+
+        (window as any).init = (window as any).FluidScale.init;
+
+        (window as any).engineAssertionMaster = (
+          window as any
+        ).FluidScale.engineAssertionMaster;
 
         // @ts-expect-error global from IIFE bundle
         window.getQueue = window.FluidScale.getQueue;
