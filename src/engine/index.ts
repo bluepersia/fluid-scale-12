@@ -37,11 +37,11 @@ function addElementsToState(els: ElementState[]) {
   }
 }
 
-function addElements(
+let addElements = (
   els: HTMLElement[],
   allEls: Map<HTMLElement, ElementState>,
   ctx: AddElementsContext
-) {
+): ElementState[] => {
   const toAddEls: ElementState[] = [];
 
   for (const el of els) {
@@ -70,13 +70,13 @@ function addElements(
     toAddEls.push(elState);
   }
   return toAddEls;
-}
+};
 
-function insertFluidPropertiesForAnchor(
+let insertFluidPropertiesForAnchor = (
   anchor: string,
   el: HTMLElement,
   ctx: InsertFluidPropertiesForAnchorContext
-) {
+): FluidProperty[] => {
   const { fluidData, breakpoints } = ctx;
 
   const anchorData = fluidData[anchor];
@@ -98,6 +98,14 @@ function insertFluidPropertiesForAnchor(
   }
 
   return fluidProperties;
+};
+
+function wrap(
+  addElementsWrapped: typeof addElements,
+  insertFluidPropertiesForAnchorWrapped: typeof insertFluidPropertiesForAnchor
+) {
+  addElements = addElementsWrapped;
+  insertFluidPropertiesForAnchor = insertFluidPropertiesForAnchorWrapped;
 }
 
 export {
@@ -107,4 +115,5 @@ export {
   addElements,
   addElementsToState,
   insertFluidPropertiesForAnchor,
+  wrap,
 };

@@ -1,8 +1,8 @@
-import { RuntimeGoldenDoc } from "../engine/index.types";
+import { RuntimeGoldenDoc, RuntimeGoldenDocFlat } from "../engine/index.types";
 import { ElementState } from "../../src/engine/index.types";
 
 function parseGoldenStructFluidProperties(elWStates: ElementState[]) {
-  const goldenStruct: RuntimeGoldenDoc = {};
+  const goldenStruct: RuntimeGoldenDocFlat = {};
 
   for (const elWState of elWStates) {
     const goldenId = elWState.el.getAttribute("data-golden-id");

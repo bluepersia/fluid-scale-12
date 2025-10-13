@@ -62,6 +62,16 @@ async function initPlaywrightPages(): Promise<PlaywrightPage[]> {
         // @ts-expect-error global from IIFE bundle
         window.serializeDocAssertionMaster = window.FluidScale.serializeDocAssertionMaster;
 
+        (window as any).parseDocAssertionMaster = (
+          window as any
+        ).FluidScale.parseDocAssertionMaster;
+
+        (window as any).init = (window as any).FluidScale.init;
+
+        (window as any).EngineAssertionMaster = (
+          window as any
+        ).FluidScale.EngineAssertionMaster;
+
         // @ts-expect-error global from IIFE bundle
         window.getQueue = window.FluidScale.getQueue;
       });
