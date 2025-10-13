@@ -10,12 +10,21 @@ type GlobalState = {
   elsObserving: Set<HTMLElement>;
   allEls: Map<HTMLElement, ElementState>;
   visibleEls: Set<ElementState>;
-  hiddenEls: Set<ElementState>;
+  pendingHiddenEls: Set<ElementState>;
+  windowWidth: number;
 };
 
 type ElementState = {
   el: HTMLElement;
   fluidProperties: FluidProperty[];
+  isVisible: boolean;
+  parentEl: ElementState | undefined;
+};
+
+type FluidPropertyState = {
+  property: string;
+  value: string;
+  orderID: number;
 };
 
 type FluidProperty = {
@@ -34,6 +43,7 @@ export type {
   GlobalState,
   ElementState,
   FluidProperty,
+  FluidPropertyState,
   AddElementsContext,
   InsertFluidPropertiesForAnchorContext,
 };

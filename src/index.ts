@@ -6,6 +6,7 @@ import {
   wrap as wrapEngine,
   insertFluidPropertiesForAnchor,
   observeElements,
+  assignParentEls,
 } from "./engine";
 import { parseDocument } from "./parsing/parser/docParser";
 import { serializeDocument } from "./parsing/serialization/docSerializer";
@@ -19,6 +20,7 @@ let addElements = (els: Node[]): void => {
   const { allEls } = globalState;
   const toAddEls = addElementsToEngine(htmlEls, allEls, globalState);
   addElementsToState(toAddEls);
+  assignParentEls();
   observeElements(toAddEls.map((el) => el.el));
 };
 
@@ -37,11 +39,16 @@ function wrap(
   addElementsWrapped: typeof addElements,
   initWrapped: typeof init,
   addElementsEngineWrapped: typeof addElementsToEngine,
-  insertFluidPropertiesForAnchorWrapped: typeof insertFluidPropertiesForAnchor
+  insertFluidPropertiesForAnchorWrapped: typeof insertFluidPropertiesForAnchor,
+  assignParentElsWrapped: typeof assignParentEls
 ) {
   addElements = addElementsWrapped;
   init = initWrapped;
-  wrapEngine(addElementsEngineWrapped, insertFluidPropertiesForAnchorWrapped);
+  wrapEngine(
+    addElementsEngineWrapped,
+    insertFluidPropertiesForAnchorWrapped,
+    assignParentElsWrapped
+  );
 }
 
 export { addElements, init, wrap };

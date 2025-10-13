@@ -3,6 +3,7 @@ import {
   AddElementsContext,
   ElementState,
   FluidProperty,
+  FluidPropertyState,
   GlobalState,
   InsertFluidPropertiesForAnchorContext,
 } from "./index.types";
@@ -19,9 +20,11 @@ function handleIntersection(entries: IntersectionObserverEntry[]) {
     if (entry.isIntersecting) {
       addVisibleElement(elState);
       removeHiddenElement(elState);
+      elState.isVisible = true;
     } else {
       addHiddenElement(elState);
       removeVisibleElement(elState);
+      elState.isVisible = false;
     }
   }
 }
@@ -45,8 +48,9 @@ function newState(): GlobalState {
     fluidData: {},
     allEls: new Map(),
     visibleEls: new Set(),
-    hiddenEls: new Set(),
+    pendingHiddenEls: new Set(),
     elsObserving: new Set(),
+    windowWidth: 0,
   };
 }
 
@@ -71,7 +75,7 @@ function addVisibleElement(elState: ElementState) {
 }
 
 function addHiddenElement(elState: ElementState) {
-  state.hiddenEls.add(elState);
+  state.pendingHiddenEls.add(elState);
 }
 
 function removeVisibleElement(elState: ElementState) {
@@ -79,8 +83,21 @@ function removeVisibleElement(elState: ElementState) {
 }
 
 function removeHiddenElement(elState: ElementState) {
-  state.hiddenEls.delete(elState);
+  state.pendingHiddenEls.delete(elState);
 }
+
+function removeElement(elState: ElementState) {
+  state.allEls.delete(elState.el);
+  state.visibleEls.delete(elState);
+  state.pendingHiddenEls.delete(elState);
+  state.elsObserving.delete(elState.el);
+  intersectionObserver.unobserve(elState.el);
+}
+
+function updateWindowWidth() {
+  state.windowWidth = window.innerWidth;
+}
+
 const insertFluidPropertiesForAnchorRouter = [
   (el: HTMLElement, ctx: InsertFluidPropertiesForAnchorContext) => {
     const classes = el.classList;
@@ -111,7 +128,12 @@ let addElements = (
   for (const el of els) {
     if (allEls.has(el)) continue;
 
-    const elState: ElementState = { el, fluidProperties: [] };
+    const elState: ElementState = {
+      el,
+      fluidProperties: [],
+      isVisible: false,
+      parentEl: undefined,
+    };
     const fluidProperties: FluidProperty[] = elState.fluidProperties;
 
     for (const anchorRoute of insertFluidPropertiesForAnchorRouter) {
@@ -153,12 +175,86 @@ let insertFluidPropertiesForAnchor = (
   return fluidProperties;
 };
 
+let assignParentEls = () => {
+  const { allEls } = getState();
+  for (const elState of allEls.values()) {
+    const { el } = elState;
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      elState.parentEl = allEls.get(parentEl);
+    }
+  }
+};
+
+let update = () => {
+  updateWindowWidth();
+  const { visibleEls, pendingHiddenEls } = getState();
+
+  //Flush pending elements
+  for (const elState of pendingHiddenEls) {
+    updateElement(elState);
+  }
+
+  //Update visible elements
+  for (const elState of visibleEls) {
+    updateElement(elState);
+  }
+};
+
+update = update;
+
+function updateElement(elState: ElementState) {
+  const { el } = elState;
+
+  if (!el.isConnected) {
+    removeElement(elState);
+    return;
+  }
+
+  const { fluidProperties } = elState;
+  const stateUpdates: Map<string, FluidPropertyState> = new Map();
+  for (const fluidProperty of fluidProperties) {
+    const { property, orderID } = fluidProperty.metaData;
+    if (!stateUpdates.has(property)) {
+      stateUpdates.set(property, {
+        property,
+        value: "",
+        orderID,
+      });
+    }
+    const stateUpdate: FluidPropertyState | undefined = updateFluidProperty(
+      fluidProperty,
+      stateUpdates.get(property)
+    );
+    if (stateUpdate) {
+      stateUpdates.set(property, stateUpdate);
+    }
+  }
+
+  for (const [property, stateUpdate] of stateUpdates) {
+    el.style.setProperty(property, stateUpdate.value);
+  }
+}
+
+function updateFluidProperty(
+  fluidProperty: FluidProperty,
+  currentPropertyState: FluidPropertyState | undefined
+): FluidPropertyState | undefined {
+  if (
+    currentPropertyState &&
+    fluidProperty.metaData.orderID < currentPropertyState.orderID
+  )
+    return;
+}
+
 function wrap(
   addElementsWrapped: typeof addElements,
-  insertFluidPropertiesForAnchorWrapped: typeof insertFluidPropertiesForAnchor
+  insertFluidPropertiesForAnchorWrapped: typeof insertFluidPropertiesForAnchor,
+  assignParentElsWrapped: typeof assignParentEls
 ) {
   addElements = addElementsWrapped;
   insertFluidPropertiesForAnchor = insertFluidPropertiesForAnchorWrapped;
+  assignParentEls = assignParentElsWrapped;
 }
 
 export {
@@ -171,4 +267,6 @@ export {
   wrap,
   observeElements,
   handleIntersection,
+  updateWindowWidth,
+  assignParentEls,
 };

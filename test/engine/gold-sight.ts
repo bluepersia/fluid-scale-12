@@ -12,6 +12,7 @@ import {
   insertFluidPropertiesForAnchor,
   addElements as addElementsToEngine,
   getState,
+  assignParentEls,
 } from "../../src/engine";
 import init, { addElements, wrap } from "../../src";
 import {
@@ -125,11 +126,27 @@ const insertFluidPropertiesForAnchorAssertionChain: AssertionChain<
   },
 };
 
+const assignParentElsAssertionChain: AssertionChain<
+  State,
+  [],
+  {
+    parentGoldenIdVanilla: string;
+    parentGoldenIdState: string;
+  }[]
+> = {
+  "should assign parent els": (state, args, result) => {
+    for (const { parentGoldenIdVanilla, parentGoldenIdState } of result) {
+      expect(parentGoldenIdVanilla).toEqual(parentGoldenIdState);
+    }
+  },
+};
+
 const defaultAssertions = {
   init: initAssertionChain,
   insertFluidPropertiesForAnchor: insertFluidPropertiesForAnchorAssertionChain,
   addElements: addElementsAssertionChain,
   addElementsEngine: addElementsEngineAssertionChain,
+  assignParentEls: assignParentElsAssertionChain,
 };
 
 class EngineAssertionMaster extends AssertionMaster<State, EngineMaster> {
@@ -194,6 +211,26 @@ class EngineAssertionMaster extends AssertionMaster<State, EngineMaster> {
       return result.map(serializeElementState);
     },
   });
+
+  assignParentEls = this.wrapFn(assignParentEls, "assignParentEls", {
+    resultConverter: () => {
+      const globalState = getState();
+      const { allEls } = globalState;
+      return Array.from(allEls.values()).map((elState) => {
+        const parentGlobalEl = elState.el.parentElement
+          ? allEls.get(elState.el.parentElement)
+          : undefined;
+        return {
+          parentGoldenIdVanilla: parentGlobalEl
+            ? elState.el.parentElement?.dataset.goldenId
+            : undefined,
+          parentGoldenIdState: parentGlobalEl
+            ? elState.parentEl?.el.dataset.goldenId
+            : undefined,
+        };
+      });
+    },
+  });
 }
 
 const engineAssertionMaster = new EngineAssertionMaster();
@@ -203,7 +240,8 @@ function wrapAll() {
     engineAssertionMaster.addElements,
     engineAssertionMaster.init,
     engineAssertionMaster.addElementsEngine,
-    engineAssertionMaster.insertFluidPropertiesForAnchor
+    engineAssertionMaster.insertFluidPropertiesForAnchor,
+    engineAssertionMaster.assignParentEls
   );
 }
 
