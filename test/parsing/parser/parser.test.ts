@@ -4,6 +4,7 @@ import { parseDocAssertionMaster } from "./gold-sight";
 
 import { parseDocument } from "../../../src/parsing/parser/docParser";
 import {
+  getAnchor,
   parseFluidValue,
   parseFluidValue1D,
   parseFluidValue2D,
@@ -137,4 +138,22 @@ describe("splitSelectors", () => {
       expect(result).toEqual(expected);
     }
   );
+});
+
+describe("getAnchor", () => {
+  const getAnchorTests = [
+    {
+      selector: ".product-card",
+      expected: ".product-card",
+    },
+    {
+      selector: ".product-card .inner .title",
+      expected: ".title",
+    },
+  ];
+  test.each(getAnchorTests)("should get the anchor", (testCase) => {
+    const { selector, expected } = testCase;
+    const result = getAnchor(selector);
+    expect(result).toEqual(expected);
+  });
 });

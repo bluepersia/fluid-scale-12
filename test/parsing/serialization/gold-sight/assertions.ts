@@ -3,20 +3,13 @@ if (process.env.NODE_ENV === "test") {
   expect = (await import("vitest")).expect;
 }
 
-import { AssertionChain } from "gold-sight";
+import { AssertionChainForFunc } from "gold-sight";
 import { AssertFluidPropContext, NullRule } from "../index.types";
 import { State } from "./gold-sight";
 
 import {
-  ApplyExplicitPropsFromShorthandContext,
-  CloneStylePropContext,
-  DocumentClone,
   MediaRuleClone,
-  RuleClone,
-  SerializeDocContext,
-  StyleResults,
   StyleRuleClone,
-  StyleSheetClone,
 } from "../../../../src/parsing/serialization/docSerializer.types";
 import {
   clearNullsForDoc,
@@ -42,28 +35,42 @@ import {
   SPECIAL_PROPERTIES,
 } from "../../../../src/parsing/serialization/docSerializerConsts";
 import { toBeEqualDefined } from "../../../utils/vitest";
+import {
+  applyExplicitPropsFromShorthand,
+  serializeFluidProp,
+  serializeStyleProp,
+  serializeStyleProps,
+  getAccessibleStyleSheets,
+  serializeDocument,
+  serializeMediaRule,
+  serializeRule,
+  serializeRules,
+  serializeStyleRule,
+  serializeStyleSheet,
+  serializeStyleSheets,
+} from "../../../../src/parsing/serialization/docSerializer";
 
-const serializeDocAssertions: AssertionChain<State, [Document], DocumentClone> =
-  {
-    "should serialize the document": (state, args, result) => {
-      result = normalizeDoc(result);
-      expect(result).toEqual(clearNullsForDoc(state.master!.docClone));
-    },
-  };
-
-const getAccessibleStyleSheetsAssertions: AssertionChain<
+const serializeDocAssertions: AssertionChainForFunc<
   State,
-  [StyleSheetList],
-  CSSStyleSheet[]
+  typeof serializeDocument
+> = {
+  "should serialize the document": (state, args, result) => {
+    result = normalizeDoc(result);
+    expect(result).toEqual(clearNullsForDoc(state.master!.docClone));
+  },
+};
+
+const getAccessibleStyleSheetsAssertions: AssertionChainForFunc<
+  State,
+  typeof getAccessibleStyleSheets
 > = {
   "should get the accessible style sheets": (state, args, result) => {
     expect(result.length).toBe(state.master!.docClone.styleSheets.length);
   },
 };
-const serializeStyleSheetsAssertions: AssertionChain<
+const serializeStyleSheetsAssertions: AssertionChainForFunc<
   State,
-  [CSSStyleSheet[]],
-  StyleSheetClone[]
+  typeof serializeStyleSheets
 > = {
   "should serialize the style sheets": (state, args, result) => {
     result = normalizeStyleSheets(result);
@@ -73,10 +80,9 @@ const serializeStyleSheetsAssertions: AssertionChain<
   },
 };
 
-const serializeStyleSheetAssertions: AssertionChain<
+const serializeStyleSheetAssertions: AssertionChainForFunc<
   State,
-  [CSSStyleSheet],
-  StyleSheetClone
+  typeof serializeStyleSheet
 > = {
   "should serialize the style sheet": (state, args, result) => {
     result = normalizeStyleSheet(result);
@@ -89,10 +95,9 @@ const serializeStyleSheetAssertions: AssertionChain<
   },
 };
 
-const serializeRulesAssertions: AssertionChain<
+const serializeRulesAssertions: AssertionChainForFunc<
   State,
-  [CSSRuleList],
-  RuleClone[]
+  typeof serializeRules
 > = {
   "should serialize the rules": (state, args, result) => {
     result = normalizeRules(result);
@@ -104,10 +109,9 @@ const serializeRulesAssertions: AssertionChain<
   },
 };
 
-const serializeRuleAssertions: AssertionChain<
+const serializeRuleAssertions: AssertionChainForFunc<
   State,
-  [CSSRule],
-  RuleClone | null
+  typeof serializeRule
 > = {
   "should serialize the rule": (state, args, result) => {
     result = result ? normalizeRule(result) : null;
@@ -124,10 +128,9 @@ const serializeRuleAssertions: AssertionChain<
   },
 };
 
-const serializeStyleRuleAssertions: AssertionChain<
+const serializeStyleRuleAssertions: AssertionChainForFunc<
   State,
-  [CSSStyleRule],
-  StyleRuleClone | null
+  typeof serializeStyleRule
 > = {
   "should serialize the style rule": (state, args, result) => {
     result = result ? (normalizeRule(result) as StyleRuleClone) : null;
@@ -144,10 +147,9 @@ const serializeStyleRuleAssertions: AssertionChain<
   },
 };
 
-const serializeMediaRuleAssertions: AssertionChain<
+const serializeMediaRuleAssertions: AssertionChainForFunc<
   State,
-  [CSSMediaRule],
-  MediaRuleClone | null
+  typeof serializeMediaRule
 > = {
   "should serialize the media rule": (state, args, result) => {
     result = result ? (normalizeRule(result) as MediaRuleClone) : null;
@@ -167,10 +169,9 @@ const serializeMediaRuleAssertions: AssertionChain<
   },
 };
 
-const cloneStylePropsAssertions: AssertionChain<
+const serializeStylePropsAssertions: AssertionChainForFunc<
   State,
-  [CSSStyleRule, SerializeDocContext],
-  StyleResults
+  typeof serializeStyleProps
 > = {
   "should clone the style props": (state, args, result) => {
     let { style, specialProps } = result;
@@ -192,10 +193,9 @@ const cloneStylePropsAssertions: AssertionChain<
   },
 };
 
-const cloneStylePropAssertions: AssertionChain<
+const serializeStylePropAssertions: AssertionChainForFunc<
   State,
-  [CSSStyleRule, string, CloneStylePropContext],
-  StyleResults
+  typeof serializeStyleProp
 > = {
   "should clone the style prop": (state, args, result) => {
     const [rule, prop, ctx] = args;
@@ -232,10 +232,9 @@ function assertFluidProp(prop: string, ctx: AssertFluidPropContext) {
   }
 }
 
-const cloneFluidPropAssertions: AssertionChain<
+const serializeFluidPropAssertions: AssertionChainForFunc<
   State,
-  [CSSStyleRule, string, CloneStylePropContext],
-  Record<string, string>
+  typeof serializeFluidProp
 > = {
   "should clone the fluid prop": (state, args, result) => {
     const [rule, prop, ctx] = args;
@@ -260,10 +259,9 @@ const cloneFluidPropAssertions: AssertionChain<
   },
 };
 
-const applyExplicitPropsFromShorthandAssertions: AssertionChain<
+const applyExplicitPropsFromShorthandAssertions: AssertionChainForFunc<
   State,
-  [CSSStyleRule, string, ApplyExplicitPropsFromShorthandContext],
-  Record<string, string>
+  typeof applyExplicitPropsFromShorthand
 > = {
   "should apply the explicit props from shorthand": (state, args, result) => {
     const [rule, prop, ctx] = args;
@@ -292,9 +290,9 @@ const defaultAssertions = {
   serializeRule: serializeRuleAssertions,
   serializeStyleRule: serializeStyleRuleAssertions,
   serializeMediaRule: serializeMediaRuleAssertions,
-  cloneStyleProps: cloneStylePropsAssertions,
-  cloneStyleProp: cloneStylePropAssertions,
-  cloneFluidProp: cloneFluidPropAssertions,
+  serializeStyleProps: serializeStylePropsAssertions,
+  serializeStyleProp: serializeStylePropAssertions,
+  serializeFluidProp: serializeFluidPropAssertions,
   applyExplicitPropsFromShorthand: applyExplicitPropsFromShorthandAssertions,
 };
 

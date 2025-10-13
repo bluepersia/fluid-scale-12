@@ -2,6 +2,7 @@ import { RuleClone } from "../serialization/docSerializer.types";
 
 type ParseDocResults = {
   breakpoints: number[];
+  fluidData: FluidData;
 };
 
 type FluidData = {
@@ -54,13 +55,21 @@ type RuleBatch = {
   isMediaQuery: boolean;
 };
 
-type ParseBatchContext = {
+type ParseStyleSheetContext = {
+  sheetIndex: number;
   docResultState: DocResultState;
+  globalBaselineWidth: number;
+  breakpoints: number[];
+};
+type ParseBatchesContext = ParseStyleSheetContext;
+
+type ParseBatchContext = ParseBatchesContext & {
   batchIndex: number;
   batches: RuleBatch[];
 };
 
 type ParseStyleRuleContext = ParseBatchContext & {
+  batchWidth: number;
   fluidData: FluidData;
   orderID: number;
 };
@@ -72,9 +81,10 @@ type ParsePropertyContext = ParseSelectorContext & {
 type ParseNextBatchContext = ParsePropertyContext & {
   property: string;
   minValue: string;
-  nextBatchIndex: number;
 };
-type ParseNextRuleContext = ParseNextBatchContext;
+type ParseNextRuleContext = ParseNextBatchContext & {
+  nextBatchWidth: number;
+};
 
 type InsertFluidDataContext = ParseNextRuleContext & {
   anchor: string;
@@ -99,4 +109,6 @@ export {
   ParsePropertyContext,
   ParseSelectorContext,
   ParseStyleRuleContext,
+  ParseStyleSheetContext,
+  ParseBatchesContext,
 };

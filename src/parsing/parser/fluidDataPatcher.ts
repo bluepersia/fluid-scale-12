@@ -8,6 +8,7 @@ import {
   FluidValueSingle,
   InsertFluidDataContext,
   ParseBatchContext,
+  ParseBatchesContext,
   ParseNextBatchContext,
   ParseNextRuleContext,
   ParsePropertyContext,
@@ -18,10 +19,12 @@ import {
 
 let parseBatches = (
   batches: RuleBatch[],
-  docResultState: DocResultState
+  ctx: ParseBatchesContext
 ): DocResultState => {
+  let { docResultState } = ctx;
   for (const [batchIndex, batch] of batches.entries()) {
     docResultState = parseBatch(batch, {
+      ...ctx,
       docResultState,
       batchIndex,
       batches,
@@ -36,7 +39,12 @@ let parseBatch = (batch: RuleBatch, ctx: ParseBatchContext): DocResultState => {
   for (const rule of batch.rules) {
     if (rule.type !== STYLE_RULE_TYPE) continue;
     const styleRule = rule as StyleRuleClone;
-    fluidData = parseStyleRule(styleRule, { ...ctx, fluidData, orderID });
+    fluidData = parseStyleRule(styleRule, {
+      ...ctx,
+      batchWidth: batch.width,
+      fluidData,
+      orderID,
+    });
     orderID++;
   }
   return { fluidData, orderID };
@@ -89,36 +97,46 @@ let parseProperty = (
     nextBatchIndex++
   ) {
     const nextBatch = batches[nextBatchIndex];
-    fluidData = parseNextBatch(nextBatch, {
+    if (!nextBatch.isMediaQuery) return fluidData;
+    const newFluidData = parseNextBatch(nextBatch, {
       ...ctx,
       minValue,
       property,
       fluidData,
-      nextBatchIndex,
     });
+    if (newFluidData !== fluidData) {
+      return newFluidData;
+    }
   }
   return fluidData;
 };
 
-function parseNextBatch(
+let parseNextBatch = (
   nextBatch: RuleBatch,
   ctx: ParseNextBatchContext
-): FluidData {
-  let { fluidData } = ctx;
+): FluidData => {
+  const { fluidData } = ctx;
   const { selector } = ctx;
   for (const nextRule of nextBatch.rules) {
     if (nextRule.type !== STYLE_RULE_TYPE) continue;
     const nextStyleRule = nextRule as StyleRuleClone;
     if (!splitSelector(nextStyleRule.selectorText).includes(selector)) continue;
-    fluidData = parseNextRule(nextStyleRule, { ...ctx, fluidData });
+    const newFluidData = parseNextRule(nextStyleRule, {
+      ...ctx,
+      nextBatchWidth: nextBatch.width,
+      fluidData,
+    });
+    if (newFluidData !== fluidData) {
+      return newFluidData;
+    }
   }
   return fluidData;
-}
+};
 
-function parseNextRule(
+let parseNextRule = (
   nextStyleRule: StyleRuleClone,
   ctx: ParseNextRuleContext
-): FluidData {
+): FluidData => {
   const { fluidData, property, selector } = ctx;
 
   const maxValue = nextStyleRule.style[property];
@@ -128,11 +146,16 @@ function parseNextRule(
   const anchor = selectorParts[selectorParts.length - 1];
 
   return insertFluidData(fluidData, { ...ctx, anchor, maxValue });
+};
+
+function getAnchor(selector: string) {
+  const selectorParts = selector.split(" ");
+  return selectorParts[selectorParts.length - 1];
 }
 
-function insertFluidData(fluidData: FluidData, ctx: InsertFluidDataContext) {
+let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
   const { anchor, selector, property, minValue, maxValue } = ctx;
-  const { orderID, batchIndex, nextBatchIndex } = ctx;
+  const { orderID, breakpoints, batchWidth, nextBatchWidth } = ctx;
   const newFluidData = cloneFluidData(fluidData, anchor, selector, property);
 
   if (!newFluidData[anchor]) newFluidData[anchor] = {};
@@ -149,19 +172,19 @@ function insertFluidData(fluidData: FluidData, ctx: InsertFluidDataContext) {
   newFluidData[anchor][selector][property].ranges.push({
     minValue: parseFluidValue2D(minValue),
     maxValue: parseFluidValue2D(maxValue),
-    minBpIndex: batchIndex,
-    maxBpIndex: nextBatchIndex,
+    minBpIndex: breakpoints.indexOf(batchWidth),
+    maxBpIndex: breakpoints.indexOf(nextBatchWidth),
   });
 
   return newFluidData;
-}
+};
 
-function cloneFluidData(
+let cloneFluidData = (
   fluidData: FluidData,
   anchor: string,
   selector: string,
   property: string
-): FluidData {
+): FluidData => {
   const newFluidData = { ...fluidData };
   if (newFluidData[anchor]) newFluidData[anchor] = { ...newFluidData[anchor] };
   if (newFluidData[anchor]?.[selector])
@@ -175,9 +198,9 @@ function cloneFluidData(
     ];
   }
   return newFluidData;
-}
+};
 
-let parseFluidValue2D = (value: string): FluidValue[][] => {
+function parseFluidValue2D(value: string): FluidValue[][] {
   let depth = 0;
   let currentValue = "";
   let values: FluidValue[][] = [];
@@ -196,14 +219,14 @@ let parseFluidValue2D = (value: string): FluidValue[][] => {
   values.push(parseFluidValue1D(currentValue.trim()));
 
   return values;
-};
+}
 
-let parseFluidValue1D = (value: string): FluidValue[] => {
+function parseFluidValue1D(value: string): FluidValue[] {
   const values: string[] = splitBySpaces(value);
   return values.map(parseFluidValue);
-};
+}
 
-let parseFluidValue = (strValue: string): FluidValue => {
+function parseFluidValue(strValue: string): FluidValue {
   const value = parseFloat(strValue);
 
   // Match any alphabetic characters after the number
@@ -214,6 +237,74 @@ let parseFluidValue = (strValue: string): FluidValue => {
     value,
     unit,
   } as FluidValueSingle;
-};
+}
 
-export { parseBatches, parseFluidValue2D, parseFluidValue1D, parseFluidValue };
+function wrap(
+  parseBatchesWrapped: (
+    batches: RuleBatch[],
+    ctx: ParseBatchesContext
+  ) => DocResultState,
+  parseBatchWrapped: (
+    batch: RuleBatch,
+    ctx: ParseBatchContext
+  ) => DocResultState,
+  parseStyleRuleWrapped: (
+    styleRule: StyleRuleClone,
+    ctx: ParseStyleRuleContext
+  ) => FluidData,
+  parseSelectorWrapped: (
+    styleRule: StyleRuleClone,
+    selector: string,
+    ctx: ParseSelectorContext
+  ) => FluidData,
+  parsePropertyWrapped: (
+    styleRule: StyleRuleClone,
+    property: string,
+    ctx: ParsePropertyContext
+  ) => FluidData,
+  parseNextBatchWrapped: (
+    nextBatch: RuleBatch,
+    ctx: ParseNextBatchContext
+  ) => FluidData,
+  parseNextRuleWrapped: (
+    nextStyleRule: StyleRuleClone,
+    ctx: ParseNextRuleContext
+  ) => FluidData,
+  insertFluidDataWrapped: (
+    fluidData: FluidData,
+    ctx: InsertFluidDataContext
+  ) => FluidData,
+  cloneFluidDataWrapped: (
+    fluidData: FluidData,
+    anchor: string,
+    selector: string,
+    property: string
+  ) => FluidData
+) {
+  parseBatches = parseBatchesWrapped;
+  parseBatch = parseBatchWrapped;
+  parseStyleRule = parseStyleRuleWrapped;
+  parseSelector = parseSelectorWrapped;
+  parseProperty = parsePropertyWrapped;
+  parseNextBatch = parseNextBatchWrapped;
+  parseNextRule = parseNextRuleWrapped;
+  insertFluidData = insertFluidDataWrapped;
+  cloneFluidData = cloneFluidDataWrapped;
+}
+
+export {
+  parseBatches,
+  parseBatch,
+  parseStyleRule,
+  parseSelector,
+  parseProperty,
+  parseNextBatch,
+  parseNextRule,
+  insertFluidData,
+  cloneFluidData,
+  parseFluidValue2D,
+  parseFluidValue1D,
+  parseFluidValue,
+  getAnchor,
+  wrap,
+};

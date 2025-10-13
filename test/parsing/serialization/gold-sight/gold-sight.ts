@@ -3,9 +3,9 @@ import { SerializeDocMaster } from "../index.types";
 import defaultAssertions from "./assertions";
 import {
   applyExplicitPropsFromShorthand,
-  cloneFluidProp,
-  cloneStyleProp,
-  cloneStyleProps,
+  serializeFluidProp,
+  serializeStyleProp,
+  serializeStyleProps,
   getAccessibleStyleSheets,
   serializeDocument,
   serializeMediaRule,
@@ -89,11 +89,11 @@ class SerializeDocAssertionMaster extends AssertionMaster<
     },
   });
 
-  cloneStyleProps = this.wrapFn(cloneStyleProps, "cloneStyleProps");
+  cloneStyleProps = this.wrapFn(serializeStyleProps, "serializeStyleProps");
 
-  cloneStyleProp = this.wrapFn(cloneStyleProp, "cloneStyleProp");
+  cloneStyleProp = this.wrapFn(serializeStyleProp, "serializeStyleProp");
 
-  cloneFluidProp = this.wrapFn(cloneFluidProp, "cloneFluidProp");
+  cloneFluidProp = this.wrapFn(serializeFluidProp, "serializeFluidProp");
 
   applyExplicitPropsFromShorthand = this.wrapFn(
     applyExplicitPropsFromShorthand,
