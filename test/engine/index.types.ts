@@ -5,9 +5,9 @@ import { SerializeDocMaster } from "../parsing/serialization/index.types";
 
 type RuntimeGoldenDoc = {
   [goldenId: string]: {
-    anchor: string;
-    selector: string;
-    fluidProperties: FluidProperty[];
+    [anchor: string]: {
+      [selector: string]: FluidProperty[];
+    };
   };
 };
 
@@ -19,6 +19,22 @@ type EngineMaster = Master & {
   serializeDocMaster: SerializeDocMaster;
   parseDocMaster: ParseDocMaster;
   docStructure: RuntimeGoldenDoc;
+  breakpointsLength: number;
 };
 
-export type { RuntimeGoldenDoc, EngineMaster, RuntimeGoldenDocFlat };
+type SerializedElement = {
+  goldenId: string;
+};
+
+type SerializedElementState = {
+  el: SerializedElement;
+  fluidProperties: FluidProperty[];
+};
+
+export type {
+  RuntimeGoldenDoc,
+  EngineMaster,
+  RuntimeGoldenDocFlat,
+  SerializedElement,
+  SerializedElementState,
+};

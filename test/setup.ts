@@ -68,9 +68,9 @@ async function initPlaywrightPages(): Promise<PlaywrightPage[]> {
 
         (window as any).init = (window as any).FluidScale.init;
 
-        (window as any).EngineAssertionMaster = (
+        (window as any).engineAssertionMaster = (
           window as any
-        ).FluidScale.EngineAssertionMaster;
+        ).FluidScale.engineAssertionMaster;
 
         // @ts-expect-error global from IIFE bundle
         window.getQueue = window.FluidScale.getQueue;

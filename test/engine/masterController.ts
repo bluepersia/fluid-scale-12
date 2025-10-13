@@ -9,9 +9,14 @@ import { RuntimeGoldenDoc, RuntimeGoldenDocFlat } from "./index.types";
 function convertToFlat(doc: RuntimeGoldenDoc) {
   const newDoc: RuntimeGoldenDocFlat = {};
 
-  for (const [goldenId, fluidPropertyEntry] of Object.entries(doc)) {
-    const { fluidProperties } = fluidPropertyEntry;
-    newDoc[goldenId] = fluidProperties;
+  for (const [goldenId, elData] of Object.entries(doc)) {
+    const elProperties = [] as FluidProperty[];
+    for (const [anchor, selectorData] of Object.entries(elData)) {
+      for (const [selector, fluidProperties] of Object.entries(selectorData)) {
+        elProperties.push(...fluidProperties);
+      }
+    }
+    newDoc[goldenId] = elProperties;
   }
 
   return newDoc;
@@ -23,14 +28,19 @@ function fillDocWithNullRanges(
 ) {
   const newDoc: RuntimeGoldenDoc = deepClone(doc);
 
-  for (const [goldenId, fluidPropertyEntry] of Object.entries(newDoc)) {
-    const { fluidProperties } = fluidPropertyEntry;
-    for (const fluidPropertyData of fluidProperties) {
-      const fullRanges = new Array(breakpointsLength).fill(null);
-      for (const range of fluidPropertyData.ranges as FluidRange[]) {
-        fullRanges[range.minBpIndex] = range;
+  for (const anchorData of Object.values(newDoc)) {
+    for (const selectorData of Object.values(anchorData)) {
+      for (const [selector, fluidProperties] of Object.entries(selectorData)) {
+        for (const fluidProperty of fluidProperties) {
+          const fullRanges = new Array(breakpointsLength).fill(
+            null
+          ) as FluidRange[];
+          for (const range of fluidProperty.ranges as FluidRange[]) {
+            fullRanges[range.minBpIndex] = range;
+          }
+          fluidProperty.ranges = fullRanges;
+        }
       }
-      fluidPropertyData.ranges = fullRanges;
     }
   }
 

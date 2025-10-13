@@ -37,6 +37,26 @@ function addElementsToState(els: ElementState[]) {
   }
 }
 
+const insertFluidPropertiesForAnchorRouter = [
+  (el: HTMLElement, ctx: InsertFluidPropertiesForAnchorContext) => {
+    const classes = el.classList;
+    const fluidProperties: FluidProperty[] = [];
+    for (const className of classes) {
+      fluidProperties.push(
+        ...insertFluidPropertiesForAnchor(`.${className}`, el, ctx)
+      );
+    }
+    return fluidProperties;
+  },
+  (el: HTMLElement, ctx: InsertFluidPropertiesForAnchorContext) => {
+    if (!el.id) return [];
+    return insertFluidPropertiesForAnchor(`#${el.id}`, el, ctx);
+  },
+  (el: HTMLElement, ctx: InsertFluidPropertiesForAnchorContext) => {
+    return insertFluidPropertiesForAnchor(el.tagName.toLowerCase(), el, ctx);
+  },
+];
+
 let addElements = (
   els: HTMLElement[],
   allEls: Map<HTMLElement, ElementState>,
@@ -49,21 +69,10 @@ let addElements = (
 
     const elState: ElementState = { el, fluidProperties: [] };
     const fluidProperties: FluidProperty[] = elState.fluidProperties;
-    for (const klass of el.classList) {
-      fluidProperties.push(
-        ...insertFluidPropertiesForAnchor(`.${klass}`, el, ctx)
-      );
+
+    for (const anchorRoute of insertFluidPropertiesForAnchorRouter) {
+      fluidProperties.push(...anchorRoute(el, ctx));
     }
-
-    const id = el.id;
-
-    if (id)
-      fluidProperties.push(
-        ...insertFluidPropertiesForAnchor(`#${id}`, el, ctx)
-      );
-
-    const tag = el.tagName.toLowerCase();
-    fluidProperties.push(...insertFluidPropertiesForAnchor(tag, el, ctx));
 
     if (fluidProperties.length <= 0) continue;
 

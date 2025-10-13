@@ -17,7 +17,7 @@ wrapAllParseDoc();
 
 import {
   wrapAll as wrapAllEngine,
-  EngineAssertionMaster,
+  engineAssertionMaster,
 } from "../../test/engine/gold-sight";
 
 wrapAllEngine();
@@ -30,5 +30,5 @@ export {
   serializeDocument,
   parseDocAssertionMaster,
   init,
-  EngineAssertionMaster,
+  engineAssertionMaster,
 };

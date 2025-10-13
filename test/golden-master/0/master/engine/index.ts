@@ -8,6 +8,7 @@ const master: EngineMaster = {
   docStructure,
   parseDocMaster,
   serializeDocMaster,
+  breakpointsLength: 2,
 };
 
 export { master };
