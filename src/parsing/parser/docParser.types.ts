@@ -59,6 +59,7 @@ type ParseStyleSheetContext = {
   sheetIndex: number;
   docResultState: DocResultState;
   globalBaselineWidth: number;
+  breakpoints: number[];
 };
 type ParseBatchesContext = ParseStyleSheetContext;
 
@@ -68,6 +69,7 @@ type ParseBatchContext = ParseBatchesContext & {
 };
 
 type ParseStyleRuleContext = ParseBatchContext & {
+  batchWidth: number;
   fluidData: FluidData;
   orderID: number;
 };
@@ -79,9 +81,10 @@ type ParsePropertyContext = ParseSelectorContext & {
 type ParseNextBatchContext = ParsePropertyContext & {
   property: string;
   minValue: string;
-  nextBatchIndex: number;
 };
-type ParseNextRuleContext = ParseNextBatchContext;
+type ParseNextRuleContext = ParseNextBatchContext & {
+  nextBatchWidth: number;
+};
 
 type InsertFluidDataContext = ParseNextRuleContext & {
   anchor: string;

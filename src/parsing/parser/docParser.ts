@@ -78,6 +78,7 @@ let parseStyleSheets = (
       sheetIndex,
       docResultState,
       globalBaselineWidth,
+      breakpoints,
     });
   }
 

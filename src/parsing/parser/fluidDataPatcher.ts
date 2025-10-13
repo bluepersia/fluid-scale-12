@@ -39,7 +39,12 @@ let parseBatch = (batch: RuleBatch, ctx: ParseBatchContext): DocResultState => {
   for (const rule of batch.rules) {
     if (rule.type !== STYLE_RULE_TYPE) continue;
     const styleRule = rule as StyleRuleClone;
-    fluidData = parseStyleRule(styleRule, { ...ctx, fluidData, orderID });
+    fluidData = parseStyleRule(styleRule, {
+      ...ctx,
+      batchWidth: batch.width,
+      fluidData,
+      orderID,
+    });
     orderID++;
   }
   return { fluidData, orderID };
@@ -98,7 +103,6 @@ let parseProperty = (
       minValue,
       property,
       fluidData,
-      nextBatchIndex,
     });
     if (newFluidData !== fluidData) {
       return newFluidData;
@@ -117,7 +121,11 @@ let parseNextBatch = (
     if (nextRule.type !== STYLE_RULE_TYPE) continue;
     const nextStyleRule = nextRule as StyleRuleClone;
     if (!splitSelector(nextStyleRule.selectorText).includes(selector)) continue;
-    const newFluidData = parseNextRule(nextStyleRule, { ...ctx, fluidData });
+    const newFluidData = parseNextRule(nextStyleRule, {
+      ...ctx,
+      nextBatchWidth: nextBatch.width,
+      fluidData,
+    });
     if (newFluidData !== fluidData) {
       return newFluidData;
     }
@@ -147,7 +155,7 @@ function getAnchor(selector: string) {
 
 let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
   const { anchor, selector, property, minValue, maxValue } = ctx;
-  const { orderID, batchIndex, nextBatchIndex } = ctx;
+  const { orderID, breakpoints, batchWidth, nextBatchWidth } = ctx;
   const newFluidData = cloneFluidData(fluidData, anchor, selector, property);
 
   if (!newFluidData[anchor]) newFluidData[anchor] = {};
@@ -164,8 +172,8 @@ let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
   newFluidData[anchor][selector][property].ranges.push({
     minValue: parseFluidValue2D(minValue),
     maxValue: parseFluidValue2D(maxValue),
-    minBpIndex: batchIndex,
-    maxBpIndex: nextBatchIndex,
+    minBpIndex: breakpoints.indexOf(batchWidth),
+    maxBpIndex: breakpoints.indexOf(nextBatchWidth),
   });
 
   return newFluidData;
