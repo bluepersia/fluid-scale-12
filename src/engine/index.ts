@@ -170,4 +170,5 @@ export {
   insertFluidPropertiesForAnchor,
   wrap,
   observeElements,
+  handleIntersection,
 };
