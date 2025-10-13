@@ -1,10 +1,14 @@
-import { FluidData } from "../parsing/parser/docParser.types";
+import { getState } from "./engineState";
+import {
+  addHiddenElement,
+  addVisibleElement,
+  removeHiddenElement,
+  removeVisibleElement,
+} from "./engineState";
 import {
   AddElementsContext,
   ElementState,
   FluidProperty,
-  FluidPropertyState,
-  GlobalState,
   InsertFluidPropertiesForAnchorContext,
 } from "./index.types";
 
@@ -27,75 +31,6 @@ function handleIntersection(entries: IntersectionObserverEntry[]) {
       elState.isVisible = false;
     }
   }
-}
-
-function observeElements(els: HTMLElement[]) {
-  for (const el of els) {
-    state.elsObserving.add(el);
-    intersectionObserver.observe(el);
-  }
-}
-
-let state: GlobalState = newState();
-
-function getState(): GlobalState {
-  return { ...state };
-}
-
-function newState(): GlobalState {
-  return {
-    breakpoints: [],
-    fluidData: {},
-    allEls: new Map(),
-    visibleEls: new Set(),
-    pendingHiddenEls: new Set(),
-    elsObserving: new Set(),
-    windowWidth: 0,
-  };
-}
-
-function resetState() {
-  state = newState();
-}
-
-function initEngineState(breakpoints: number[], fluidData: FluidData) {
-  state.breakpoints = breakpoints;
-  state.fluidData = fluidData;
-}
-
-function addElementsToState(els: ElementState[]) {
-  const { allEls } = getState();
-  for (const el of els) {
-    allEls.set(el.el, el);
-  }
-}
-
-function addVisibleElement(elState: ElementState) {
-  state.visibleEls.add(elState);
-}
-
-function addHiddenElement(elState: ElementState) {
-  state.pendingHiddenEls.add(elState);
-}
-
-function removeVisibleElement(elState: ElementState) {
-  state.visibleEls.delete(elState);
-}
-
-function removeHiddenElement(elState: ElementState) {
-  state.pendingHiddenEls.delete(elState);
-}
-
-function removeElement(elState: ElementState) {
-  state.allEls.delete(elState.el);
-  state.visibleEls.delete(elState);
-  state.pendingHiddenEls.delete(elState);
-  state.elsObserving.delete(elState.el);
-  intersectionObserver.unobserve(elState.el);
-}
-
-function updateWindowWidth() {
-  state.windowWidth = window.innerWidth;
 }
 
 const insertFluidPropertiesForAnchorRouter = [
@@ -186,67 +121,6 @@ let assignParentEls = () => {
   }
 };
 
-let update = () => {
-  updateWindowWidth();
-  const { visibleEls, pendingHiddenEls } = getState();
-
-  //Flush pending elements
-  for (const elState of pendingHiddenEls) {
-    updateElement(elState);
-  }
-
-  //Update visible elements
-  for (const elState of visibleEls) {
-    updateElement(elState);
-  }
-};
-
-update = update;
-
-function updateElement(elState: ElementState) {
-  const { el } = elState;
-
-  if (!el.isConnected) {
-    removeElement(elState);
-    return;
-  }
-
-  const { fluidProperties } = elState;
-  const stateUpdates: Map<string, FluidPropertyState> = new Map();
-  for (const fluidProperty of fluidProperties) {
-    const { property, orderID } = fluidProperty.metaData;
-    if (!stateUpdates.has(property)) {
-      stateUpdates.set(property, {
-        property,
-        value: "",
-        orderID,
-      });
-    }
-    const stateUpdate: FluidPropertyState | undefined = updateFluidProperty(
-      fluidProperty,
-      stateUpdates.get(property)
-    );
-    if (stateUpdate) {
-      stateUpdates.set(property, stateUpdate);
-    }
-  }
-
-  for (const [property, stateUpdate] of stateUpdates) {
-    el.style.setProperty(property, stateUpdate.value);
-  }
-}
-
-function updateFluidProperty(
-  fluidProperty: FluidProperty,
-  currentPropertyState: FluidPropertyState | undefined
-): FluidPropertyState | undefined {
-  if (
-    currentPropertyState &&
-    fluidProperty.metaData.orderID < currentPropertyState.orderID
-  )
-    return;
-}
-
 function wrap(
   addElementsWrapped: typeof addElements,
   insertFluidPropertiesForAnchorWrapped: typeof insertFluidPropertiesForAnchor,
@@ -258,15 +132,11 @@ function wrap(
 }
 
 export {
-  resetState,
-  getState,
-  initEngineState,
-  addElements,
-  addElementsToState,
-  insertFluidPropertiesForAnchor,
-  wrap,
-  observeElements,
   handleIntersection,
-  updateWindowWidth,
+  insertFluidPropertiesForAnchorRouter,
+  addElements,
+  insertFluidPropertiesForAnchor,
   assignParentEls,
+  intersectionObserver,
+  wrap,
 };

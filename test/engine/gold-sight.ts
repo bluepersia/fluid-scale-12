@@ -11,9 +11,9 @@ import {
 import {
   insertFluidPropertiesForAnchor,
   addElements as addElementsToEngine,
-  getState,
   assignParentEls,
-} from "../../src/engine";
+} from "../../src/engine/engineSetup";
+import { getState } from "../../src/engine/engineState";
 import init, { addElements, wrap } from "../../src";
 import {
   AddElementsContext,

@@ -13,8 +13,8 @@ import { AssertionBlueprint } from "gold-sight";
 import { serializeDocAssertionMaster } from "../parsing/serialization/gold-sight/gold-sight";
 import { parseDocAssertionMaster } from "../parsing/parser/gold-sight";
 import { engineAssertionMaster } from "./gold-sight";
-import { getState, handleIntersection, resetState } from "../../src/engine";
-import { JSDOM } from "jsdom";
+import { getState, resetState } from "../../src/engine/engineState";
+import { handleIntersection } from "../../src/engine/engineSetup";
 
 let playwrightPages: PlaywrightPage[] = [];
 

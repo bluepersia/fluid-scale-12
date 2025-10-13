@@ -1,13 +1,15 @@
 import {
-  addElementsToState,
-  initEngineState,
   addElements as addElementsToEngine,
-  getState,
   wrap as wrapEngine,
   insertFluidPropertiesForAnchor,
-  observeElements,
   assignParentEls,
-} from "./engine";
+} from "./engine/engineSetup";
+import {
+  getState,
+  observeElements,
+  initEngineState,
+  addElementsToState,
+} from "./engine/engineState";
 import { parseDocument } from "./parsing/parser/docParser";
 import { serializeDocument } from "./parsing/serialization/docSerializer";
 
