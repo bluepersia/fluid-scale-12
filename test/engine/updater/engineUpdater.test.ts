@@ -7,7 +7,7 @@ import {
   onLoadBrowserPage,
 } from "../../setup";
 import { Browser, Page } from "playwright";
-import { masterCollection } from "./masterCollection";
+import { masterCollection, masterFlowCollection } from "./masterCollection";
 import { engineUpdateAssertionMaster } from "./gold-sight";
 import { PlaywrightPage } from "../../index.types";
 import { AssertionBlueprint } from "gold-sight";
@@ -32,7 +32,7 @@ describe("update", () => {
     await onLoadBrowserPage(page, blueprint);
 
     await page.evaluate(async () => {
-      (window as any).init();
+      (window as any).init({ startEngine: false });
 
       await (window as any).waitUntil(
         () => (window as any).getState().interObserverIsInitialized
@@ -56,6 +56,52 @@ describe("update", () => {
     engineUpdateAssertionMaster.setQueueFromArray(queue);
     engineUpdateAssertionMaster.assertQueue({ master: { index } });
   });
+
+  test.each(masterFlowCollection)(
+    "should update the document in flow",
+    async (master) => {
+      const { index } = master;
+      const { page, blueprint } = playwrightPages[index];
+
+      await page.reload();
+      await onLoadBrowserPage(page, blueprint);
+
+      await page.evaluate(async () => {
+        (window as any).init({ startEngine: true });
+
+        await (window as any).waitUntil(
+          () => (window as any).getState().interObserverIsInitialized
+        );
+      });
+
+      for (const masterStep of master.steps) {
+        await page.evaluate((masterStep) => {
+          (window as any).engineUpdateAssertionMaster.master = masterStep;
+        }, masterStep);
+        await page.setViewportSize({
+          width: masterStep.coreDocStructWindowWidth,
+          height: 1000,
+        });
+        const queue: [number, AssertionBlueprint][] = await page.evaluate(
+          () => {
+            return new Promise((resolve) => {
+              // Wait two frames to ensure any async layout/render work finishes
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                  const queue = (
+                    window as any
+                  ).engineUpdateAssertionMaster.getQueue();
+                  resolve(Array.from(queue.entries()));
+                });
+              });
+            });
+          }
+        );
+        engineUpdateAssertionMaster.setQueueFromArray(queue);
+        engineUpdateAssertionMaster.assertQueue({ master: masterStep });
+      }
+    }
+  );
 });
 
 describe("getFlushProps", () => {

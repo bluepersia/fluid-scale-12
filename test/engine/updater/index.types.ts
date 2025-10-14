@@ -1,4 +1,4 @@
-import { Master } from "../../golden-master/index.types";
+import { Master, MasterStep } from "../../golden-master/index.types";
 
 type UpdateDocStruc = {
   [goldenId: string]: {
@@ -22,4 +22,8 @@ type EngineUpdateMaster = Master & {
   coreDocStructRange: number;
 };
 
-export { EngineUpdateMaster, UpdateDocStruc };
+type EngineUpdateMasterFlow = Master & {
+  steps: (EngineUpdateMaster & { step: number })[];
+};
+
+export { EngineUpdateMaster, UpdateDocStruc, EngineUpdateMasterFlow };

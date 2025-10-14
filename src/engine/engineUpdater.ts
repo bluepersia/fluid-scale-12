@@ -34,6 +34,10 @@ let update = () => {
       documentElement: document.documentElement,
     });
   }
+
+  if (globalState.config.startEngine) {
+    requestAnimationFrame(update);
+  }
 };
 
 let flushElement = (elState: ElementState) => {
@@ -78,7 +82,7 @@ let updateFluidProperties = (
   ctx: UpdateElementContext
 ) => {
   const stateUpdates: Map<string, FluidPropertyState> =
-    elState.fluidPropertiesState || new Map();
+    (elState.fluidPropertiesState = new Map());
 
   for (const fluidProperty of fluidProperties) {
     const { property, orderID } = fluidProperty.metaData;

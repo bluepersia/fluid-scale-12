@@ -1,3 +1,4 @@
+import { Config } from "../index.types";
 import { FluidData } from "../parsing/parser/docParser.types";
 import { intersectionObserver } from "./engineSetup";
 import { ElementState, GlobalState } from "./index.types";
@@ -19,6 +20,7 @@ function newState(): GlobalState {
     elsObserving: new Set(),
     windowWidth: 0,
     interObserverIsInitialized: false,
+    config: {},
   };
 }
 
@@ -26,9 +28,14 @@ function resetState() {
   state = newState();
 }
 
-function initEngineState(breakpoints: number[], fluidData: FluidData) {
+function initEngineState(
+  breakpoints: number[],
+  fluidData: FluidData,
+  config: Config
+) {
   state.breakpoints = breakpoints;
   state.fluidData = fluidData;
+  state.config = config;
 }
 
 function addElementsToState(els: ElementState[]) {

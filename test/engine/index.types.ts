@@ -1,5 +1,5 @@
 import { FluidProperty } from "../../src/engine/index.types";
-import { Master } from "../golden-master/index.types";
+import { Master, MasterStep } from "../golden-master/index.types";
 import { ParseDocMaster } from "../parsing/parser/index.types";
 import { SerializeDocMaster } from "../parsing/serialization/index.types";
 

@@ -1,3 +1,4 @@
+import { Config } from "../index.types";
 import {
   FluidData,
   FluidPropertyMetaData,
@@ -14,6 +15,7 @@ type GlobalState = {
   hiddenEls: Set<ElementState>;
   windowWidth: number;
   interObserverIsInitialized: boolean;
+  config: Config;
 };
 
 type ElementState = {
