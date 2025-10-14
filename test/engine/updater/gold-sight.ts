@@ -5,7 +5,11 @@ if (process.env.NODE_ENV === "test") {
 
 import { AssertionChain, AssertionChainForFunc } from "gold-sight";
 import { EngineUpdateMaster } from "./index.types";
-import { getCurrentRange, update } from "../../../src/engine/engineUpdater";
+import {
+  computeValues,
+  getCurrentRange,
+  update,
+} from "../../../src/engine/engineUpdater";
 import { SerializedElementState } from "../index.types";
 import {
   ElementState,
@@ -14,7 +18,11 @@ import {
   UpdateElementContext,
   UpdateFluidPropertyContext,
 } from "../../../src/engine/index.types";
-import { FluidRange } from "../../../src/parsing/parser/docParser.types";
+import {
+  FluidRange,
+  FluidValue,
+  FluidValueSingle,
+} from "../../../src/parsing/parser/docParser.types";
 
 type State = {
   master?: EngineUpdateMaster;
@@ -123,5 +131,82 @@ const getCurrentRangeAssertionChain: AssertionChainForFunc<
     if (result) {
       expect(result.minBpIndex).toBe(state.master!.coreDocStructRange);
     }
+  },
+};
+
+const computeValuesAssertionChain: AssertionChain<
+  State,
+  [FluidRange, FluidProperty, SerializedElementState],
+  number[][]
+> = {
+  "should compute the values": (state, args, result) => {
+    const [, fluidProperty, serializedElState] = args;
+
+    assertStyleValues(
+      result,
+      state.master!.coreDocStruct[serializedElState.el.goldenId][
+        fluidProperty.metaData.property
+      ].computedValues.actual
+    );
+  },
+};
+
+const interpolateValuesAssertionChain: AssertionChain<
+  State,
+  { elState: SerializedElementState; fluidProperty: FluidProperty },
+  number[][]
+> = {
+  "should interpolate the values": (state, args, result) => {
+    const { elState, fluidProperty } = args;
+    assertStyleValues(
+      result,
+      state.master!.coreDocStruct[elState.el.goldenId][
+        fluidProperty.metaData.property
+      ].computedValues.actual
+    );
+  },
+};
+
+const computeFluidValueAssertionChain: AssertionChain<
+  State,
+  [
+    FluidValue,
+    { elState: SerializedElementState; fluidProperty: FluidProperty }
+  ],
+  number
+> = {
+  "should compute the fluid value": (state, args, result) => {
+    const [fluidValue, { elState, fluidProperty }] = args;
+    let key;
+    if (fluidValue.type === "single") {
+      const { value, unit } = fluidValue as FluidValueSingle;
+      key = `${value}${unit}`;
+    }
+    expect(result).toBeCloseTo(
+      state.master!.coreDocStruct[elState.el.goldenId][
+        fluidProperty.metaData.property
+      ].conversions[`${key}`],
+      1
+    );
+  },
+};
+
+const convertToPixelsAssertionChain: AssertionChain<
+  State,
+  [
+    FluidValueSingle,
+    { elState: SerializedElementState; fluidProperty: FluidProperty }
+  ],
+  number
+> = {
+  "should convert the fluid value to pixels": (state, args, result) => {
+    const [fluidValue, { elState, fluidProperty }] = args;
+
+    expect(result).toBeCloseTo(
+      state.master!.coreDocStruct[elState.el.goldenId][
+        fluidProperty.metaData.property
+      ].conversions[`${fluidValue.value}${fluidValue.unit}`],
+      1
+    );
   },
 };
