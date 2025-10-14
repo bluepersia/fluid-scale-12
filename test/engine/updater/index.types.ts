@@ -7,8 +7,6 @@ type UpdateDocStruc = {
         [conversionId: string]: number;
       };
       computedValues: {
-        min: [[number]];
-        max: [[number]];
         actual: [[number]];
         actualOrderID: number;
       };

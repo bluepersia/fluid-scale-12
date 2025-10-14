@@ -85,12 +85,12 @@ let updateFluidProperties = (
     (elState.fluidPropertiesState = new Map());
 
   for (const fluidProperty of fluidProperties) {
-    const { property, orderID } = fluidProperty.metaData;
+    const { property } = fluidProperty.metaData;
     if (!stateUpdates.has(property)) {
       stateUpdates.set(property, {
         property,
         value: "",
-        orderID,
+        orderID: -1,
       });
     }
     const stateUpdate: FluidPropertyState | undefined = updateFluidProperty(

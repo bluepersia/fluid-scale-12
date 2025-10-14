@@ -53,15 +53,28 @@ function assertElementState(elState: SerializedElementState, state: State) {
 }
 
 function parseStyleValues(value: string) {
+  if (!value) return [[NaN]];
   return value
     .split(",")
     .map((group) => group.split(" ").map((val) => parseFloat(val)));
 }
 
-function assertStyleValues(actual: number[][], expected: number[][]) {
+function assertStyleValues(
+  actual: number[][],
+  expected: number[][],
+  msg?: string
+) {
   for (let i = 0; i < actual.length; i++) {
     for (let j = 0; j < actual[i].length; j++) {
-      expect(actual[i][j]).toBeCloseTo(expected[i][j], 1);
+      const actualValue = actual[i][j];
+      const expectedValue = expected[i][j];
+
+      if (isNaN(actualValue) || isNaN(expectedValue)) {
+        expect(actualValue).toBeNaN();
+        expect(expectedValue).toBeNaN();
+      } else {
+        expect(actual[i][j], msg).toBeCloseTo(expected[i][j], 1);
+      }
     }
   }
 }
@@ -155,7 +168,15 @@ const updateFluidPropertyAssertionChain: AssertionChain<
     if (masterProp.computedValues.actualOrderID === orderID) {
       const actualValue = parseStyleValues(fluidPropertyState.value);
 
-      assertStyleValues(actualValue, masterProp.computedValues.actual);
+      assertStyleValues(
+        actualValue,
+        masterProp.computedValues.actual,
+        JSON.stringify({
+          actualValue,
+          masterIndex: state.master!.index,
+          masterStep: state.master!.coreDocStructWindowWidth,
+        })
+      );
     }
   },
 };
