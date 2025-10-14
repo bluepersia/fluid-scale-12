@@ -11,6 +11,7 @@ type GlobalState = {
   allEls: Map<HTMLElement, ElementState>;
   visibleEls: Set<ElementState>;
   pendingHiddenEls: Set<ElementState>;
+  hiddenEls: Set<ElementState>;
   windowWidth: number;
   interObserverIsInitialized: boolean;
 };
@@ -44,6 +45,7 @@ type InsertFluidPropertiesForAnchorContext = AddElementsContext;
 type UpdateElementContext = {
   breakpoints: number[];
   windowWidth: number;
+  documentElement: HTMLElement;
 };
 
 type UpdateFluidPropertyContext = UpdateElementContext & {

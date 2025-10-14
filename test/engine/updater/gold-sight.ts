@@ -78,6 +78,16 @@ const updateAssertionChain: AssertionChain<
     for (const elState of result.visibleEls) {
       assertElementState(elState, state);
     }
+
+    for (const elState of result.hiddenEls) {
+      const props = Object.keys(
+        state.master!.coreDocStruct[elState.el.goldenId]
+      );
+
+      for (const prop of props) {
+        expect(elState.inlineStyles[prop]).toBe("");
+      }
+    }
   },
 };
 
@@ -265,9 +275,10 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
 
   update = this.wrapTopFn(update, "update", {
     resultConverter: () => {
-      const { visibleEls } = getState();
+      const { visibleEls, hiddenEls } = getState();
       return {
         visibleEls: [...visibleEls].map((el) => serializeElementState(el)),
+        hiddenEls: [...hiddenEls].map((el) => serializeElementState(el)),
       };
     },
   });

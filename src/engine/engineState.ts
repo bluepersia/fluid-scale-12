@@ -15,6 +15,7 @@ function newState(): GlobalState {
     allEls: new Map(),
     visibleEls: new Set(),
     pendingHiddenEls: new Set(),
+    hiddenEls: new Set(),
     elsObserving: new Set(),
     windowWidth: 0,
     interObserverIsInitialized: false,
@@ -42,6 +43,7 @@ function addVisibleElement(elState: ElementState) {
 }
 
 function addHiddenElement(elState: ElementState) {
+  state.hiddenEls.add(elState);
   state.pendingHiddenEls.add(elState);
 }
 
@@ -51,6 +53,7 @@ function removeVisibleElement(elState: ElementState) {
 
 function removeHiddenElement(elState: ElementState) {
   state.pendingHiddenEls.delete(elState);
+  state.hiddenEls.delete(elState);
 }
 
 function removeElement(elState: ElementState) {

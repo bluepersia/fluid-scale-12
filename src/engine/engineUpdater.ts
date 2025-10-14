@@ -25,10 +25,14 @@ let update = () => {
   for (const elState of pendingHiddenEls) {
     flushElement(elState);
   }
+  pendingHiddenEls.clear();
 
   //Update visible elements
   for (const elState of visibleEls) {
-    updateElement(elState, globalState);
+    updateElement(elState, {
+      ...globalState,
+      documentElement: document.documentElement,
+    });
   }
 };
 
@@ -208,38 +212,46 @@ let computeFluidValue = (
   throw Error(`Unknown fluid value type: ${fluidValue.type}`);
 };
 
+const unitConversionRouter: Record<
+  string,
+  (value: number, ctx: ConvertToPixelsContext) => number
+> = {
+  px: (value: number) => value,
+  em: calcEm,
+  rem: calcRem,
+};
+
 let convertToPixels = (
   value: FluidValueSingle,
   ctx: ConvertToPixelsContext
 ) => {
+  const route = unitConversionRouter[value.unit];
+  if (!route) {
+    throw Error(`Unknown unit: ${value.unit}`);
+  }
+  return route(value.value, ctx);
+};
+
+function calcEm(value: number, ctx: ConvertToPixelsContext) {
   const {
     elState,
     fluidProperty: {
       metaData: { property },
     },
+    documentElement,
   } = ctx;
-  switch (value.unit) {
-    case "px":
-      return value.value;
-    case "em": {
-      if (property === "font-size")
-        return (
-          value.value *
-          parseFloat(
-            (elState.el.parentElement || document.documentElement).style
-              .fontSize
-          )
-        );
-      else return value.value * readPropertyValue(property, elState);
-    }
-    case "rem":
-      return (
-        value.value *
-        parseFloat(getComputedStyle(document.documentElement).fontSize)
-      );
-  }
-  throw Error(`Unknown unit: ${value.unit}`);
-};
+  if (property === "font-size")
+    return (
+      value *
+      parseFloat((elState.el.parentElement || documentElement).style.fontSize)
+    );
+  else return value * readPropertyValue(property, elState);
+}
+
+function calcRem(value: number, ctx: ConvertToPixelsContext) {
+  const { documentElement } = ctx;
+  return value * parseFloat(getComputedStyle(documentElement).fontSize);
+}
 
 function wrap(
   updateWrapped: typeof update,
