@@ -43,6 +43,18 @@ let updateElement = (elState: ElementState, ctx: UpdateElementContext) => {
   }
 
   const { fluidProperties } = elState;
+  const stateUpdates = updateFluidProperties(elState, fluidProperties, ctx);
+
+  for (const [property, stateUpdate] of stateUpdates) {
+    el.style.setProperty(property, stateUpdate.value);
+  }
+};
+
+let updateFluidProperties = (
+  elState: ElementState,
+  fluidProperties: FluidProperty[],
+  ctx: UpdateElementContext
+) => {
   const stateUpdates: Map<string, FluidPropertyState> =
     elState.fluidPropertiesState || new Map();
   for (const fluidProperty of fluidProperties) {
@@ -63,10 +75,7 @@ let updateElement = (elState: ElementState, ctx: UpdateElementContext) => {
       stateUpdates.set(property, stateUpdate);
     }
   }
-
-  for (const [property, stateUpdate] of stateUpdates) {
-    el.style.setProperty(property, stateUpdate.value);
-  }
+  return stateUpdates;
 };
 
 let updateFluidProperty = (
@@ -77,31 +86,26 @@ let updateFluidProperty = (
   const { property, orderID } = fluidProperty.metaData;
   if (currentPropertyState && orderID < currentPropertyState.orderID) return;
 
-  const value = computeValueAsString(fluidProperty, ctx);
+  let value = "";
+  const currentRange = getCurrentRange(fluidProperty, ctx);
+
+  if (currentRange) {
+    const result = computeValues(
+      currentRange,
+      fluidProperty.metaData.property,
+      ctx
+    );
+
+    value = result
+      .map((group) => group.map((value) => value.toString()).join(" "))
+      .join(",");
+  }
 
   return {
     property,
     value,
     orderID,
   };
-};
-
-let computeValueAsString = (
-  fluidProperty: FluidProperty,
-  ctx: UpdateFluidPropertyContext
-) => {
-  const currentRange = getCurrentRange(fluidProperty, ctx);
-  if (!currentRange) return "";
-
-  const result = computeValues(
-    currentRange,
-    fluidProperty.metaData.property,
-    ctx
-  );
-
-  return result
-    .map((group) => group.map((value) => value.toString()).join(" "))
-    .join(",");
 };
 
 let getCurrentRange = (
