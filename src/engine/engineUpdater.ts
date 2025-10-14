@@ -217,4 +217,4 @@ let convertToPixels = (
   throw Error(`Unknown unit: ${value.unit}`);
 };
 
-export { updateElement, updateFluidProperty };
+export { updateElement, updateFluidProperty, readPropertyValue };

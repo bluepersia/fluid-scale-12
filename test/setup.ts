@@ -38,6 +38,27 @@ const JSDOMDocs = realProjectsData.map(({ htmlFilePath }, index) => {
   return { doc: generateJSDOMDocument([finalPath]), index };
 });
 
+async function startBrowserPage() {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  return { browser, page };
+}
+
+async function closeBrowserPage({
+  browser,
+  page,
+}: {
+  browser: Browser;
+  page: Page;
+}) {
+  await page.close();
+  await browser.close();
+}
+
+async function gotoPage(page: Page, url: string) {
+  await page.goto(url);
+}
+
 async function initPlaywrightPages(): Promise<PlaywrightPage[]> {
   return await Promise.all(
     realProjectsData.map(async ({ htmlFilePath, addCss }) => {
@@ -81,8 +102,11 @@ async function initPlaywrightPages(): Promise<PlaywrightPage[]> {
           window as any
         ).FluidScale.engineAssertionMaster;
 
-        // @ts-expect-error global from IIFE bundle
-        window.getQueue = window.FluidScale.getQueue;
+        (window as any).getQueue = (window as any).FluidScale.getQueue;
+
+        (window as any).readPropertyValue = (
+          window as any
+        ).FluidScale.readPropertyValue;
       });
 
       return { page, browser };
@@ -99,4 +123,10 @@ async function teardownPlaywrightPages(
   }
 }
 
-export { initPlaywrightPages, teardownPlaywrightPages, JSDOMDocs };
+export {
+  initPlaywrightPages,
+  teardownPlaywrightPages,
+  JSDOMDocs,
+  startBrowserPage,
+  closeBrowserPage,
+};

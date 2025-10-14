@@ -24,6 +24,8 @@ wrapAllEngine();
 
 import { init } from "../../src/index";
 
+import { readPropertyValue } from "../../src/engine/engineUpdater";
+
 export {
   getQueue,
   serializeDocAssertionMaster,
@@ -31,4 +33,5 @@ export {
   parseDocAssertionMaster,
   init,
   engineAssertionMaster,
+  readPropertyValue,
 };
