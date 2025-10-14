@@ -23,13 +23,33 @@ let update = () => {
 
   //Flush pending elements
   for (const elState of pendingHiddenEls) {
-    updateElement(elState, globalState);
+    flushElement(elState);
   }
 
   //Update visible elements
   for (const elState of visibleEls) {
     updateElement(elState, globalState);
   }
+};
+
+let flushElement = (elState: ElementState) => {
+  const { el, fluidProperties } = elState;
+  if (!el.isConnected) {
+    removeElement(elState);
+    return;
+  }
+  const propsToFlush = getFlushProps(fluidProperties);
+
+  for (const property of propsToFlush) {
+    el.style.removeProperty(property);
+  }
+};
+
+let getFlushProps = (fluidProperties: FluidProperty[]) => {
+  const propsToFlush: Set<string> = new Set();
+  for (const fluidProperty of fluidProperties)
+    propsToFlush.add(fluidProperty.metaData.property);
+  return propsToFlush;
 };
 
 let updateElement = (elState: ElementState, ctx: UpdateElementContext) => {
@@ -224,6 +244,7 @@ let convertToPixels = (
 function wrap(
   updateWrapped: typeof update,
   updateElementWrapped: typeof updateElement,
+  flushElementWrapped: typeof flushElement,
   updateFluidPropertiesWrapped: typeof updateFluidProperties,
   updateFluidPropertyWrapped: typeof updateFluidProperty,
   getCurrentRangeWrapped: typeof getCurrentRange,
@@ -234,6 +255,7 @@ function wrap(
 ) {
   update = updateWrapped;
   updateElement = updateElementWrapped;
+  flushElement = flushElementWrapped;
   updateFluidProperties = updateFluidPropertiesWrapped;
   updateFluidProperty = updateFluidPropertyWrapped;
   getCurrentRange = getCurrentRangeWrapped;
@@ -246,6 +268,8 @@ function wrap(
 export {
   update,
   updateElement,
+  flushElement,
+  getFlushProps,
   updateFluidProperties,
   updateFluidProperty,
   readPropertyValue,

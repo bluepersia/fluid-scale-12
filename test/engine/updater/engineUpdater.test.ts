@@ -11,6 +11,7 @@ import { masterCollection } from "./masterCollection";
 import { engineUpdateAssertionMaster } from "./gold-sight";
 import { PlaywrightPage } from "../../index.types";
 import { AssertionBlueprint } from "gold-sight";
+import { getFlushProps } from "../../../src/engine/engineUpdater";
 
 let playwrightPages: PlaywrightPage[] = [];
 
@@ -54,6 +55,32 @@ describe("update", () => {
 
     engineUpdateAssertionMaster.setQueueFromArray(queue);
     engineUpdateAssertionMaster.assertQueue({ master: { index } });
+  });
+});
+
+describe("getFlushProps", () => {
+  const cases = [
+    {
+      fluidProperties: [],
+      expected: [],
+    },
+    {
+      fluidProperties: [
+        { metaData: { property: "font-size", orderID: 0 } },
+        { metaData: { property: "line-height", orderID: 1 } },
+        { metaData: { property: "letter-spacing", orderID: 2 } },
+        { metaData: { property: "word-spacing", orderID: 3 } },
+        { metaData: { property: "line-height", orderID: 4 } },
+        { metaData: { property: "font-size", orderID: 5 } },
+      ],
+      expected: ["font-size", "line-height", "letter-spacing", "word-spacing"],
+    },
+  ];
+  test.each(cases)("should get the flush props", async (testCase) => {
+    const { fluidProperties, expected } = testCase;
+
+    const result = getFlushProps(fluidProperties as any);
+    expect([...result].sort()).toEqual(expected.sort());
   });
 });
 

@@ -12,6 +12,7 @@ import {
   computeFluidValue,
   computeValues,
   convertToPixels,
+  flushElement,
   getCurrentRange,
   interpolateValues,
   update,
@@ -87,6 +88,20 @@ const updateElementAssertionChain: AssertionChain<
 > = {
   "should update the element": (state, args, result) => {
     assertElementState(result, state);
+  },
+};
+
+const flushElementAssertionChain: AssertionChain<
+  State,
+  [ElementState],
+  SerializedElementState
+> = {
+  "should flush the element": (state, args, result) => {
+    const props = Object.keys(state.master!.coreDocStruct[result.el.goldenId]);
+
+    for (const prop of props) {
+      expect(result.inlineStyles[prop]).toBe("");
+    }
   },
 };
 
@@ -226,6 +241,7 @@ const convertToPixelsAssertionChain: AssertionChain<
 const defaultAssertions = {
   update: updateAssertionChain,
   updateElement: updateElementAssertionChain,
+  flushElement: flushElementAssertionChain,
   updateFluidProperties: updateFluidPropertiesAssertionChain,
   updateFluidProperty: updateFluidPropertyAssertionChain,
   getCurrentRange: getCurrentRangeAssertionChain,
@@ -253,6 +269,13 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
       return {
         visibleEls: [...visibleEls].map((el) => serializeElementState(el)),
       };
+    },
+  });
+
+  flushElement = this.wrapFn(flushElement, "flushElement", {
+    resultConverter: (result, args) => {
+      const [elState] = args;
+      return serializeElementState(elState);
     },
   });
 
@@ -335,6 +358,7 @@ function wrapAll() {
   wrap(
     engineUpdateAssertionMaster.update,
     engineUpdateAssertionMaster.updateElement,
+    engineUpdateAssertionMaster.flushElement,
     engineUpdateAssertionMaster.updateFluidProperties,
     engineUpdateAssertionMaster.updateFluidProperty,
     engineUpdateAssertionMaster.getCurrentRange,
