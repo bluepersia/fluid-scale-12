@@ -136,7 +136,7 @@ let computeValues = (
   const progress = (windowWidth - minBp) / (maxBp - minBp);
 
   const childCtx = { ...ctx, property };
-  let result;
+  let result: number[][];
   if (progress <= 0)
     result = currentRange.minValue.map((group) =>
       group.map((minValue) => computeFluidValue(minValue, childCtx))
@@ -161,14 +161,14 @@ let interpolateValues = (
   const { progress } = ctx;
   return minValues.map((group, groupIndex) =>
     group.map((minValue, valueIndex) => {
-      if (groupIndex >= maxValues.length) return minValue;
+      const minValuePx = computeFluidValue(minValue, ctx);
+      if (groupIndex >= maxValues.length) return minValuePx;
 
       const maxGroup = maxValues[groupIndex];
 
-      if (valueIndex >= maxGroup.length) return minValue;
+      if (valueIndex >= maxGroup.length) return minValuePx;
 
       const maxValue = maxGroup[valueIndex];
-      const minValuePx = computeFluidValue(minValue, ctx);
       const maxValuePx = computeFluidValue(maxValue, ctx);
       return minValuePx + (maxValuePx - minValuePx) * progress;
     })
