@@ -38,10 +38,58 @@ const JSDOMDocs = realProjectsData.map(({ htmlFilePath }, index) => {
   return { doc: generateJSDOMDocument([finalPath]), index };
 });
 
-async function startBrowserPage() {
+async function startBrowserPage(blueprint?: PlaywrightBlueprint) {
+  const { htmlFilePath, addCss } = blueprint ?? {};
+
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  return { browser, page };
+  const finalPath = htmlFilePath
+    ? path.resolve(__dirname, htmlFilePath, "index.html")
+    : "";
+  if (finalPath) await page.goto(`file://${finalPath}`);
+
+  if (addCss && htmlFilePath) {
+    for (const css of addCss) {
+      const cssPath = path.resolve(__dirname, htmlFilePath, css);
+      await page.addStyleTag({ path: cssPath });
+    }
+  }
+
+  // Inject the IIFE bundle and expose cloneDocument on window for tests
+  const clonerBundlePath = path.resolve(__dirname, "../bundle/dist/bundle.js");
+  page.on("console", (msg) => {
+    console.log("BROWSER LOG:", msg.text());
+  });
+  page.on("pageerror", (err) => {
+    console.log("PAGE ERROR:", err);
+  });
+  await page.addScriptTag({ path: clonerBundlePath });
+  await page.evaluate(() => {
+    // @ts-expect-error global from IIFE bundle
+    window.serializeDocument = window.FluidScale.serializeDocument;
+
+    // prettier-ignore
+    // @ts-expect-error global from IIFE bundle
+    window.serializeDocAssertionMaster = window.FluidScale.serializeDocAssertionMaster;
+
+    (window as any).parseDocAssertionMaster = (
+      window as any
+    ).FluidScale.parseDocAssertionMaster;
+
+    (window as any).init = (window as any).FluidScale.init;
+
+    (window as any).engineAssertionMaster = (
+      window as any
+    ).FluidScale.engineAssertionMaster;
+
+    (window as any).getQueue = (window as any).FluidScale.getQueue;
+
+    (window as any).readPropertyValue = (
+      window as any
+    ).FluidScale.readPropertyValue;
+  });
+
+  return { page, browser };
 }
 
 async function closeBrowserPage({
@@ -62,54 +110,7 @@ async function gotoPage(page: Page, url: string) {
 async function initPlaywrightPages(): Promise<PlaywrightPage[]> {
   return await Promise.all(
     realProjectsData.map(async ({ htmlFilePath, addCss }) => {
-      const finalPath = path.resolve(__dirname, htmlFilePath, "index.html");
-      const browser = await chromium.launch();
-      const page = await browser.newPage();
-      await page.goto(`file://${finalPath}`);
-
-      for (const css of addCss) {
-        const cssPath = path.resolve(__dirname, htmlFilePath, css);
-        await page.addStyleTag({ path: cssPath });
-      }
-
-      // Inject the IIFE bundle and expose cloneDocument on window for tests
-      const clonerBundlePath = path.resolve(
-        __dirname,
-        "../bundle/dist/bundle.js"
-      );
-      page.on("console", (msg) => {
-        console.log("BROWSER LOG:", msg.text());
-      });
-      page.on("pageerror", (err) => {
-        console.log("PAGE ERROR:", err);
-      });
-      await page.addScriptTag({ path: clonerBundlePath });
-      await page.evaluate(() => {
-        // @ts-expect-error global from IIFE bundle
-        window.serializeDocument = window.FluidScale.serializeDocument;
-
-        // prettier-ignore
-        // @ts-expect-error global from IIFE bundle
-        window.serializeDocAssertionMaster = window.FluidScale.serializeDocAssertionMaster;
-
-        (window as any).parseDocAssertionMaster = (
-          window as any
-        ).FluidScale.parseDocAssertionMaster;
-
-        (window as any).init = (window as any).FluidScale.init;
-
-        (window as any).engineAssertionMaster = (
-          window as any
-        ).FluidScale.engineAssertionMaster;
-
-        (window as any).getQueue = (window as any).FluidScale.getQueue;
-
-        (window as any).readPropertyValue = (
-          window as any
-        ).FluidScale.readPropertyValue;
-      });
-
-      return { page, browser };
+      return await startBrowserPage({ htmlFilePath, addCss });
     })
   );
 }

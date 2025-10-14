@@ -14,7 +14,7 @@ describe("readPropertyValue", () => {
   const cases = [
     {
       property: "font-size",
-      fluidPropertyState: new Map(),
+      fluidPropertiesState: new Map(),
       style: {
         "font-size": "20px",
       },
@@ -22,7 +22,7 @@ describe("readPropertyValue", () => {
     },
     {
       property: "font-size",
-      fluidPropertyState: new Map([
+      fluidPropertiesState: new Map([
         ["font-size", { property: "font-size", value: "30px", orderID: 0 }],
       ]),
       style: {},
@@ -34,7 +34,7 @@ describe("readPropertyValue", () => {
     const result = await page.evaluate(
       (testCase) => {
         const { property, style } = testCase;
-        const fluidPropertyState = new Map(testCase.fluidPropertyState);
+        const fluidPropertiesState = new Map(testCase.fluidPropertiesState);
 
         const el = document.createElement("div");
         for (const [key, value] of Object.entries(style)) {
@@ -42,14 +42,16 @@ describe("readPropertyValue", () => {
         }
         const elState = {
           el,
-          fluidPropertyState,
+          fluidPropertiesState,
         };
         document.body.appendChild(el);
         return (window as any).readPropertyValue(property, elState);
       },
       {
         ...testCase,
-        fluidPropertyState: Array.from(testCase.fluidPropertyState.entries()),
+        fluidPropertiesState: Array.from(
+          testCase.fluidPropertiesState.entries()
+        ),
       }
     );
 
