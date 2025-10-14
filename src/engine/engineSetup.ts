@@ -68,6 +68,7 @@ let addElements = (
       fluidProperties: [],
       isVisible: false,
       parentEl: undefined,
+      fluidPropertiesState: new Map(),
     };
     const fluidProperties: FluidProperty[] = elState.fluidProperties;
 

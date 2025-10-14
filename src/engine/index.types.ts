@@ -18,6 +18,7 @@ type ElementState = {
   el: HTMLElement;
   fluidProperties: FluidProperty[];
   isVisible: boolean;
+  fluidPropertiesState: Map<string, FluidPropertyState>;
   parentEl: ElementState | undefined;
 };
 
@@ -39,6 +40,25 @@ type AddElementsContext = {
 
 type InsertFluidPropertiesForAnchorContext = AddElementsContext;
 
+type UpdateElementContext = {
+  breakpoints: number[];
+  windowWidth: number;
+};
+
+type UpdateFluidPropertyContext = UpdateElementContext & {
+  elState: ElementState;
+};
+
+type PropertyContext = {
+  property: string;
+};
+
+type InterpolateValuesContext = UpdateFluidPropertyContext & {
+  progress: number;
+} & PropertyContext;
+
+type ConvertToPixelsContext = UpdateFluidPropertyContext & PropertyContext;
+
 export type {
   GlobalState,
   ElementState,
@@ -46,4 +66,8 @@ export type {
   FluidPropertyState,
   AddElementsContext,
   InsertFluidPropertiesForAnchorContext,
+  UpdateElementContext,
+  UpdateFluidPropertyContext,
+  ConvertToPixelsContext,
+  InterpolateValuesContext,
 };

@@ -1,8 +1,5 @@
 import { FluidProperty } from "../../src/engine/index.types";
-import {
-  FluidPropertyData,
-  FluidRange,
-} from "../../src/parsing/parser/docParser.types";
+import { FluidRange } from "../../src/parsing/parser/docParser.types";
 import { deepClone } from "../utils/objectCloner";
 import { RuntimeGoldenDoc, RuntimeGoldenDocFlat } from "./index.types";
 
