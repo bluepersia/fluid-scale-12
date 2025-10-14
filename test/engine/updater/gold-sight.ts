@@ -168,15 +168,7 @@ const updateFluidPropertyAssertionChain: AssertionChain<
     if (masterProp.computedValues.actualOrderID === orderID) {
       const actualValue = parseStyleValues(fluidPropertyState.value);
 
-      assertStyleValues(
-        actualValue,
-        masterProp.computedValues.actual,
-        JSON.stringify({
-          actualValue,
-          masterIndex: state.master!.index,
-          masterStep: state.master!.coreDocStructWindowWidth,
-        })
-      );
+      assertStyleValues(actualValue, masterProp.computedValues.actual);
     }
   },
 };
