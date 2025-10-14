@@ -67,7 +67,7 @@ let serializeRules = (
 ): RuleClone[] => {
   return Array.from(rules)
     .map((rule) => serializeRule(rule, ctx))
-    .filter((rule) => rule !== null);
+    .filter((rule) => rule !== null) as RuleClone[];
 };
 
 let serializeRule = (

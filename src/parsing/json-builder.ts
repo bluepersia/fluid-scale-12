@@ -20,9 +20,9 @@ function generateJSDOMDocument(inputFiles: string[]) {
 
     if (file.endsWith(".html"))
       cssFiles.push(
-        ...[...content.matchAll(/<link\s+[^>]*href=["']([^"']+\.css)["']/g)]
+        ...([...content.matchAll(/<link\s+[^>]*href=["']([^"']+\.css)["']/g)]
           .map((m) => resolvePath(m[1], file))
-          .filter((m) => m !== null)
+          .filter((m) => m !== null) as string[])
       );
   }
   let html = "<!DOCTYPE html><html><head>";
