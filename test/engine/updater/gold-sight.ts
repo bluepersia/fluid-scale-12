@@ -3,12 +3,22 @@ if (process.env.NODE_ENV === "test") {
   expect = (await import("vitest")).expect;
 }
 
-import { AssertionChain, AssertionChainForFunc } from "gold-sight";
+import AssertionMaster, {
+  AssertionChain,
+  AssertionChainForFunc,
+} from "gold-sight";
 import { EngineUpdateMaster } from "./index.types";
 import {
+  computeFluidValue,
   computeValues,
+  convertToPixels,
   getCurrentRange,
+  interpolateValues,
   update,
+  updateElement,
+  updateFluidProperties,
+  updateFluidProperty,
+  wrap,
 } from "../../../src/engine/engineUpdater";
 import { SerializedElementState } from "../index.types";
 import {
@@ -23,6 +33,8 @@ import {
   FluidValue,
   FluidValueSingle,
 } from "../../../src/parsing/parser/docParser.types";
+import { getState } from "../../../src/engine/engineState";
+import { serializeElementState } from "../serialization";
 
 type State = {
   master?: EngineUpdateMaster;
@@ -210,3 +222,127 @@ const convertToPixelsAssertionChain: AssertionChain<
     );
   },
 };
+
+const defaultAssertions = {
+  update: updateAssertionChain,
+  updateElement: updateElementAssertionChain,
+  updateFluidProperties: updateFluidPropertiesAssertionChain,
+  updateFluidProperty: updateFluidPropertyAssertionChain,
+  getCurrentRange: getCurrentRangeAssertionChain,
+  computeValues: computeValuesAssertionChain,
+  interpolateValues: interpolateValuesAssertionChain,
+  computeFluidValue: computeFluidValueAssertionChain,
+  convertToPixels: convertToPixelsAssertionChain,
+};
+
+class EngineUpdateAssertionMaster extends AssertionMaster<
+  State,
+  EngineUpdateMaster
+> {
+  constructor() {
+    super(defaultAssertions, "engineUpdate");
+  }
+
+  newState() {
+    return {};
+  }
+
+  update = this.wrapTopFn(update, "update", {
+    resultConverter: () => {
+      const { visibleEls } = getState();
+      return {
+        visibleEls: [...visibleEls].map((el) => serializeElementState(el)),
+      };
+    },
+  });
+
+  updateElement = this.wrapFn(updateElement, "updateElement", {
+    resultConverter: (result, args) => {
+      const [elState] = args;
+      return serializeElementState(elState);
+    },
+  });
+
+  updateFluidProperties = this.wrapFn(
+    updateFluidProperties,
+    "updateFluidProperties",
+    {
+      resultConverter: (result, args) => {
+        const [elState] = args;
+        return [serializeElementState(elState), Array.from(result.entries())];
+      },
+    }
+  );
+
+  updateFluidProperty = this.wrapFn(
+    updateFluidProperty,
+    "updateFluidProperty",
+    {
+      resultConverter: (result, args) => {
+        const [, , ctx] = args;
+        const { elState } = ctx;
+        return [serializeElementState(elState), result];
+      },
+    }
+  );
+
+  getCurrentRange = this.wrapFn(getCurrentRange, "getCurrentRange");
+
+  computeValues = this.wrapFn(computeValues, "computeValues", {
+    argsConverter: (args) => {
+      const [currentRange, fluidProperty, ctx] = args;
+      const { elState } = ctx;
+      return [currentRange, fluidProperty, serializeElementState(elState)];
+    },
+  });
+
+  interpolateValues = this.wrapFn(interpolateValues, "interpolateValues", {
+    argsConverter: (args) => {
+      const ctx = args[2];
+      const { elState, fluidProperty } = ctx;
+      return { elState: serializeElementState(elState), fluidProperty };
+    },
+  });
+
+  computeFluidValue = this.wrapFn(computeFluidValue, "computeFluidValue", {
+    argsConverter: (args) => {
+      const [fluidValue, ctx] = args;
+      const { elState, fluidProperty } = ctx;
+      return [
+        fluidValue,
+        { elState: serializeElementState(elState), fluidProperty },
+      ];
+    },
+  });
+
+  convertToPixels = this.wrapFn(convertToPixels, "convertToPixels", {
+    argsConverter: (args) => {
+      const [fluidValue, ctx] = args;
+
+      const { elState, fluidProperty } = ctx;
+
+      return [
+        fluidValue,
+        { elState: serializeElementState(elState), fluidProperty },
+      ];
+    },
+  });
+}
+
+const engineUpdateAssertionMaster = new EngineUpdateAssertionMaster();
+
+function wrapAll() {
+  wrap(
+    engineUpdateAssertionMaster.update,
+    engineUpdateAssertionMaster.updateElement,
+    engineUpdateAssertionMaster.updateFluidProperties,
+    engineUpdateAssertionMaster.updateFluidProperty,
+    engineUpdateAssertionMaster.getCurrentRange,
+    engineUpdateAssertionMaster.computeValues,
+    engineUpdateAssertionMaster.interpolateValues,
+    engineUpdateAssertionMaster.computeFluidValue,
+    engineUpdateAssertionMaster.convertToPixels
+  );
+}
+
+export { engineUpdateAssertionMaster, wrapAll };

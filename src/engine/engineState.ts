@@ -17,6 +17,7 @@ function newState(): GlobalState {
     pendingHiddenEls: new Set(),
     elsObserving: new Set(),
     windowWidth: 0,
+    interObserverIsInitialized: false,
   };
 }
 
@@ -71,6 +72,10 @@ function observeElements(els: HTMLElement[]) {
   }
 }
 
+function setInterObserverIsInitialized() {
+  state.interObserverIsInitialized = true;
+}
+
 export {
   getState,
   newState,
@@ -84,4 +89,5 @@ export {
   removeElement,
   updateWindowWidth,
   observeElements,
+  setInterObserverIsInitialized,
 };

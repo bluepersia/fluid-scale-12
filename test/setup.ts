@@ -1,7 +1,7 @@
 import { Browser, chromium, Page } from "playwright";
 import path from "path";
 import { fileURLToPath } from "url";
-import { PlaywrightPage } from "./index.types";
+import { PlaywrightBlueprint, PlaywrightPage } from "./index.types";
 import { generateJSDOMDocument } from "../src/parsing/json-builder";
 import { wrapAll as wrapAllSerializeDoc } from "./parsing/serialization/gold-sight/gold-sight";
 import { wrapAll as wrapAllParseDoc } from "./parsing/parser/gold-sight";
@@ -20,11 +20,6 @@ class IntersectionObserverMock {
 }
 
 (global as any).IntersectionObserver = IntersectionObserverMock;
-
-type PlaywrightBlueprint = {
-  htmlFilePath: string;
-  addCss: string[];
-};
 
 const realProjectsData: PlaywrightBlueprint[] = [
   {
@@ -47,6 +42,14 @@ async function startBrowserPage(blueprint?: PlaywrightBlueprint) {
     ? path.resolve(__dirname, htmlFilePath, "index.html")
     : "";
   if (finalPath) await page.goto(`file://${finalPath}`);
+
+  await onLoadBrowserPage(page, blueprint);
+
+  return { page, browser, blueprint };
+}
+
+async function onLoadBrowserPage(page: Page, blueprint?: PlaywrightBlueprint) {
+  const { htmlFilePath, addCss } = blueprint ?? {};
 
   if (addCss && htmlFilePath) {
     for (const css of addCss) {
@@ -84,12 +87,20 @@ async function startBrowserPage(blueprint?: PlaywrightBlueprint) {
 
     (window as any).getQueue = (window as any).FluidScale.getQueue;
 
+    (window as any).engineUpdateAssertionMaster = (
+      window as any
+    ).FluidScale.engineUpdateAssertionMaster;
+
+    (window as any).update = (window as any).FluidScale.update;
+
     (window as any).readPropertyValue = (
       window as any
     ).FluidScale.readPropertyValue;
-  });
 
-  return { page, browser };
+    (window as any).waitUntil = (window as any).FluidScale.waitUntil;
+
+    (window as any).getState = (window as any).FluidScale.getState;
+  });
 }
 
 async function closeBrowserPage({
@@ -130,4 +141,5 @@ export {
   JSDOMDocs,
   startBrowserPage,
   closeBrowserPage,
+  onLoadBrowserPage,
 };

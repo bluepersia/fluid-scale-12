@@ -1,6 +1,62 @@
 import { expect, test, describe, beforeAll, afterAll } from "vitest";
-import { startBrowserPage, closeBrowserPage } from "../../setup";
+import {
+  startBrowserPage,
+  closeBrowserPage,
+  initPlaywrightPages,
+  teardownPlaywrightPages,
+  onLoadBrowserPage,
+} from "../../setup";
 import { Browser, Page } from "playwright";
+import { masterCollection } from "./masterCollection";
+import { engineUpdateAssertionMaster } from "./gold-sight";
+import { PlaywrightPage } from "../../index.types";
+import { AssertionBlueprint } from "gold-sight";
+
+let playwrightPages: PlaywrightPage[] = [];
+
+beforeAll(async () => {
+  playwrightPages = await initPlaywrightPages();
+});
+
+afterAll(async () => {
+  await teardownPlaywrightPages(playwrightPages);
+});
+
+describe("update", () => {
+  test.each(masterCollection)("should update the document", async (master) => {
+    const { index, coreDocStructWindowWidth: width } = master;
+    const { page, blueprint } = playwrightPages[index];
+
+    await page.reload();
+    await onLoadBrowserPage(page, blueprint);
+
+    await page.evaluate(async () => {
+      (window as any).init();
+
+      await (window as any).waitUntil(
+        () => (window as any).getState().interObserverIsInitialized
+      );
+    });
+
+    await page.setViewportSize({ width, height: 1000 });
+
+    const queue: [number, AssertionBlueprint][] = await page.evaluate(
+      (master) => {
+        (window as any).engineUpdateAssertionMaster.master = master;
+        (window as any).update();
+
+        const queue = (window as any).engineUpdateAssertionMaster.getQueue();
+
+        return Array.from(queue.entries());
+      },
+      master
+    );
+
+    engineUpdateAssertionMaster.setQueueFromArray(queue);
+    engineUpdateAssertionMaster.assertQueue({ master: { index } });
+  });
+});
+
 describe("readPropertyValue", () => {
   let browserCtx: { browser: Browser; page: Page } | undefined;
   beforeAll(async () => {

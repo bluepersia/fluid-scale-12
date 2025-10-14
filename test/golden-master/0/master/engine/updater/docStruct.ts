@@ -107,13 +107,13 @@ const docStruct400: UpdateDocStruc = {
   "7": {
     "margin-bottom": {
       conversions: {
-        "1.71rem": 24.36,
+        "1.71rem": 23.94,
         "2.07rem": 28.98,
       },
       computedValues: {
-        min: [[24.36]],
+        min: [[23.94]],
         max: [[28.98]],
-        actual: [[24.873333333333333]],
+        actual: [[24.49999]],
         actualOrderID: 10,
       },
     },

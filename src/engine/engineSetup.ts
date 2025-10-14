@@ -1,4 +1,4 @@
-import { getState } from "./engineState";
+import { getState, setInterObserverIsInitialized } from "./engineState";
 import {
   addHiddenElement,
   addVisibleElement,
@@ -31,6 +31,7 @@ function handleIntersection(entries: IntersectionObserverEntry[]) {
       elState.isVisible = false;
     }
   }
+  setInterObserverIsInitialized();
 }
 
 const insertFluidPropertiesForAnchorRouter = [

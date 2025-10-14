@@ -13,8 +13,24 @@ const fluidData: FluidData = {
         },
         ranges: [
           {
-            minValue: [[{ value: 24.5, unit: "rem" } as FluidValueSingle]],
-            maxValue: [[{ value: 42.85, unit: "rem" } as FluidValueSingle]],
+            minValue: [
+              [
+                {
+                  value: 24.5,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
+            maxValue: [
+              [
+                {
+                  value: 42.85,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
             minBpIndex: 0,
             maxBpIndex: 1,
           },
@@ -27,8 +43,24 @@ const fluidData: FluidData = {
         },
         ranges: [
           {
-            minValue: [[{ value: 0.71, unit: "rem" } as FluidValueSingle]],
-            maxValue: [[{ value: 0.71, unit: "rem" } as FluidValueSingle]],
+            minValue: [
+              [
+                {
+                  value: 0.71,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
+            maxValue: [
+              [
+                {
+                  value: 0.71,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
             minBpIndex: 0,
             maxBpIndex: 1,
           },
@@ -45,8 +77,24 @@ const fluidData: FluidData = {
         },
         ranges: [
           {
-            minValue: [[{ value: 1.71, unit: "rem" } as FluidValueSingle]],
-            maxValue: [[{ value: 2.28, unit: "rem" } as FluidValueSingle]],
+            minValue: [
+              [
+                {
+                  value: 1.71,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
+            maxValue: [
+              [
+                {
+                  value: 2.28,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
             minBpIndex: 0,
             maxBpIndex: 1,
           },
@@ -59,8 +107,24 @@ const fluidData: FluidData = {
         },
         ranges: [
           {
-            minValue: [[{ value: 1.71, unit: "rem" } as FluidValueSingle]],
-            maxValue: [[{ value: 2.28, unit: "rem" } as FluidValueSingle]],
+            minValue: [
+              [
+                {
+                  value: 1.71,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
+            maxValue: [
+              [
+                {
+                  value: 2.28,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
             minBpIndex: 0,
             maxBpIndex: 1,
           },
@@ -73,8 +137,24 @@ const fluidData: FluidData = {
         },
         ranges: [
           {
-            minValue: [[{ value: 1.71, unit: "rem" } as FluidValueSingle]],
-            maxValue: [[{ value: 2.28, unit: "rem" } as FluidValueSingle]],
+            minValue: [
+              [
+                {
+                  value: 1.71,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
+            maxValue: [
+              [
+                {
+                  value: 2.28,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
             minBpIndex: 0,
             maxBpIndex: 1,
           },
@@ -87,8 +167,24 @@ const fluidData: FluidData = {
         },
         ranges: [
           {
-            minValue: [[{ value: 1.71, unit: "rem" } as FluidValueSingle]],
-            maxValue: [[{ value: 2.28, unit: "rem" } as FluidValueSingle]],
+            minValue: [
+              [
+                {
+                  value: 1.71,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
+            maxValue: [
+              [
+                {
+                  value: 2.28,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
             minBpIndex: 0,
             maxBpIndex: 1,
           },
@@ -105,8 +201,24 @@ const fluidData: FluidData = {
         },
         ranges: [
           {
-            minValue: [[{ value: 0.85, unit: "rem" } as FluidValueSingle]],
-            maxValue: [[{ value: 1.42, unit: "rem" } as FluidValueSingle]],
+            minValue: [
+              [
+                {
+                  value: 0.85,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
+            maxValue: [
+              [
+                {
+                  value: 1.42,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
             minBpIndex: 0,
             maxBpIndex: 1,
           },
@@ -123,8 +235,24 @@ const fluidData: FluidData = {
         },
         ranges: [
           {
-            minValue: [[{ value: 1.14, unit: "rem" } as FluidValueSingle]],
-            maxValue: [[{ value: 1.71, unit: "rem" } as FluidValueSingle]],
+            minValue: [
+              [
+                {
+                  value: 1.14,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
+            maxValue: [
+              [
+                {
+                  value: 1.71,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
             minBpIndex: 0,
             maxBpIndex: 1,
           },
@@ -141,8 +269,24 @@ const fluidData: FluidData = {
         },
         ranges: [
           {
-            minValue: [[{ value: 1.71, unit: "rem" } as FluidValueSingle]],
-            maxValue: [[{ value: 2.07, unit: "rem" } as FluidValueSingle]],
+            minValue: [
+              [
+                {
+                  value: 1.71,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
+            maxValue: [
+              [
+                {
+                  value: 2.07,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
             minBpIndex: 0,
             maxBpIndex: 1,
           },
@@ -159,8 +303,24 @@ const fluidData: FluidData = {
         },
         ranges: [
           {
-            minValue: [[{ value: 1.42, unit: "rem" } as FluidValueSingle]],
-            maxValue: [[{ value: 2.14, unit: "rem" } as FluidValueSingle]],
+            minValue: [
+              [
+                {
+                  value: 1.42,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
+            maxValue: [
+              [
+                {
+                  value: 2.14,
+                  unit: "rem",
+                  type: "single",
+                } as FluidValueSingle,
+              ],
+            ],
             minBpIndex: 0,
             maxBpIndex: 1,
           },

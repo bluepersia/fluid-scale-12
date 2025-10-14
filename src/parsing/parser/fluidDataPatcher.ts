@@ -236,6 +236,7 @@ function parseFluidValue(strValue: string): FluidValue {
   return {
     value,
     unit,
+    type: "single",
   } as FluidValueSingle;
 }
 
