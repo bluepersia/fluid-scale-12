@@ -32,8 +32,6 @@ let update = () => {
   }
 };
 
-update = update;
-
 let updateElement = (elState: ElementState, ctx: UpdateElementContext) => {
   const { el } = elState;
 
@@ -57,6 +55,7 @@ let updateFluidProperties = (
 ) => {
   const stateUpdates: Map<string, FluidPropertyState> =
     elState.fluidPropertiesState || new Map();
+
   for (const fluidProperty of fluidProperties) {
     const { property, orderID } = fluidProperty.metaData;
     if (!stateUpdates.has(property)) {
@@ -84,20 +83,16 @@ let updateFluidProperty = (
   ctx: UpdateFluidPropertyContext
 ): FluidPropertyState | undefined => {
   const { property, orderID } = fluidProperty.metaData;
-  if (currentPropertyState && orderID < currentPropertyState.orderID) return;
+  if (currentPropertyState?.value) return;
 
   let value = "";
   const currentRange = getCurrentRange(fluidProperty, ctx);
 
   if (currentRange) {
-    const result = computeValues(
-      currentRange,
-      fluidProperty.metaData.property,
-      ctx
-    );
+    const result = computeValues(currentRange, fluidProperty, ctx);
 
     value = result
-      .map((group) => group.map((value) => value.toString()).join(" "))
+      .map((group) => group.map((value) => `${value.toString()}px`).join(" "))
       .join(",");
   }
 
@@ -126,7 +121,7 @@ let getCurrentRange = (
 
 let computeValues = (
   currentRange: FluidRange,
-  property: string,
+  fluidProperty: FluidProperty,
   ctx: UpdateFluidPropertyContext
 ) => {
   const { minBpIndex, maxBpIndex } = currentRange;
@@ -135,7 +130,7 @@ let computeValues = (
   const maxBp = breakpoints[maxBpIndex];
   const progress = (windowWidth - minBp) / (maxBp - minBp);
 
-  const childCtx = { ...ctx, property };
+  const childCtx = { ...ctx, fluidProperty };
   let result: number[][];
   if (progress <= 0)
     result = currentRange.minValue.map((group) =>
@@ -197,7 +192,12 @@ let convertToPixels = (
   value: FluidValueSingle,
   ctx: ConvertToPixelsContext
 ) => {
-  const { elState, property } = ctx;
+  const {
+    elState,
+    fluidProperty: {
+      metaData: { property },
+    },
+  } = ctx;
   switch (value.unit) {
     case "px":
       return value.value;
@@ -221,4 +221,38 @@ let convertToPixels = (
   throw Error(`Unknown unit: ${value.unit}`);
 };
 
-export { updateElement, updateFluidProperty, readPropertyValue };
+function wrap(
+  updateWrapped: typeof update,
+  updateElementWrapped: typeof updateElement,
+  updateFluidPropertiesWrapped: typeof updateFluidProperties,
+  updateFluidPropertyWrapped: typeof updateFluidProperty,
+  getCurrentRangeWrapped: typeof getCurrentRange,
+  computeValuesWrapped: typeof computeValues,
+  interpolateValuesWrapped: typeof interpolateValues,
+  computeFluidValueWrapped: typeof computeFluidValue,
+  convertToPixelsWrapped: typeof convertToPixels
+) {
+  update = updateWrapped;
+  updateElement = updateElementWrapped;
+  updateFluidProperties = updateFluidPropertiesWrapped;
+  updateFluidProperty = updateFluidPropertyWrapped;
+  getCurrentRange = getCurrentRangeWrapped;
+  computeValues = computeValuesWrapped;
+  interpolateValues = interpolateValuesWrapped;
+  computeFluidValue = computeFluidValueWrapped;
+  convertToPixels = convertToPixelsWrapped;
+}
+
+export {
+  update,
+  updateElement,
+  updateFluidProperties,
+  updateFluidProperty,
+  readPropertyValue,
+  getCurrentRange,
+  computeValues,
+  interpolateValues,
+  computeFluidValue,
+  convertToPixels,
+  wrap,
+};

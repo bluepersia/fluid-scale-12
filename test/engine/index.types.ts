@@ -29,6 +29,8 @@ type SerializedElement = {
 type SerializedElementState = {
   el: SerializedElement;
   fluidProperties: FluidProperty[];
+  inlineStyles: Record<string, string>;
+  computedStyles: Record<string, string>;
 };
 
 export type {

@@ -50,7 +50,7 @@ type UpdateFluidPropertyContext = UpdateElementContext & {
 };
 
 type PropertyContext = {
-  property: string;
+  fluidProperty: FluidProperty;
 };
 
 type InterpolateValuesContext = UpdateFluidPropertyContext & {

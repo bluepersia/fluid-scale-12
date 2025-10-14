@@ -11,6 +11,7 @@ const docStruct400: UpdateDocStruc = {
         min: [[343]],
         max: [[599.9]],
         actual: [[371.54444]],
+        actualOrderID: 5,
       },
     },
     "border-bottom-right-radius": {
@@ -21,6 +22,7 @@ const docStruct400: UpdateDocStruc = {
         min: [[9.94]],
         max: [[9.94]],
         actual: [[9.94]],
+        actualOrderID: 5,
       },
     },
   },
@@ -34,6 +36,7 @@ const docStruct400: UpdateDocStruc = {
         min: [[23.94]],
         max: [[31.92]],
         actual: [[24.826666666666666]],
+        actualOrderID: 7,
       },
     },
     "padding-right": {
@@ -45,6 +48,7 @@ const docStruct400: UpdateDocStruc = {
         min: [[23.94]],
         max: [[31.92]],
         actual: [[24.826666666666666]],
+        actualOrderID: 7,
       },
     },
     "padding-bottom": {
@@ -56,6 +60,7 @@ const docStruct400: UpdateDocStruc = {
         min: [[23.94]],
         max: [[31.92]],
         actual: [[24.826666666666666]],
+        actualOrderID: 7,
       },
     },
     "padding-left": {
@@ -67,6 +72,7 @@ const docStruct400: UpdateDocStruc = {
         min: [[23.94]],
         max: [[31.92]],
         actual: [[24.826666666666666]],
+        actualOrderID: 7,
       },
     },
   },
@@ -80,6 +86,7 @@ const docStruct400: UpdateDocStruc = {
         min: [[11.9]],
         max: [[19.88]],
         actual: [[12.786666666666666]],
+        actualOrderID: 8,
       },
     },
   },
@@ -93,6 +100,7 @@ const docStruct400: UpdateDocStruc = {
         min: [[15.96]],
         max: [[23.94]],
         actual: [[16.846666666666666]],
+        actualOrderID: 9,
       },
     },
   },
@@ -106,11 +114,12 @@ const docStruct400: UpdateDocStruc = {
         min: [[24.36]],
         max: [[28.98]],
         actual: [[24.873333333333333]],
+        actualOrderID: 10,
       },
     },
   },
   "11": {
-    "margin-bottom": {
+    "margin-top": {
       conversions: {
         "1.42rem": 19.88,
         "2.14rem": 29.96,
@@ -119,6 +128,7 @@ const docStruct400: UpdateDocStruc = {
         min: [[19.88]],
         max: [[29.96]],
         actual: [[21]],
+        actualOrderID: 14,
       },
     },
   },

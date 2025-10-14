@@ -10,13 +10,16 @@ type UpdateDocStruc = {
         min: [[number]];
         max: [[number]];
         actual: [[number]];
+        actualOrderID: number;
       };
     };
   };
 };
 
 type EngineUpdateMaster = Master & {
-  updateDocStructure: UpdateDocStruc;
+  coreDocStruct: UpdateDocStruc;
+  coreDocStructWindowWidth: number;
+  coreDocStructRange: number;
 };
 
 export { EngineUpdateMaster, UpdateDocStruc };
