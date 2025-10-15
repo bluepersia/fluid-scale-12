@@ -3,9 +3,8 @@
   border-radius: 0.625rem;
   background-color: white;
   position: relative;
-  padding-top: 3.5rem;
   height: 16rem;
-  --span-start: height;
+  --span-start: height, padding-top;
   display: flex;
   flex-direction: column;
 }
@@ -55,7 +54,7 @@
     padding-top: 3.5rem;
     padding-left: 2rem;
     padding-right: 2rem;
-    --span-end: height;
+    --span-end: height, padding-top;
   }
 
   .course-card--intro .course-card__title {

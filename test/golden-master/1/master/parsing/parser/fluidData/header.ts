@@ -4,6 +4,7 @@ import {
   FluidRange,
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
+import { applyProperty } from "./controller";
 
 const fluidDataHeader: FluidData = {};
 
@@ -42,6 +43,12 @@ const paddingTopProperty: FluidPropertyData = {
   ranges: paddingTopRanges,
 };
 
-fluidDataHeader[".header"][".header"]["padding-top"] = paddingTopProperty;
+applyProperty(
+  fluidDataHeader,
+  ".header",
+  ".header",
+  "padding-top",
+  paddingTopProperty
+);
 
 export { fluidDataHeader };

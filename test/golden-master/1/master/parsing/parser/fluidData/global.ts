@@ -4,6 +4,7 @@ import {
   FluidRange,
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
+import { applyProperty } from "./controller";
 
 const fluidDataGlobal: FluidData = {};
 
@@ -51,9 +52,20 @@ const paddingBottom: FluidPropertyData = {
   ranges: verticalPadding,
 };
 
-fluidDataGlobal[".u-container"][".u-container"]["padding-top"] = paddingTop;
-fluidDataGlobal[".u-container"][".u-container"]["padding-bottom"] =
-  paddingBottom;
+applyProperty(
+  fluidDataGlobal,
+  ".u-container",
+  ".u-container",
+  "padding-top",
+  paddingTop
+);
+applyProperty(
+  fluidDataGlobal,
+  ".u-container",
+  ".u-container",
+  "padding-bottom",
+  paddingBottom
+);
 
 const horizontalPadding: FluidRange[] = [];
 
@@ -122,7 +134,19 @@ const paddingLeft: FluidPropertyData = {
   ranges: horizontalPadding,
 };
 
-fluidDataGlobal[".u-container"][".u-container"]["padding-right"] = paddingRight;
-fluidDataGlobal[".u-container"][".u-container"]["padding-left"] = paddingLeft;
+applyProperty(
+  fluidDataGlobal,
+  ".u-container",
+  ".u-container",
+  "padding-right",
+  paddingRight
+);
+applyProperty(
+  fluidDataGlobal,
+  ".u-container",
+  ".u-container",
+  "padding-left",
+  paddingLeft
+);
 
 export { fluidDataGlobal };

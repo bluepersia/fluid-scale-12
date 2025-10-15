@@ -4,6 +4,7 @@ import {
   FluidRange,
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
+import { applyProperty } from "./controller";
 
 const fluidDataHero: FluidData = {};
 
@@ -67,7 +68,13 @@ const heroPaddingTopProperty: FluidPropertyData = {
   ranges: heroPaddingTopRanges,
 };
 
-fluidDataHero[".hero"][".hero"]["padding-top"] = heroPaddingTopProperty;
+applyProperty(
+  fluidDataHero,
+  ".hero",
+  ".hero",
+  "padding-top",
+  heroPaddingTopProperty
+);
 
 orderID = 17;
 
@@ -104,9 +111,15 @@ const heroPaddingBottomProperty: FluidPropertyData = {
   },
   ranges: heroPaddingBottomRanges,
 };
-fluidDataHero[".hero"][".hero"]["padding-bottom"] = heroPaddingBottomProperty;
+applyProperty(
+  fluidDataHero,
+  ".hero",
+  ".hero",
+  "padding-bottom",
+  heroPaddingBottomProperty
+);
 
-orderID++;
+orderID = 18;
 
 const heroTitleFontSizeRanges: FluidRange[] = [];
 
@@ -140,8 +153,14 @@ const heroTitleFontSizeProperty: FluidPropertyData = {
   },
   ranges: heroTitleFontSizeRanges,
 };
-fluidDataHero[".hero__title"][".hero__title"]["font-size"] =
-  heroTitleFontSizeProperty;
+
+applyProperty(
+  fluidDataHero,
+  ".hero__title",
+  ".hero__title",
+  "font-size",
+  heroTitleFontSizeProperty
+);
 
 const heroTitleMarginBottomRanges: FluidRange[] = [];
 const heroTitleMarginBottomRange1: FluidRange = {
@@ -174,10 +193,16 @@ const heroTitleMarginBottomProperty: FluidPropertyData = {
   },
   ranges: heroTitleMarginBottomRanges,
 };
-fluidDataHero[".hero__title"][".hero__title"]["margin-bottom"] =
-  heroTitleMarginBottomProperty;
 
-orderID++;
+applyProperty(
+  fluidDataHero,
+  ".hero__title",
+  ".hero__title",
+  "margin-bottom",
+  heroTitleMarginBottomProperty
+);
+
+orderID = 19;
 
 const heroDescriptionMarginBottomRanges: FluidRange[] = [];
 
@@ -212,7 +237,7 @@ const heroDescriptionMarginBottomProperty: FluidPropertyData = {
   ranges: heroDescriptionMarginBottomRanges,
 };
 
-orderID += 2;
+orderID = 21;
 
 const heroImageTabletRightRanges: FluidRange[] = [];
 
@@ -246,8 +271,13 @@ const heroImageTabletRightProperty: FluidPropertyData = {
   },
   ranges: heroImageTabletRightRanges,
 };
-fluidDataHero[".hero__image--tablet"][".hero__image--tablet"]["right"] =
-  heroImageTabletRightProperty;
+applyProperty(
+  fluidDataHero,
+  ".hero__image--tablet",
+  ".hero__image--tablet",
+  "right",
+  heroImageTabletRightProperty
+);
 
 const heroImageTabletTopRanges: FluidRange[] = [];
 
@@ -281,8 +311,14 @@ const heroImageTabletTopProperty: FluidPropertyData = {
   },
   ranges: heroImageTabletTopRanges,
 };
-fluidDataHero[".hero__image--tablet"][".hero__image--tablet"]["top"] =
-  heroImageTabletTopProperty;
+
+applyProperty(
+  fluidDataHero,
+  ".hero__image--tablet",
+  ".hero__image--tablet",
+  "top",
+  heroImageTabletTopProperty
+);
 
 const heroImageTabletWidthRanges: FluidRange[] = [];
 const heroImageTabletWidthRange1: FluidRange = {
@@ -315,7 +351,13 @@ const heroImageTabletWidthProperty: FluidPropertyData = {
   },
   ranges: heroImageTabletWidthRanges,
 };
-fluidDataHero[".hero__image--tablet"][".hero__image--tablet"]["width"] =
-  heroImageTabletWidthProperty;
+
+applyProperty(
+  fluidDataHero,
+  ".hero__image--tablet",
+  ".hero__image--tablet",
+  "width",
+  heroImageTabletWidthProperty
+);
 
 export { fluidDataHero };

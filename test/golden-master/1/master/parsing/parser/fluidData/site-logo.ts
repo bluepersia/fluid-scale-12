@@ -4,6 +4,7 @@ import {
   FluidRange,
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
+import { applyProperty } from "./controller";
 
 const fluidDataSiteLogo: FluidData = {};
 
@@ -42,6 +43,12 @@ const widthProperty: FluidPropertyData = {
   ranges: widthRanges,
 };
 
-fluidDataSiteLogo[".site-logo"][".site-logo"]["width"] = widthProperty;
+applyProperty(
+  fluidDataSiteLogo,
+  ".site-logo",
+  ".site-logo",
+  "width",
+  widthProperty
+);
 
 export { fluidDataSiteLogo };

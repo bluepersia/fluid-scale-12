@@ -39,6 +39,11 @@ type FluidValueSingle = FluidValue & {
   unit: string;
 };
 
+type FluidValueString = FluidValue & {
+  type: "string";
+  value: string;
+};
+
 type DocResultState = {
   fluidData: FluidData;
   orderID: number;
@@ -116,4 +121,5 @@ export {
   ParseStyleRuleContext,
   ParseStyleSheetContext,
   ParseBatchesContext,
+  FluidValueString,
 };
