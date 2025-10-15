@@ -31,9 +31,9 @@ const realProjectsData: PlaywrightBlueprint[] = [
     addCss: [
       "css/global/global.css",
       "css/blocks/site-logo.css",
-      "css/blocks/home-page.css",
       "css/blocks/header.css",
       "css/blocks/hero.css",
+      "css/blocks/home-page.css",
       "css/blocks/course-card.css",
       "css/blocks/footer.css",
       "css/blocks/btn.css",

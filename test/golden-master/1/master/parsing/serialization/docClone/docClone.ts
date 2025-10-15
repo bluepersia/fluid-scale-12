@@ -12,9 +12,9 @@ const docClone: DocumentClone = {
   styleSheets: [
     docCloneGlobal,
     docCloneSiteLogo,
-    docCloneHomePage,
     docCloneHeader,
     docCloneHero,
+    docCloneHomePage,
     docCloneCourseCard,
     docCloneFooter,
     docCloneBtn,

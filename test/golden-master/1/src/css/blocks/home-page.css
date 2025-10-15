@@ -1,7 +1,6 @@
 .home-page__courses {
   background: linear-gradient(to bottom, white, #f0f1ff);
   padding-bottom: 5rem;
-  --force: padding-bottom;
 }
 
 .home-page__course-list {

@@ -1,7 +1,6 @@
 .hero {
   font-size: 1rem;
   padding-top: 2.375rem;
-  --force: padding-top;
 }
 
 .hero__content {

@@ -14,9 +14,7 @@ const docCloneHero: StyleSheetClone = {
         "font-size": "1rem",
         "padding-top": "2.375rem",
       },
-      specialProps: {
-        "--force": "padding-top",
-      },
+      specialProps: {},
     } as StyleRuleClone,
     {
       type: 1,

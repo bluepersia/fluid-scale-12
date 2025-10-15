@@ -12,9 +12,7 @@ const docCloneHeader: StyleSheetClone = {
       style: {
         "padding-top": "1rem",
       },
-      specialProps: {
-        "--force": "padding-top",
-      },
+      specialProps: {},
     } as StyleRuleClone,
     {
       type: 4,

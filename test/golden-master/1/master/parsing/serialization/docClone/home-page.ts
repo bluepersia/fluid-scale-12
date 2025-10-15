@@ -14,9 +14,7 @@ const docCloneHomePage: StyleSheetClone = {
         "background-position-x": "initial",
         "background-position-y": "initial",
       },
-      specialProps: {
-        "--force": "padding-bottom",
-      },
+      specialProps: {},
     } as StyleRuleClone,
     {
       type: 1,
