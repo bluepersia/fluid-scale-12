@@ -101,6 +101,15 @@ let parseProperty = (
   const appliedSpanStart = applySpanStart(styleRule, property, ctx);
   if (appliedSpanStart) return appliedSpanStart;
 
+  const { batches } = ctx;
+  if (styleRule.specialProps.force)
+    return parseNextRule(styleRule, {
+      ...ctx,
+      minValue,
+      property,
+      nextBatchWidth: batches[batches.length - 1].width,
+      docResultState,
+    });
   return parseNextBatches(minValue, property, ctx);
 };
 
