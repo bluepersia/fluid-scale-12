@@ -84,7 +84,8 @@ let serializeStyleRule = (
   ctx: SerializeDocContext
 ): StyleRuleClone | null => {
   const { style, specialProps } = serializeStyleProps(rule, ctx);
-  if (Object.keys(style).length <= 0) return null;
+  if (Object.keys(style).length <= 0 && Object.keys(specialProps).length <= 0)
+    return null;
   return {
     type: STYLE_RULE_TYPE,
     selectorText: rule.selectorText,
