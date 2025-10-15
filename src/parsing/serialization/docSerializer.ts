@@ -106,35 +106,58 @@ let serializeStyleProps = (
   }
   return styleResults;
 };
+const serializeStylePropRouter: {
+  match: (prop: string) => boolean;
+  handler: (
+    rule: CSSStyleRule,
+    prop: string,
+    ctx: CloneStylePropContext
+  ) => StyleResults;
+}[] = [
+  {
+    match: (prop: string) => FLUID_PROPERTY_NAMES.has(prop),
+    handler: (rule: CSSStyleRule, prop: string, ctx: CloneStylePropContext) => {
+      let { styleResults } = ctx;
+      return { ...styleResults, style: serializeFluidProp(rule, prop, ctx) };
+    },
+  },
+  {
+    match: (prop: string) => SPECIAL_PROPERTIES.has(prop),
+    handler: (rule: CSSStyleRule, prop: string, ctx: CloneStylePropContext) => {
+      let { styleResults } = ctx;
+      const specialProps = { ...styleResults.specialProps };
+      specialProps[prop] = rule.style.getPropertyValue(prop);
+      return { ...styleResults, specialProps };
+    },
+  },
+  {
+    match: (prop: string) => prop === "background",
+    handler: (rule: CSSStyleRule, prop: string, ctx: CloneStylePropContext) => {
+      let { styleResults } = ctx;
+      const style = { ...styleResults.style };
 
+      const bg = rule.style.getPropertyValue(prop);
+
+      if (bg.startsWith("var")) {
+        style["background-position-x"] = "";
+        style["background-position-y"] = "";
+      } else {
+        style["background-position-x"] = "initial";
+        style["background-position-y"] = "initial";
+      }
+
+      return { ...styleResults, style };
+    },
+  },
+];
 let serializeStyleProp = (
   rule: CSSStyleRule,
   prop: string,
   ctx: CloneStylePropContext
 ): StyleResults => {
-  let { styleResults } = ctx;
-
-  styleResults = { ...styleResults };
-
-  if (FLUID_PROPERTY_NAMES.has(prop)) {
-    styleResults.style = serializeFluidProp(rule, prop, ctx);
-  } else if (SPECIAL_PROPERTIES.has(prop)) {
-    const specialProps = (styleResults.specialProps = {
-      ...styleResults.specialProps,
-    });
-    specialProps[prop] = rule.style.getPropertyValue(prop);
-  } else if (prop === "background") {
-    const bg = rule.style.getPropertyValue(prop);
-
-    if (bg.startsWith("var")) {
-      styleResults.style["background-position-x"] = "";
-      styleResults.style["background-position-y"] = "";
-    } else {
-      styleResults.style["background-position-x"] = "initial";
-      styleResults.style["background-position-y"] = "initial";
-    }
-  }
-  return styleResults;
+  const route = serializeStylePropRouter.find((router) => router.match(prop));
+  if (!route) return ctx.styleResults;
+  return route.handler(rule, prop, ctx);
 };
 
 let serializeFluidProp = (
