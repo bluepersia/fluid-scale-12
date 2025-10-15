@@ -1,0 +1,13 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  --force: padding-top;
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding-top: 1.5rem;
+  }
+}

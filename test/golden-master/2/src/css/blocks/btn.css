@@ -1,0 +1,57 @@
+.btn {
+  font-family: inherit;
+  font-size: 1rem;
+  --span-start: font-size;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 1.75rem;
+  padding: 0.625rem 1.5rem;
+  --span-start: padding;
+}
+
+@media (min-width: 768px) {
+  .btn {
+    --span-end: font-size;
+  }
+}
+
+@media (min-width: 1200px) {
+  .btn {
+    font-size: 1.125rem;
+  }
+}
+.btn--dark {
+  background-color: var(--color-dark-blue);
+}
+
+.btn--radiant {
+  background: var(--color-radiant);
+  padding: 0.9375rem 2.375rem;
+  border-radius: 1.96rem;
+}
+
+.btn--transparent {
+  background: none;
+  color: #f74780;
+  font-size: 1.125rem;
+  padding: 0;
+}
+
+.btn--radiant-2 {
+  background: linear-gradient(to bottom, #4851ff, #f02aa6);
+}
+
+@media (min-width: 768px) {
+  .btn {
+    --span-end: padding;
+  }
+}
+
+@media (min-width: 1200px) {
+  .btn--dark,
+  .btn--radiant-2 {
+    padding: 0.875rem 2rem;
+  }
+}
