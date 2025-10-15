@@ -220,6 +220,7 @@ const unitConversionRouter: Record<
   string,
   (value: number, ctx: ConvertToPixelsContext) => number
 > = {
+  "": calcUnitless,
   px: (value: number) => value,
   em: calcEm,
   rem: calcRem,
@@ -235,6 +236,28 @@ let convertToPixels = (
   }
   return route(value.value, ctx);
 };
+
+function calcUnitless(value: number, ctx: ConvertToPixelsContext) {
+  const {
+    fluidProperty: {
+      metaData: { property },
+    },
+    elState: { el },
+  } = ctx;
+  if (property === "line-height") {
+    const prevValue = el.style.getPropertyValue("line-height");
+
+    el.style.setProperty("line-height", value.toString());
+
+    const result = getComputedStyle(el).getPropertyValue("line-height");
+
+    el.style.setProperty("line-height", prevValue);
+
+    return parseFloat(result);
+  }
+
+  return value;
+}
 
 function calcEm(value: number, ctx: ConvertToPixelsContext) {
   const {
