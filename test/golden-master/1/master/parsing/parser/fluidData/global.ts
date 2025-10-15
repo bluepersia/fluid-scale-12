@@ -124,3 +124,5 @@ const paddingLeft: FluidPropertyData = {
 
 fluidDataGlobal[".u-container"][".u-container"]["padding-right"] = paddingRight;
 fluidDataGlobal[".u-container"][".u-container"]["padding-left"] = paddingLeft;
+
+export { fluidDataGlobal };
