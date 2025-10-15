@@ -7,9 +7,23 @@ function serializeElement(el: HTMLElement): SerializedElement {
 }
 
 function serializeElementState(elWState: ElementState): SerializedElementState {
+  const currentInlineStyles = elWState.el.style;
+  const currentComputedStyles = getComputedStyle(elWState.el);
+  const inlineStylesRecord: Record<string, string> = {};
+  const computedStylesRecord: Record<string, string> = {};
+  for (let i = 0; i < currentInlineStyles.length; i++) {
+    const prop = currentInlineStyles[i];
+    const value = currentInlineStyles.getPropertyValue(prop);
+    if (value) {
+      inlineStylesRecord[prop] = value;
+      computedStylesRecord[prop] = currentComputedStyles.getPropertyValue(prop);
+    }
+  }
   return {
     el: serializeElement(elWState.el),
     fluidProperties: elWState.fluidProperties,
+    inlineStyles: inlineStylesRecord,
+    computedStyles: computedStylesRecord,
   };
 }
 

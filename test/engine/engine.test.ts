@@ -13,8 +13,8 @@ import { AssertionBlueprint } from "gold-sight";
 import { serializeDocAssertionMaster } from "../parsing/serialization/gold-sight/gold-sight";
 import { parseDocAssertionMaster } from "../parsing/parser/gold-sight";
 import { engineAssertionMaster } from "./gold-sight";
-import { getState, handleIntersection, resetState } from "../../src/engine";
-import { JSDOM } from "jsdom";
+import { getState, resetState } from "../../src/engine/engineState";
+import { handleIntersection } from "../../src/engine/engineSetup";
 
 let playwrightPages: PlaywrightPage[] = [];
 
@@ -103,8 +103,10 @@ describe("handleIntersection", () => {
     }
     handleIntersection(entries as any);
 
-    const { visibleEls, hiddenEls } = getState();
+    const { visibleEls, pendingHiddenEls } = getState();
     expect([...visibleEls].map((el) => el.el.id)).toEqual(["1", "3", "4", "6"]);
-    expect([...hiddenEls].map((el) => el.el.id)).toEqual(["2", "5"]);
+    expect([...pendingHiddenEls].map((el) => el.el.id)).toEqual(["2", "5"]);
+    expect([...visibleEls].every((el) => el.isVisible)).toBe(true);
+    expect([...pendingHiddenEls].every((el) => !el.isVisible)).toBe(true);
   });
 });

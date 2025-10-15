@@ -1,9 +1,14 @@
-import { FluidData } from "../parsing/parser/docParser.types";
+import { getState, setInterObserverIsInitialized } from "./engineState";
+import {
+  addHiddenElement,
+  addVisibleElement,
+  removeHiddenElement,
+  removeVisibleElement,
+} from "./engineState";
 import {
   AddElementsContext,
   ElementState,
   FluidProperty,
-  GlobalState,
   InsertFluidPropertiesForAnchorContext,
 } from "./index.types";
 
@@ -19,68 +24,16 @@ function handleIntersection(entries: IntersectionObserverEntry[]) {
     if (entry.isIntersecting) {
       addVisibleElement(elState);
       removeHiddenElement(elState);
+      elState.isVisible = true;
     } else {
       addHiddenElement(elState);
       removeVisibleElement(elState);
+      elState.isVisible = false;
     }
   }
+  setInterObserverIsInitialized();
 }
 
-function observeElements(els: HTMLElement[]) {
-  for (const el of els) {
-    state.elsObserving.add(el);
-    intersectionObserver.observe(el);
-  }
-}
-
-let state: GlobalState = newState();
-
-function getState(): GlobalState {
-  return { ...state };
-}
-
-function newState(): GlobalState {
-  return {
-    breakpoints: [],
-    fluidData: {},
-    allEls: new Map(),
-    visibleEls: new Set(),
-    hiddenEls: new Set(),
-    elsObserving: new Set(),
-  };
-}
-
-function resetState() {
-  state = newState();
-}
-
-function initEngineState(breakpoints: number[], fluidData: FluidData) {
-  state.breakpoints = breakpoints;
-  state.fluidData = fluidData;
-}
-
-function addElementsToState(els: ElementState[]) {
-  const { allEls } = getState();
-  for (const el of els) {
-    allEls.set(el.el, el);
-  }
-}
-
-function addVisibleElement(elState: ElementState) {
-  state.visibleEls.add(elState);
-}
-
-function addHiddenElement(elState: ElementState) {
-  state.hiddenEls.add(elState);
-}
-
-function removeVisibleElement(elState: ElementState) {
-  state.visibleEls.delete(elState);
-}
-
-function removeHiddenElement(elState: ElementState) {
-  state.hiddenEls.delete(elState);
-}
 const insertFluidPropertiesForAnchorRouter = [
   (el: HTMLElement, ctx: InsertFluidPropertiesForAnchorContext) => {
     const classes = el.classList;
@@ -111,7 +64,13 @@ let addElements = (
   for (const el of els) {
     if (allEls.has(el)) continue;
 
-    const elState: ElementState = { el, fluidProperties: [] };
+    const elState: ElementState = {
+      el,
+      fluidProperties: [],
+      isVisible: false,
+      parentEl: undefined,
+      fluidPropertiesState: new Map(),
+    };
     const fluidProperties: FluidProperty[] = elState.fluidProperties;
 
     for (const anchorRoute of insertFluidPropertiesForAnchorRouter) {
@@ -153,22 +112,33 @@ let insertFluidPropertiesForAnchor = (
   return fluidProperties;
 };
 
+let assignParentEls = () => {
+  const { allEls } = getState();
+  for (const elState of allEls.values()) {
+    const { el } = elState;
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      elState.parentEl = allEls.get(parentEl);
+    }
+  }
+};
+
 function wrap(
   addElementsWrapped: typeof addElements,
-  insertFluidPropertiesForAnchorWrapped: typeof insertFluidPropertiesForAnchor
+  insertFluidPropertiesForAnchorWrapped: typeof insertFluidPropertiesForAnchor,
+  assignParentElsWrapped: typeof assignParentEls
 ) {
   addElements = addElementsWrapped;
   insertFluidPropertiesForAnchor = insertFluidPropertiesForAnchorWrapped;
+  assignParentEls = assignParentElsWrapped;
 }
 
 export {
-  resetState,
-  getState,
-  initEngineState,
-  addElements,
-  addElementsToState,
-  insertFluidPropertiesForAnchor,
-  wrap,
-  observeElements,
   handleIntersection,
+  insertFluidPropertiesForAnchorRouter,
+  addElements,
+  insertFluidPropertiesForAnchor,
+  assignParentEls,
+  intersectionObserver,
+  wrap,
 };

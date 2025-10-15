@@ -1,3 +1,4 @@
+import { Config } from "../index.types";
 import {
   FluidData,
   FluidPropertyMetaData,
@@ -10,12 +11,25 @@ type GlobalState = {
   elsObserving: Set<HTMLElement>;
   allEls: Map<HTMLElement, ElementState>;
   visibleEls: Set<ElementState>;
+  pendingHiddenEls: Set<ElementState>;
   hiddenEls: Set<ElementState>;
+  windowWidth: number;
+  interObserverIsInitialized: boolean;
+  config: Config;
 };
 
 type ElementState = {
   el: HTMLElement;
   fluidProperties: FluidProperty[];
+  isVisible: boolean;
+  fluidPropertiesState: Map<string, FluidPropertyState>;
+  parentEl: ElementState | undefined;
+};
+
+type FluidPropertyState = {
+  property: string;
+  value: string;
+  orderID: number;
 };
 
 type FluidProperty = {
@@ -30,10 +44,35 @@ type AddElementsContext = {
 
 type InsertFluidPropertiesForAnchorContext = AddElementsContext;
 
+type UpdateElementContext = {
+  breakpoints: number[];
+  windowWidth: number;
+  documentElement: HTMLElement;
+};
+
+type UpdateFluidPropertyContext = UpdateElementContext & {
+  elState: ElementState;
+};
+
+type PropertyContext = {
+  fluidProperty: FluidProperty;
+};
+
+type InterpolateValuesContext = UpdateFluidPropertyContext & {
+  progress: number;
+} & PropertyContext;
+
+type ConvertToPixelsContext = UpdateFluidPropertyContext & PropertyContext;
+
 export type {
   GlobalState,
   ElementState,
   FluidProperty,
+  FluidPropertyState,
   AddElementsContext,
   InsertFluidPropertiesForAnchorContext,
+  UpdateElementContext,
+  UpdateFluidPropertyContext,
+  ConvertToPixelsContext,
+  InterpolateValuesContext,
 };

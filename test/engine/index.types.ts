@@ -1,5 +1,5 @@
 import { FluidProperty } from "../../src/engine/index.types";
-import { Master } from "../golden-master/index.types";
+import { Master, MasterStep } from "../golden-master/index.types";
 import { ParseDocMaster } from "../parsing/parser/index.types";
 import { SerializeDocMaster } from "../parsing/serialization/index.types";
 
@@ -29,6 +29,8 @@ type SerializedElement = {
 type SerializedElementState = {
   el: SerializedElement;
   fluidProperties: FluidProperty[];
+  inlineStyles: Record<string, string>;
+  computedStyles: Record<string, string>;
 };
 
 export type {

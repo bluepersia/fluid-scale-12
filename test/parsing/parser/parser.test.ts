@@ -27,6 +27,7 @@ describe("make fluid value", () => {
       expected: {
         value: 10,
         unit: "px",
+        type: "single",
       },
     },
     {
@@ -34,6 +35,7 @@ describe("make fluid value", () => {
       expected: {
         value: 2.2,
         unit: "rem",
+        type: "single",
       },
     },
   ];
@@ -52,15 +54,15 @@ describe("make fluid value", () => {
     {
       value: "10px 20px",
       expected: [
-        { value: 10, unit: "px" },
-        { value: 20, unit: "px" },
+        { value: 10, unit: "px", type: "single" },
+        { value: 20, unit: "px", type: "single" },
       ],
     },
     {
       value: "2.2rem 3.3rem",
       expected: [
-        { value: 2.2, unit: "rem" },
-        { value: 3.3, unit: "rem" },
+        { value: 2.2, unit: "rem", type: "single" },
+        { value: 3.3, unit: "rem", type: "single" },
       ],
     },
   ];
@@ -79,12 +81,12 @@ describe("make fluid value", () => {
       value: "10px 20px, 30px 40px",
       expected: [
         [
-          { value: 10, unit: "px" },
-          { value: 20, unit: "px" },
+          { value: 10, unit: "px", type: "single" },
+          { value: 20, unit: "px", type: "single" },
         ],
         [
-          { value: 30, unit: "px" },
-          { value: 40, unit: "px" },
+          { value: 30, unit: "px", type: "single" },
+          { value: 40, unit: "px", type: "single" },
         ],
       ],
     },
@@ -92,12 +94,12 @@ describe("make fluid value", () => {
       value: "20px 3.3rem, 4.4px 5.5rem",
       expected: [
         [
-          { value: 20, unit: "px" },
-          { value: 3.3, unit: "rem" },
+          { value: 20, unit: "px", type: "single" },
+          { value: 3.3, unit: "rem", type: "single" },
         ],
         [
-          { value: 4.4, unit: "px" },
-          { value: 5.5, unit: "rem" },
+          { value: 4.4, unit: "px", type: "single" },
+          { value: 5.5, unit: "rem", type: "single" },
         ],
       ],
     },

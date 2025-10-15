@@ -2,4 +2,8 @@ type Master = {
   index: number;
 };
 
-export { Master };
+type MasterStep = Master & {
+  step: number;
+};
+
+export { Master, MasterStep };
