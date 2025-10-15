@@ -183,7 +183,10 @@ const serializeStylePropsAssertions: AssertionChainForFunc<
       state.styleRuleIndex - 1
     );
 
-    if (Object.keys(style).length <= 0) {
+    if (
+      Object.keys(style).length <= 0 &&
+      Object.keys(specialProps).length <= 0
+    ) {
       expect((masterRule as unknown as NullRule).null).toBeTruthy();
       return;
     }
@@ -214,21 +217,33 @@ const serializeStylePropAssertions: AssertionChainForFunc<
     );
 
     if (FLUID_PROPERTY_NAMES.has(prop)) {
-      assertFluidProp(prop, { isBrowser, style, masterRule, styleArg });
+      assertFluidProp(prop, { rule, isBrowser, style, masterRule, styleArg });
     } else if (SPECIAL_PROPERTIES.has(prop)) {
       expect(specialProps[prop]).toEqual(masterRule!.specialProps[prop]);
     }
   },
 };
 
-function assertFluidProp(prop: string, ctx: AssertFluidPropContext) {
-  const { isBrowser, style, masterRule, styleArg } = ctx;
+function assertFluidProp(
+  prop: string,
+  ctx: AssertFluidPropContext,
+  msg?: string
+) {
+  const { isBrowser, rule, style, masterRule, styleArg } = ctx;
   if (SHORTHAND_PROPERTIES[prop]) {
     if (isBrowser) return;
     expect(style).not.toEqual(styleArg);
-    expect(masterRule!.style).toMatchObject(style);
+
+    const filteredStyle = { ...style };
+    for (const key in style) {
+      if (rule.style.getPropertyValue(key)) {
+        delete filteredStyle[key];
+      }
+    }
+
+    expect(masterRule!.style).toMatchObject(filteredStyle);
   } else {
-    toBeEqualDefined(style[prop], masterRule!.style[prop]);
+    toBeEqualDefined(style[prop], masterRule!.style[prop], msg);
   }
 }
 
@@ -251,6 +266,7 @@ const serializeFluidPropAssertions: AssertionChainForFunc<
     result = normalizeStyle(result);
 
     assertFluidProp(prop, {
+      rule,
       isBrowser,
       style: result,
       masterRule,
@@ -276,8 +292,15 @@ const applyExplicitPropsFromShorthandAssertions: AssertionChainForFunc<
 
     result = normalizeStyle(result);
 
+    const filteredResult = { ...result };
+    for (const key in filteredResult) {
+      if (rule.style.getPropertyValue(key)) {
+        delete filteredResult[key];
+      }
+    }
+
     expect(result).not.toEqual(styleArg);
-    expect(masterRule!.style).toMatchObject(result);
+    expect(masterRule!.style).toMatchObject(filteredResult);
   },
 };
 

@@ -9,7 +9,7 @@ const docCloneGlobal: StyleSheetClone = {
   cssRules: [
     {
       type: 1,
-      selectorText: "*, *::before, *::after ",
+      selectorText: "*, ::before, ::after",
       style: {
         "margin-top": "0px",
         "margin-right": "0px",
@@ -28,7 +28,7 @@ const docCloneGlobal: StyleSheetClone = {
     } as NullRule,
     {
       type: 1,
-      selectorText: "u-container",
+      selectorText: ".u-container",
       style: {
         "padding-top": "0px",
         "padding-right": "1rem",
@@ -43,7 +43,7 @@ const docCloneGlobal: StyleSheetClone = {
       cssRules: [
         {
           type: 1,
-          selectorText: "u-container",
+          selectorText: ".u-container",
           style: {
             "padding-top": "0px",
             "padding-right": "2.4375rem",
@@ -60,7 +60,7 @@ const docCloneGlobal: StyleSheetClone = {
       cssRules: [
         {
           type: 1,
-          selectorText: "u-container",
+          selectorText: ".u-container",
           style: {
             "padding-top": "0px",
             "padding-right": "10.3125rem",

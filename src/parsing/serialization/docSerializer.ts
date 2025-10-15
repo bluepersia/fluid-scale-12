@@ -123,6 +123,16 @@ let serializeStyleProp = (
       ...styleResults.specialProps,
     });
     specialProps[prop] = rule.style.getPropertyValue(prop);
+  } else if (prop === "background") {
+    const bg = rule.style.getPropertyValue(prop);
+
+    if (bg.startsWith("var")) {
+      styleResults.style["background-position-x"] = "";
+      styleResults.style["background-position-y"] = "";
+    } else {
+      styleResults.style["background-position-x"] = "initial";
+      styleResults.style["background-position-y"] = "initial";
+    }
   }
   return styleResults;
 };

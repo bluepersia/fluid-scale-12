@@ -11,7 +11,7 @@
 
 .hero__title {
   font-size: 2.5em;
-  --soan-start: font-size, margin-bottom;
+  --span-start: font-size, margin-bottom;
   color: var(--color-dark-blue);
   margin-bottom: 1.625rem;
   font-weight: 800;

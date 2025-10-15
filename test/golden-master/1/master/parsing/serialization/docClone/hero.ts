@@ -35,7 +35,7 @@ const docCloneHero: StyleSheetClone = {
         "margin-bottom": "1.625rem",
       },
       specialProps: {
-        "--soan-start": "font-size, margin-bottom",
+        "--span-start": "font-size, margin-bottom",
       },
     } as StyleRuleClone,
     {
@@ -164,3 +164,5 @@ const docCloneHero: StyleSheetClone = {
     } as MediaRuleClone,
   ],
 };
+
+export { docCloneHero };

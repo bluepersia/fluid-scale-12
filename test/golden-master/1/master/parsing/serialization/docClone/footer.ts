@@ -13,7 +13,9 @@ const docCloneFooter: StyleSheetClone = {
         "padding-top": "1rem",
         "padding-bottom": "1rem",
       },
-      specialProps: {},
+      specialProps: {
+        "--force": "padding-top, padding-bottom",
+      },
     } as StyleRuleClone,
     {
       type: 4,

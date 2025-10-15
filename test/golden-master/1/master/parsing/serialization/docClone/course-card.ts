@@ -52,6 +52,8 @@ const docCloneCourseCard: StyleSheetClone = {
       style: {
         "padding-top": "1.5rem",
         "margin-bottom": "0px",
+        "background-position-y": "",
+        "background-position-x": "",
       },
       specialProps: {},
     } as StyleRuleClone,
@@ -100,7 +102,7 @@ const docCloneCourseCard: StyleSheetClone = {
         } as StyleRuleClone,
         {
           type: 1,
-          selectorText: ".course-card__title",
+          selectorText: ".course-card--intro .course-card__title",
           style: {},
           specialProps: {
             "--span-end": "font-size",

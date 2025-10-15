@@ -63,7 +63,7 @@ const docCloneBtn: StyleSheetClone = {
     } as NullRule,
     {
       type: 1,
-      selectorText: "btn--radiant",
+      selectorText: ".btn--radiant",
       style: {
         "padding-top": "0.9375rem",
         "padding-right": "2.375rem",
@@ -73,25 +73,34 @@ const docCloneBtn: StyleSheetClone = {
         "border-bottom-right-radius": "1.96rem",
         "border-bottom-left-radius": "1.96rem",
         "border-top-left-radius": "1.96rem",
+        "background-position-y": "",
+        "background-position-x": "",
       },
       specialProps: {},
     } as StyleRuleClone,
     {
       type: 1,
-      selectorText: "btn--transparent",
+      selectorText: ".btn--transparent",
       style: {
         "padding-top": "0px",
         "padding-right": "0px",
         "padding-bottom": "0px",
         "padding-left": "0px",
         "font-size": "1.125rem",
+        "background-position-y": "initial",
+        "background-position-x": "initial",
       },
       specialProps: {},
     } as StyleRuleClone,
     {
       type: 1,
-      null: true,
-    } as NullRule,
+      selectorText: ".btn--radiant-2",
+      style: {
+        "background-position-y": "initial",
+        "background-position-x": "initial",
+      },
+      specialProps: {},
+    } as StyleRuleClone,
   ],
 };
 

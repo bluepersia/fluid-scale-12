@@ -11,6 +11,8 @@ const docCloneHomePage: StyleSheetClone = {
       selectorText: ".home-page__courses",
       style: {
         "padding-bottom": "5rem",
+        "background-position-x": "initial",
+        "background-position-y": "initial",
       },
       specialProps: {
         "--force": "padding-bottom",
