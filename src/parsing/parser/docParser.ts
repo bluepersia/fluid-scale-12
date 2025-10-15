@@ -2,7 +2,6 @@ import {
   DocumentClone,
   MediaRuleClone,
   RuleClone,
-  StyleRuleClone,
   StyleSheetClone,
 } from "../serialization/docSerializer.types";
 import {
@@ -13,19 +12,23 @@ import {
   BatchState,
   DocResultState,
   FluidData,
-  InsertFluidDataContext,
   ParseBatchContext,
   ParseBatchesContext,
   ParseDocResults,
-  ParseNextBatchContext,
-  ParseNextRuleContext,
-  ParsePropertyContext,
-  ParseSelectorContext,
-  ParseStyleRuleContext,
   ParseStyleSheetContext,
   RuleBatch,
 } from "./docParser.types";
-import { parseBatches, wrap as wrapFluidDataPatcher } from "./fluidDataPatcher";
+import {
+  insertFluidData,
+  parseBatches,
+  parseNextBatch,
+  parseNextBatches,
+  parseNextRule,
+  parseProperty,
+  parseSelector,
+  parseStyleRule,
+  wrap as wrapFluidDataPatcher,
+} from "./fluidDataPatcher";
 
 let parseDocument = (docClone: DocumentClone): ParseDocResults => {
   const { breakpoints, globalBaselineWidth } = parseMediaRules(
@@ -71,6 +74,7 @@ let parseStyleSheets = (
   let docResultState: DocResultState = {
     fluidData: {},
     orderID: 0,
+    spans: {},
   };
 
   for (const [sheetIndex, styleSheet] of styleSheets.entries()) {
@@ -214,32 +218,13 @@ function wrap(
     batch: RuleBatch,
     ctx: ParseBatchContext
   ) => DocResultState,
-  parseStyleRuleWrapped: (
-    styleRule: StyleRuleClone,
-    ctx: ParseStyleRuleContext
-  ) => FluidData,
-  parseSelectorWrapped: (
-    styleRule: StyleRuleClone,
-    selector: string,
-    ctx: ParseSelectorContext
-  ) => FluidData,
-  parsePropertyWrapped: (
-    styleRule: StyleRuleClone,
-    property: string,
-    ctx: ParsePropertyContext
-  ) => FluidData,
-  parseNextBatchWrapped: (
-    nextBatch: RuleBatch,
-    ctx: ParseNextBatchContext
-  ) => FluidData,
-  parseNextRuleWrapped: (
-    nextStyleRule: StyleRuleClone,
-    ctx: ParseNextRuleContext
-  ) => FluidData,
-  insertFluidDataWrapped: (
-    fluidData: FluidData,
-    ctx: InsertFluidDataContext
-  ) => FluidData,
+  parseStyleRuleWrapped: typeof parseStyleRule,
+  parseSelectorWrapped: typeof parseSelector,
+  parsePropertyWrapped: typeof parseProperty,
+  parseNextBatchWrapped: typeof parseNextBatch,
+  parseNextBatchesWrapped: typeof parseNextBatches,
+  parseNextRuleWrapped: typeof parseNextRule,
+  insertFluidDataWrapped: typeof insertFluidData,
   cloneFluidDataWrapped: (
     fluidData: FluidData,
     anchor: string,
@@ -262,6 +247,7 @@ function wrap(
     parseSelectorWrapped,
     parsePropertyWrapped,
     parseNextBatchWrapped,
+    parseNextBatchesWrapped,
     parseNextRuleWrapped,
     insertFluidDataWrapped,
     cloneFluidDataWrapped

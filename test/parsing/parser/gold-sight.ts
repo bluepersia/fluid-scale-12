@@ -36,6 +36,7 @@ import {
   parseBatch,
   parseBatches,
   parseNextBatch,
+  parseNextBatches,
   parseNextRule,
   parseProperty,
   parseSelector,
@@ -53,6 +54,7 @@ import {
   insertFluidDataAssertions,
   cloneFluidDataAssertions,
   assertChildFluidInsertions,
+  parseNextBatchesAssertions,
 } from "./fluidDataPatcher/gold-sight";
 
 export type State = {
@@ -188,6 +190,7 @@ const defaultAssertions = {
   parseSelector: parseSelectorAssertions,
   parseProperty: parsePropertyAssertions,
   parseNextBatch: parseNextBatchAssertions,
+  parseNextBatches: parseNextBatchesAssertions,
   parseNextRule: parseNextRuleAssertions,
   insertFluidData: insertFluidDataAssertions,
   cloneFluidData: cloneFluidDataAssertions,
@@ -243,6 +246,8 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
 
   parseNextBatch = this.wrapFn(parseNextBatch, "parseNextBatch");
 
+  parseNextBatches = this.wrapFn(parseNextBatches, "parseNextBatches");
+
   parseNextRule = this.wrapFn(parseNextRule, "parseNextRule");
 
   insertFluidData = this.wrapFn(insertFluidData, "insertFluidData");
@@ -281,6 +286,7 @@ function wrapAll() {
     parseDocAssertionMaster.parseSelector,
     parseDocAssertionMaster.parseProperty,
     parseDocAssertionMaster.parseNextBatch,
+    parseDocAssertionMaster.parseNextBatches,
     parseDocAssertionMaster.parseNextRule,
     parseDocAssertionMaster.insertFluidData,
     parseDocAssertionMaster.cloneFluidData

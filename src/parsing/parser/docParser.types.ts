@@ -42,6 +42,13 @@ type FluidValueSingle = FluidValue & {
 type DocResultState = {
   fluidData: FluidData;
   orderID: number;
+  spans: DocSpans;
+};
+
+type DocSpans = {
+  [selector: string]: {
+    [property: string]: string;
+  };
 };
 
 type BatchState = {
@@ -70,8 +77,6 @@ type ParseBatchContext = ParseBatchesContext & {
 
 type ParseStyleRuleContext = ParseBatchContext & {
   batchWidth: number;
-  fluidData: FluidData;
-  orderID: number;
 };
 type ParseSelectorContext = ParseStyleRuleContext;
 
