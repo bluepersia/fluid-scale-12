@@ -5,8 +5,8 @@ import {
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
 import { applyProperty } from "./controller";
-
-let orderID = 34;
+import { counter } from "./counter";
+let orderID = counter.next();
 
 const fluidDataCourseCard: FluidData = {};
 
@@ -73,33 +73,7 @@ applyProperty(
   courseCardPaddingLeftProperty
 );
 
-orderID = 35;
-
-const courseCardTitleFontSizeRanges: FluidRange[] = [];
-
-const courseCardTitleFontSizeRange0: FluidRange = {
-  minBpIndex: 0,
-  maxBpIndex: 2,
-  minValue: [[{ value: 1.25, unit: "em", type: "single" } as FluidValueSingle]],
-  maxValue: [[{ value: 1.5, unit: "em", type: "single" } as FluidValueSingle]],
-};
-
-courseCardTitleFontSizeRanges.push(courseCardTitleFontSizeRange0);
-
-const courseCardTitleFontSizeProperty: FluidPropertyData = {
-  metaData: { orderID, property: "font-size" },
-  ranges: courseCardTitleFontSizeRanges,
-};
-
-applyProperty(
-  fluidDataCourseCard,
-  ".course-card__title",
-  ".course-card__title",
-  "font-size",
-  courseCardTitleFontSizeProperty
-);
-
-orderID = 41;
+orderID = counter.next();
 
 const courseCardPaddingTopRanges: FluidRange[] = [];
 const courseCardPaddingTopRange1: FluidRange = {
@@ -130,7 +104,7 @@ const courseCardHeightRange1: FluidRange = {
   maxBpIndex: 2,
   minValue: [[{ value: 16, unit: "rem", type: "single" } as FluidValueSingle]],
   maxValue: [
-    [{ value: 24.125, unit: "rem", type: "single" } as FluidValueSingle],
+    [{ value: 20.125, unit: "rem", type: "single" } as FluidValueSingle],
   ],
 };
 
@@ -148,12 +122,38 @@ applyProperty(
   courseCardHeightProperty
 );
 
-orderID = 42;
+orderID = counter.next();
+
+const courseCardTitleFontSizeRanges: FluidRange[] = [];
+
+const courseCardTitleFontSizeRange1: FluidRange = {
+  minBpIndex: 1,
+  maxBpIndex: 2,
+  minValue: [[{ value: 1.25, unit: "em", type: "single" } as FluidValueSingle]],
+  maxValue: [[{ value: 1.5, unit: "em", type: "single" } as FluidValueSingle]],
+};
+
+courseCardTitleFontSizeRanges.push(courseCardTitleFontSizeRange1);
+
+const courseCardTitleFontSizeProperty: FluidPropertyData = {
+  metaData: { orderID, property: "font-size" },
+  ranges: courseCardTitleFontSizeRanges,
+};
+
+applyProperty(
+  fluidDataCourseCard,
+  ".course-card__title",
+  ".course-card__title",
+  "font-size",
+  courseCardTitleFontSizeProperty
+);
+
+orderID = counter.next();
 
 const courseCardIntroTitleFontSizeRanges: FluidRange[] = [];
 
 const courseCardIntroTitleFontSizeRange1: FluidRange = {
-  minBpIndex: 0,
+  minBpIndex: 1,
   maxBpIndex: 2,
   minValue: [[{ value: 1.5, unit: "em", type: "single" } as FluidValueSingle]],
   maxValue: [[{ value: 2, unit: "em", type: "single" } as FluidValueSingle]],
@@ -168,7 +168,7 @@ const courseCardIntroTitleFontSizeProperty: FluidPropertyData = {
 
 applyProperty(
   fluidDataCourseCard,
-  ".course-card--intro .course-card__title",
+  ".course-card__title",
   ".course-card--intro .course-card__title",
   "font-size",
   courseCardIntroTitleFontSizeProperty

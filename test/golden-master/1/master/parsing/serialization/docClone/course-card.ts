@@ -21,7 +21,7 @@ const docCloneCourseCard: StyleSheetClone = {
         height: "16rem",
       },
       specialProps: {
-        "--span-start": "height",
+        "--span-start": "height, padding-top",
       },
     } as StyleRuleClone,
     {
@@ -92,14 +92,22 @@ const docCloneCourseCard: StyleSheetClone = {
           type: 1,
           selectorText: ".course-card",
           style: {
-            "padding-top": "3.5rem",
             "padding-right": "2rem",
             "padding-left": "2rem",
           },
           specialProps: {
-            "--span-end": "height",
+            "--span-end": "height, padding-top",
           },
         } as StyleRuleClone,
+        {
+          type: 1,
+          selectorText: ".course-card__title",
+          style: {},
+          specialProps: {
+            "--span-end": "font-size",
+          },
+        } as StyleRuleClone,
+
         {
           type: 1,
           selectorText: ".course-card--intro .course-card__title",

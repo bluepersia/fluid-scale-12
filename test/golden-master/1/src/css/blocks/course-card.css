@@ -1,5 +1,6 @@
 .course-card {
   padding: 2rem 1.75rem;
+  padding-top: 3.5rem;
   border-radius: 0.625rem;
   background-color: white;
   position: relative;
@@ -51,10 +52,13 @@
 
 @media (min-width: 768px) {
   .course-card {
-    padding-top: 3.5rem;
     padding-left: 2rem;
     padding-right: 2rem;
     --span-end: height, padding-top;
+  }
+
+  .course-card__title {
+    --span-end: font-size;
   }
 
   .course-card--intro .course-card__title {

@@ -76,7 +76,9 @@ const docCloneBtn: StyleSheetClone = {
         "background-position-y": "",
         "background-position-x": "",
       },
-      specialProps: {},
+      specialProps: {
+        "--force": "padding",
+      },
     } as StyleRuleClone,
     {
       type: 1,
@@ -90,7 +92,9 @@ const docCloneBtn: StyleSheetClone = {
         "background-position-y": "initial",
         "background-position-x": "initial",
       },
-      specialProps: {},
+      specialProps: {
+        "--force": "font-size",
+      },
     } as StyleRuleClone,
     {
       type: 1,

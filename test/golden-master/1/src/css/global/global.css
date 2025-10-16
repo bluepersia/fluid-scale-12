@@ -19,6 +19,9 @@ body {
   padding: 0 1rem;
 }
 
+@media (min-width: 375px) {
+}
+
 @media (min-width: 768px) {
   .u-container {
     padding: 0 2.4375rem;

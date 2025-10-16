@@ -75,6 +75,7 @@ let parseStyleSheets = (
     fluidData: {},
     orderID: 0,
     spans: {},
+    isNew: false,
   };
 
   for (const [sheetIndex, styleSheet] of styleSheets.entries()) {

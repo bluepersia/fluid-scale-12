@@ -39,6 +39,11 @@ const docCloneGlobal: StyleSheetClone = {
     } as StyleRuleClone,
     {
       type: 4,
+      minWidth: 375,
+      cssRules: [],
+    } as MediaRuleClone,
+    {
+      type: 4,
       minWidth: 768,
       cssRules: [
         {

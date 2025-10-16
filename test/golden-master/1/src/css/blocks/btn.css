@@ -30,12 +30,14 @@
   background: var(--color-radiant);
   padding: 0.9375rem 2.375rem;
   border-radius: 1.96rem;
+  --force: padding;
 }
 
 .btn--transparent {
   background: none;
   color: #f74780;
   font-size: 1.125rem;
+  --force: font-size;
   padding: 0;
 }
 

@@ -5,8 +5,8 @@ import {
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
 import { applyProperty } from "./controller";
-
-let orderID = 49;
+import { counter } from "./counter";
+let orderID = counter.next();
 
 const fluidDataBtn: FluidData = {};
 
@@ -29,5 +29,83 @@ const btnFontSizeProperty: FluidPropertyData = {
 };
 
 applyProperty(fluidDataBtn, ".btn", ".btn", "font-size", btnFontSizeProperty);
+
+const btnPaddingHorizontalRanges: FluidRange[] = [];
+
+const btnPaddingHorizontalRange1: FluidRange = {
+  minBpIndex: 1,
+  maxBpIndex: 2,
+  minValue: [[{ value: 1.5, unit: "rem", type: "single" } as FluidValueSingle]],
+  maxValue: [[{ value: 2, unit: "rem", type: "single" } as FluidValueSingle]],
+};
+
+btnPaddingHorizontalRanges.push(btnPaddingHorizontalRange1);
+
+const btnPaddingLeftProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-left" },
+  ranges: btnPaddingHorizontalRanges,
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "padding-left",
+  btnPaddingLeftProperty
+);
+
+const btnPaddingRightProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-right" },
+  ranges: btnPaddingHorizontalRanges,
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "padding-right",
+  btnPaddingRightProperty
+);
+
+const btnPaddingVerticalRanges: FluidRange[] = [];
+
+const btnPaddingVerticalRange1: FluidRange = {
+  minBpIndex: 1,
+  maxBpIndex: 2,
+  minValue: [
+    [{ value: 0.625, unit: "rem", type: "single" } as FluidValueSingle],
+  ],
+  maxValue: [
+    [{ value: 0.875, unit: "rem", type: "single" } as FluidValueSingle],
+  ],
+};
+
+btnPaddingVerticalRanges.push(btnPaddingVerticalRange1);
+
+const btnPaddingTopProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-top" },
+  ranges: btnPaddingVerticalRanges,
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "padding-top",
+  btnPaddingTopProperty
+);
+
+const btnPaddingBottomProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-bottom" },
+  ranges: btnPaddingVerticalRanges,
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "padding-bottom",
+  btnPaddingBottomProperty
+);
 
 export { fluidDataBtn };

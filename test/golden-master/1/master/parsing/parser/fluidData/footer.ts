@@ -5,8 +5,8 @@ import {
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
 import { applyProperty } from "./controller";
-
-let orderID = 47;
+import { counter } from "./counter";
+let orderID = counter.next();
 
 const fluidDataFooter: FluidData = {};
 

@@ -71,7 +71,7 @@ const docCloneHomePage: StyleSheetClone = {
           style: {
             "row-gap": "5rem",
             "column-gap": "1.875rem",
-            "grid-template-columns": "repeat(3, 1fr)",
+            "grid-template-columns": "repeat(auto-fit, minmax(21.875rem, 1fr))",
           },
           specialProps: {},
         } as StyleRuleClone,

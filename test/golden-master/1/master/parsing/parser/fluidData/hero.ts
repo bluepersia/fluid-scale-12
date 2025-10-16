@@ -5,10 +5,10 @@ import {
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
 import { applyProperty } from "./controller";
+import { counter } from "./counter";
+let orderID = counter.next();
 
 const fluidDataHero: FluidData = {};
-
-let orderID = 11;
 
 const heroPaddingTopRanges: FluidRange[] = [];
 
@@ -76,7 +76,7 @@ applyProperty(
   heroPaddingTopProperty
 );
 
-orderID = 17;
+orderID = counter.next();
 
 const heroPaddingBottomRanges: FluidRange[] = [];
 
@@ -119,7 +119,7 @@ applyProperty(
   heroPaddingBottomProperty
 );
 
-orderID = 18;
+orderID = counter.next();
 
 const heroTitleFontSizeRanges: FluidRange[] = [];
 
@@ -202,7 +202,7 @@ applyProperty(
   heroTitleMarginBottomProperty
 );
 
-orderID = 19;
+orderID = counter.next();
 
 const heroDescriptionMarginBottomRanges: FluidRange[] = [];
 
@@ -237,7 +237,15 @@ const heroDescriptionMarginBottomProperty: FluidPropertyData = {
   ranges: heroDescriptionMarginBottomRanges,
 };
 
-orderID = 21;
+applyProperty(
+  fluidDataHero,
+  ".hero__description",
+  ".hero__description",
+  "margin-bottom",
+  heroDescriptionMarginBottomProperty
+);
+
+orderID = counter.next();
 
 const heroImageTabletRightRanges: FluidRange[] = [];
 

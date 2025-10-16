@@ -5,6 +5,9 @@ import {
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
 import { applyProperty } from "./controller";
+import { counter } from "./counter";
+
+let orderID = counter.next();
 
 const fluidDataSiteLogo: FluidData = {};
 
@@ -37,7 +40,7 @@ widthRanges.push(widthRange1);
 
 const widthProperty: FluidPropertyData = {
   metaData: {
-    orderID: 6,
+    orderID,
     property: "width",
   },
   ranges: widthRanges,

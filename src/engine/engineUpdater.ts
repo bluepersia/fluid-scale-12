@@ -160,14 +160,9 @@ let computeValues = (
 
   const childCtx = { ...ctx, fluidProperty };
   let result: number[][];
-  if (progress <= 0)
-    result = currentRange.minValue.map((group) =>
-      group.map((minValue) => computeFluidValue(minValue, childCtx))
-    );
+  if (progress <= 0) result = calcFluidArray(currentRange.minValue, childCtx);
   else if (progress >= 1)
-    result = currentRange.maxValue.map((group) =>
-      group.map((maxValue) => computeFluidValue(maxValue, childCtx))
-    );
+    result = calcFluidArray(currentRange.maxValue, childCtx);
   else
     result = interpolateValues(currentRange.minValue, currentRange.maxValue, {
       ...childCtx,
@@ -176,12 +171,28 @@ let computeValues = (
   return result;
 };
 
+function calcFluidArray(
+  values: FluidValue[][] | string,
+  ctx: ConvertToPixelsContext
+) {
+  if (typeof values === "string")
+    throw Error("Absolute strings not implemented yet");
+
+  return values.map((group) =>
+    group.map((value) => computeFluidValue(value, ctx))
+  );
+}
+
 let interpolateValues = (
-  minValues: FluidValue[][],
-  maxValues: FluidValue[][],
+  minValues: FluidValue[][] | string,
+  maxValues: FluidValue[][] | string,
   ctx: InterpolateValuesContext
 ) => {
   const { progress } = ctx;
+  if (typeof minValues === "string")
+    throw Error("Absolute strings not implemented yet");
+  if (typeof maxValues === "string")
+    throw Error("Absolute strings not implemented yet");
   return minValues.map((group, groupIndex) =>
     group.map((minValue, valueIndex) => {
       const minValuePx = computeFluidValue(minValue, ctx);

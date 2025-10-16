@@ -6,10 +6,10 @@ import {
   FluidValueString,
 } from "../../../../../../../src/parsing/parser/docParser.types";
 import { applyProperty } from "./controller";
-
+import { counter } from "./counter";
 const fluidDataHomePage: FluidData = {};
 
-let orderID = 28;
+let orderID = counter.next();
 
 const homePageCoursesPaddingBottomRanges: FluidRange[] = [];
 const homePageCoursesPaddingBottomRange0: FluidRange = {
@@ -77,7 +77,7 @@ applyProperty(
   homePageCoursesPaddingBottomProperty
 );
 
-orderID = 29;
+orderID = counter.next();
 
 const homepageCourseListRowGapRanges: FluidRange[] = [];
 
@@ -150,24 +150,8 @@ const homepageCourseListGridTemplateColumnsRanges: FluidRange[] = [];
 const homepageCourseListGridTemplateColumnsRange0: FluidRange = {
   minBpIndex: 0,
   maxBpIndex: 2,
-  minValue: [
-    [
-      {
-        value: "repeat(auto-fit, minmax(21.43rem, 1fr))",
-        unit: "",
-        type: "single",
-      } as FluidValueString,
-    ],
-  ],
-  maxValue: [
-    [
-      {
-        value: "repeat(auto-fit, minmax(21.875rem, 1fr))",
-        unit: "",
-        type: "single",
-      } as FluidValueString,
-    ],
-  ],
+  minValue: "repeat(auto-fit, minmax(21.43rem, 1fr))",
+  maxValue: "repeat(auto-fit, minmax(21.875rem, 1fr))",
 };
 homepageCourseListGridTemplateColumnsRanges.push(
   homepageCourseListGridTemplateColumnsRange0
@@ -189,7 +173,7 @@ applyProperty(
   homepageCourseListGridTemplateColumnsProperty
 );
 
-orderID = 31;
+orderID = counter.next();
 
 const homepageCourseListColumnGapRanges: FluidRange[] = [];
 const homepageCourseListColumnGapRange1: FluidRange = {

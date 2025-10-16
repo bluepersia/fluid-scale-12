@@ -5,6 +5,9 @@ import {
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
 import { applyProperty } from "./controller";
+import { counter } from "./counter";
+
+let orderID = counter.next();
 
 const fluidDataHeader: FluidData = {};
 
@@ -37,7 +40,7 @@ paddingTopRanges.push(paddingTopRange);
 
 const paddingTopProperty: FluidPropertyData = {
   metaData: {
-    orderID: 9,
+    orderID,
     property: "padding-top",
   },
   ranges: paddingTopRanges,

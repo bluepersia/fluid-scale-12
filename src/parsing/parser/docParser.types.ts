@@ -24,8 +24,8 @@ type FluidPropertyMetaData = {
 };
 
 type FluidRange = {
-  minValue: FluidValue[][];
-  maxValue: FluidValue[][];
+  minValue: FluidValue[][] | string;
+  maxValue: FluidValue[][] | string;
   minBpIndex: number;
   maxBpIndex: number;
 };
@@ -48,6 +48,7 @@ type DocResultState = {
   fluidData: FluidData;
   orderID: number;
   spans: DocSpans;
+  isNew: boolean;
 };
 
 type DocSpans = {

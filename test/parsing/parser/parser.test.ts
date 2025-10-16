@@ -89,6 +89,7 @@ describe("make fluid value", () => {
           { value: 40, unit: "px", type: "single" },
         ],
       ],
+      property: "padding",
     },
     {
       value: "20px 3.3rem, 4.4px 5.5rem",
@@ -102,13 +103,19 @@ describe("make fluid value", () => {
           { value: 5.5, unit: "rem", type: "single" },
         ],
       ],
+      property: "width",
+    },
+    {
+      value: "repeat(auto-fit, minmax(21.43rem, 1fr))",
+      property: "grid-template-columns",
+      expected: "repeat(auto-fit, minmax(21.43rem, 1fr))",
     },
   ];
   test.each(parse2DFluidValueArrayTests)(
     "should make a 2D fluid value array from 2D values",
     (testCase) => {
-      const { value, expected } = testCase;
-      const result = parseFluidValue2D(value);
+      const { value, expected, property } = testCase;
+      const result = parseFluidValue2D(value, { property });
 
       expect(result).toEqual(expected);
     }

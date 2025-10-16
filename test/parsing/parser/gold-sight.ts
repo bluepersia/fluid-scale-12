@@ -94,8 +94,6 @@ const parseStyleSheetAssertions: AssertionChainForFunc<
       allAssertions,
       { result: result.fluidData, state, prevFluidData: fluidData }
     );
-
-    expect(result.orderID).toBe(orderID + 1 * countStyleRulesInSheet(args[0]));
   },
 };
 
@@ -250,7 +248,9 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
 
   parseNextRule = this.wrapFn(parseNextRule, "parseNextRule");
 
-  insertFluidData = this.wrapFn(insertFluidData, "insertFluidData");
+  insertFluidData = this.wrapFn(insertFluidData, "insertFluidData", {
+    getId: (args) => args[1].selector,
+  });
 
   cloneFluidData = this.wrapFn(cloneFluidData, "cloneFluidData", {
     resultConverter: (result, args) => {

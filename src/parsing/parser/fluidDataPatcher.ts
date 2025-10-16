@@ -39,14 +39,20 @@ let parseBatch = (batch: RuleBatch, ctx: ParseBatchContext): DocResultState => {
   for (const rule of batch.rules) {
     if (rule.type !== STYLE_RULE_TYPE) continue;
     const styleRule = rule as StyleRuleClone;
-    docResultState = {
+    const newDocResultState = {
       ...parseStyleRule(styleRule, {
         ...ctx,
         batchWidth: batch.width,
         docResultState,
       }),
     };
-    docResultState.orderID++;
+    if (newDocResultState.isNew) {
+      docResultState = { ...newDocResultState };
+      docResultState.orderID++;
+      docResultState.isNew = false;
+    } else {
+      docResultState = newDocResultState;
+    }
   }
   return docResultState;
 };
@@ -75,6 +81,15 @@ let parseSelector = (
   ctx: ParseSelectorContext
 ): DocResultState => {
   let { docResultState } = ctx;
+
+  const spanEnds = applySpanEnd(styleRule, selector, ctx);
+
+  if (spanEnds.length > 0) {
+    styleRule = { ...styleRule, style: { ...styleRule.style } };
+    for (const [key, value] of spanEnds) {
+      styleRule.style[key] = value;
+    }
+  }
   for (const property of Object.keys(styleRule.style)) {
     docResultState = parseProperty(styleRule, property, {
       ...ctx,
@@ -91,12 +106,8 @@ let parseProperty = (
   ctx: ParsePropertyContext
 ): DocResultState => {
   let { docResultState } = ctx;
-  const { selector } = ctx;
 
-  const { spans } = docResultState;
-  const spanEnd = spans[selector]?.[property];
-  if (spanEnd) delete spans[selector][property];
-  const minValue = spanEnd || styleRule.style[property];
+  const minValue = styleRule.style[property];
 
   const appliedSpanStart = applySpanStart(styleRule, property, ctx);
   if (appliedSpanStart) return appliedSpanStart;
@@ -113,6 +124,34 @@ let parseProperty = (
   return parseNextBatches(minValue, property, ctx);
 };
 
+function applySpanEnd(
+  styleRule: StyleRuleClone,
+  selector: string,
+  ctx: ParseSelectorContext
+): [string, string][] {
+  const { docResultState } = ctx;
+  const spanEnds: [string, string][] = [];
+  const spanEndValue = styleRule.specialProps["--span-end"];
+  if (spanEndValue) {
+    const { spans } = docResultState;
+    if (!spans[selector]) return spanEnds;
+    const spanEndValues = parsePropsValues(spanEndValue);
+    const all = spanEndValues.includes("all");
+    for (const [key, value] of Object.entries(spans[selector])) {
+      const shorthandKey = EXPLICIT_PROPS.get(key) || "";
+      if (
+        all ||
+        spanEndValues.includes(key) ||
+        spanEndValues.includes(shorthandKey)
+      ) {
+        spanEnds.push([key, value]);
+        delete spans[selector][key];
+      }
+    }
+  }
+  return spanEnds;
+}
+
 function applySpanStart(
   styleRule: StyleRuleClone,
   property: string,
@@ -120,7 +159,7 @@ function applySpanStart(
 ): DocResultState | null {
   const { docResultState, selector } = ctx;
 
-  const spanStart = styleRule.specialProps["span-start"];
+  const spanStart = styleRule.specialProps["--span-start"];
   if (spanStart) {
     const spanValues = parsePropsValues(spanStart);
     if (
@@ -133,6 +172,7 @@ function applySpanStart(
       if (spans[selector]) spans[selector] = { ...spans[selector] };
       else if (!spans[selector]) spans[selector] = {};
       spans[selector][property] = styleRule.style[property];
+
       return { ...docResultState, spans };
     }
   }
@@ -218,9 +258,10 @@ let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
   const { orderID } = docResultState;
   const newFluidData = cloneFluidData(fluidData, anchor, selector, property);
 
+  let isNew = false;
   if (!newFluidData[anchor]) newFluidData[anchor] = {};
   if (!newFluidData[anchor][selector]) newFluidData[anchor][selector] = {};
-  if (!newFluidData[anchor][selector][property])
+  if (!newFluidData[anchor][selector][property]) {
     newFluidData[anchor][selector][property] = {
       metaData: {
         orderID,
@@ -228,15 +269,17 @@ let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
       },
       ranges: [],
     };
+    isNew = true;
+  }
 
   newFluidData[anchor][selector][property].ranges.push({
-    minValue: parseFluidValue2D(minValue),
-    maxValue: parseFluidValue2D(maxValue),
+    minValue: parseFluidValue2D(minValue, ctx),
+    maxValue: parseFluidValue2D(maxValue, ctx),
     minBpIndex: breakpoints.indexOf(batchWidth),
     maxBpIndex: breakpoints.indexOf(nextBatchWidth),
   });
 
-  return { ...docResultState, fluidData: newFluidData };
+  return { ...docResultState, fluidData: newFluidData, isNew };
 };
 
 let cloneFluidData = (
@@ -260,7 +303,14 @@ let cloneFluidData = (
   return newFluidData;
 };
 
-function parseFluidValue2D(value: string): FluidValue[][] {
+function parseFluidValue2D(
+  value: string,
+  ctx: Pick<InsertFluidDataContext, "property">
+): FluidValue[][] | string {
+  const { property } = ctx;
+
+  if (property.startsWith("grid-")) return value;
+
   let depth = 0;
   let currentValue = "";
   let values: FluidValue[][] = [];
@@ -283,7 +333,7 @@ function parseFluidValue2D(value: string): FluidValue[][] {
 
 function parseFluidValue1D(value: string): FluidValue[] {
   const values: string[] = splitBySpaces(value);
-  return values.map(parseFluidValue);
+  return values.map((value) => parseFluidValue(value));
 }
 
 function parseFluidValue(strValue: string): FluidValue {
@@ -291,7 +341,7 @@ function parseFluidValue(strValue: string): FluidValue {
 
   // Match any alphabetic characters after the number
   const match = strValue.match(/[a-z%]+$/i);
-  const unit = match?.[0] || "px";
+  const unit = match?.[0] || "";
 
   return {
     value,

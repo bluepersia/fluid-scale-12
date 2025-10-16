@@ -5,6 +5,7 @@ import {
   FluidValueSingle,
 } from "../../../../../../../src/parsing/parser/docParser.types";
 import { applyProperty } from "./controller";
+import { counter } from "./counter";
 
 const fluidDataGlobal: FluidData = {};
 
@@ -17,7 +18,7 @@ const verticalRange: FluidRange = {
     [
       {
         value: 0,
-        unit: "",
+        unit: "px",
         type: "single",
       } as FluidValueSingle,
     ],
@@ -26,7 +27,7 @@ const verticalRange: FluidRange = {
     [
       {
         value: 0,
-        unit: "",
+        unit: "px",
         type: "single",
       } as FluidValueSingle,
     ],
@@ -36,9 +37,11 @@ const verticalRange: FluidRange = {
 verticalPadding.push(verticalRange);
 verticalPadding.push({ ...verticalRange, minBpIndex: 1, maxBpIndex: 2 });
 
+let orderID = counter.next();
+
 const paddingTop: FluidPropertyData = {
   metaData: {
-    orderID: 3,
+    orderID,
     property: "padding-top",
   },
   ranges: verticalPadding,
@@ -46,7 +49,7 @@ const paddingTop: FluidPropertyData = {
 
 const paddingBottom: FluidPropertyData = {
   metaData: {
-    orderID: 3,
+    orderID,
     property: "padding-bottom",
   },
   ranges: verticalPadding,
@@ -120,7 +123,7 @@ horizontalPadding.push(horizontalPaddingRange1);
 
 const paddingRight: FluidPropertyData = {
   metaData: {
-    orderID: 3,
+    orderID,
     property: "padding-right",
   },
   ranges: horizontalPadding,
@@ -128,7 +131,7 @@ const paddingRight: FluidPropertyData = {
 
 const paddingLeft: FluidPropertyData = {
   metaData: {
-    orderID: 3,
+    orderID,
     property: "padding-left",
   },
   ranges: horizontalPadding,

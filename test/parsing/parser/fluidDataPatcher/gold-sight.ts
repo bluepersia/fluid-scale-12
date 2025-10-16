@@ -39,6 +39,7 @@ function assertFluidRangeInsertion(
   state: State
 ) {
   const { anchor, selector, property, fluidData } = ctx;
+
   const propResult = result[anchor][selector][property];
   const rangesResult = propResult.ranges;
 
@@ -69,7 +70,8 @@ function assertChildFluidInsertions(
   const propertyAssertions = allAssertions.filter((assertion) => {
     return (
       assertion.name === "parseProperty" &&
-      assertion.args[2].docResultState !== assertion.result &&
+      assertion.args[2].docResultState.fluidData !==
+        assertion.result.fluidData &&
       requirement(assertion)
     );
   });
@@ -113,8 +115,6 @@ const parseBatchesAssertions: AssertionChainForFunc<
       (acc, batch) => acc + batch.rules.length,
       0
     );
-
-    expect(result.orderID).toBe(orderID + 1 * ruleCount);
   },
 };
 
@@ -135,9 +135,6 @@ const parseBatchAssertions: AssertionChainForFunc<State, typeof parseBatch> = {
       allAssertions,
       { result: result.fluidData, state, prevFluidData: fluidData }
     );
-
-    const ruleCount = batch.rules.length;
-    expect(result.orderID).toBe(orderID + 1 * ruleCount);
   },
 };
 
@@ -168,6 +165,7 @@ const parseSelectorAssertions: AssertionChainForFunc<
 
     const { docResultState, batchIndex, batches } = ctx;
     const { fluidData } = docResultState;
+
     assertChildFluidInsertions(
       (assertion) =>
         assertion.args[2].selector === selector &&
@@ -190,7 +188,7 @@ const parsePropertyAssertions: AssertionChainForFunc<
     const { docResultState, selector } = ctx;
     const { fluidData } = docResultState;
 
-    if (result === docResultState) {
+    if (result.fluidData === docResultState.fluidData) {
       return;
     }
 
