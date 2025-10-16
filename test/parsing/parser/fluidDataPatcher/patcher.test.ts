@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { deepClone } from "../../../utils/objectCloner";
 import {
-  applySpanStart,
+  applySpanEnd,
   propListContains,
 } from "../../../../src/parsing/parser/fluidDataPatcher";
 import { parsePropsValues } from "../../../../src/parsing/parser/fluidDataPatcher";
@@ -35,4 +35,98 @@ describe("propListContains", () => {
     expect(propListContains(["font-size", "line-height"], "width")).toBe(false);
     expect(propListContains(["all"], "line-height")).toBe(true);
   });
+});
+
+describe("applySpanEnd", () => {
+  const testCases = [
+    {
+      styleRule: {
+        specialProps: {
+          "--span-end": "font-size, line-height",
+        },
+      },
+      selector: ".product-card__body",
+      ctx: {
+        docResultState: {
+          spans: {
+            ".product-card__body": {
+              "font-size": "1rem",
+              "line-height": "1.5",
+            },
+          },
+        },
+      },
+      expected: {
+        spanEnds: [
+          ["font-size", "1rem"],
+          ["line-height", "1.5"],
+        ],
+        spans: { ".product-card__body": {} },
+      },
+    },
+    {
+      styleRule: {
+        specialProps: {
+          "--span-end": "padding, width",
+        },
+      },
+      selector: ".product-card__body",
+      ctx: {
+        docResultState: {
+          spans: {
+            ".product-card__body": {
+              "padding-top": "1rem",
+              "padding-bottom": "1rem",
+              "padding-right": "1.5rem",
+              "padding-left": "1.5rem",
+              width: "100%",
+            },
+          },
+        },
+      },
+      expected: {
+        spanEnds: [
+          ["padding-top", "1rem"],
+          ["padding-bottom", "1rem"],
+          ["padding-right", "1.5rem"],
+          ["padding-left", "1.5rem"],
+          ["width", "100%"],
+        ],
+        spans: { ".product-card__body": {} },
+      },
+    },
+    {
+      styleRule: {
+        specialProps: {
+          "--span-end": "all",
+        },
+      },
+      selector: ".product-card__body",
+      ctx: {
+        docResultState: {
+          spans: {
+            ".product-card__body": {
+              "font-size": "1rem",
+              "line-height": "1.5",
+            },
+          },
+        },
+      },
+      expected: {
+        spanEnds: [
+          ["font-size", "1rem"],
+          ["line-height", "1.5"],
+        ],
+        spans: { ".product-card__body": {} },
+      },
+    },
+  ];
+  test.each(testCases)(
+    "should apply a span end fluid data insertion",
+    (testCase) => {
+      const { styleRule, selector, ctx, expected } = testCase;
+      const result = applySpanEnd(styleRule as any, selector, ctx as any);
+      expect(result).toEqual(expected);
+    }
+  );
 });
