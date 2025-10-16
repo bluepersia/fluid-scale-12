@@ -89,6 +89,10 @@ type ParseSelectorContext = ParseStyleRuleContext;
 type ParsePropertyContext = ParseSelectorContext & {
   selector: string;
 };
+
+type ApplyForceContext = ParsePropertyContext & {
+  minValue: string;
+};
 type ParseNextBatchContext = ParsePropertyContext & {
   property: string;
   minValue: string;
@@ -123,4 +127,5 @@ export {
   ParseStyleSheetContext,
   ParseBatchesContext,
   FluidValueString,
+  ApplyForceContext,
 };

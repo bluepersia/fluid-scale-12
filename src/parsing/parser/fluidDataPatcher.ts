@@ -2,6 +2,7 @@ import { splitBySpaces } from "../../utils/stringHelpers";
 import { StyleRuleClone } from "../serialization/docSerializer.types";
 import { STYLE_RULE_TYPE } from "../serialization/docSerializerConsts";
 import {
+  ApplyForceContext,
   DocResultState,
   FluidData,
   FluidValue,
@@ -100,30 +101,6 @@ let parseSelector = (
   return docResultState;
 };
 
-let parseProperty = (
-  styleRule: StyleRuleClone,
-  property: string,
-  ctx: ParsePropertyContext
-): DocResultState => {
-  let { docResultState } = ctx;
-
-  const minValue = styleRule.style[property];
-
-  const appliedSpanStart = applySpanStart(styleRule, property, ctx);
-  if (appliedSpanStart) return appliedSpanStart;
-
-  const { batches } = ctx;
-  if (styleRule.specialProps.force)
-    return parseNextRule(styleRule, {
-      ...ctx,
-      minValue,
-      property,
-      nextBatchWidth: batches[batches.length - 1].width,
-      docResultState,
-    });
-  return parseNextBatches(minValue, property, ctx);
-};
-
 function applySpanEnd(
   styleRule: StyleRuleClone,
   selector: string,
@@ -152,6 +129,22 @@ function applySpanEnd(
   return spanEnds;
 }
 
+let parseProperty = (
+  styleRule: StyleRuleClone,
+  property: string,
+  ctx: ParsePropertyContext
+): DocResultState => {
+  const minValue = styleRule.style[property];
+
+  const appliedSpanStart = applySpanStart(styleRule, property, ctx);
+  if (appliedSpanStart) return appliedSpanStart;
+
+  const appliedForce = applyForce(styleRule, property, { ...ctx, minValue });
+  if (appliedForce) return appliedForce;
+
+  return parseNextBatches(minValue, property, ctx);
+};
+
 function applySpanStart(
   styleRule: StyleRuleClone,
   property: string,
@@ -177,6 +170,31 @@ function applySpanStart(
     }
   }
   return null;
+}
+
+function applyForce(
+  styleRule: StyleRuleClone,
+  property: string,
+  ctx: ApplyForceContext
+) {
+  const { batches, docResultState, minValue } = ctx;
+  const force = styleRule.specialProps["--force"];
+  if (force) {
+    const forceValues = parsePropsValues(force);
+    if (
+      forceValues.includes("all") ||
+      forceValues.includes(property) ||
+      forceValues.includes(EXPLICIT_PROPS.get(property) || property)
+    ) {
+      return parseNextRule(styleRule, {
+        ...ctx,
+        minValue,
+        property,
+        nextBatchWidth: Math.max(...batches.map((batch) => batch.width)),
+        docResultState,
+      });
+    }
+  }
 }
 
 function parsePropsValues(value: string) {

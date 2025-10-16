@@ -49,6 +49,7 @@ function assertFluidRangeInsertion(
   const masterProp = state.master!.fluidData[anchor][selector][property];
 
   expect(propResult.metaData.orderID).toBe(masterProp.metaData.orderID);
+
   expect(propResult.metaData.property).toBe(masterProp.metaData.property);
 
   if (argsRanges)
