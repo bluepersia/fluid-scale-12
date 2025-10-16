@@ -42,9 +42,7 @@ const docCloneCourseCard: StyleSheetClone = {
         "line-height": "1.625",
         "margin-bottom": "1.5rem",
       },
-      specialProps: {
-        "--span-start": "margin-bottom",
-      },
+      specialProps: {},
     } as StyleRuleClone,
     {
       type: 1,

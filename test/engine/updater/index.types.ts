@@ -7,7 +7,7 @@ type UpdateDocStruc = {
         [conversionId: string]: number;
       };
       computedValues: {
-        actual: [[number]];
+        actual: number[][];
         actualOrderID: number;
       };
     };

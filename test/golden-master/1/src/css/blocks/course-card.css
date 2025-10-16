@@ -23,7 +23,6 @@
   line-height: 1.625;
   color: var(--color-light-gray);
   margin-bottom: 1.5rem;
-  --span-start: margin-bottom;
 }
 
 .course-card--intro {
