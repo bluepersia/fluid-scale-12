@@ -32,6 +32,7 @@ import {
 import { deepClone } from "../../utils/objectCloner";
 import {
   applyForce,
+  applySpanEnd,
   applySpanStart,
   cloneFluidData,
   insertFluidData,
@@ -58,7 +59,6 @@ import {
   assertChildFluidInsertions,
   parseNextBatchesAssertions,
   applyForceAssertions,
-  applySpanStartAssertions,
 } from "./fluidDataPatcher/gold-sight";
 
 export type State = {
@@ -191,7 +191,6 @@ const defaultAssertions = {
   parseStyleRule: parseStyleRuleAssertions,
   parseSelector: parseSelectorAssertions,
   parseProperty: parsePropertyAssertions,
-  applySpanStart: applySpanStartAssertions,
   applyForce: applyForceAssertions,
   parseNextBatch: parseNextBatchAssertions,
   parseNextBatches: parseNextBatchesAssertions,
@@ -248,8 +247,6 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
 
   parseProperty = this.wrapFn(parseProperty, "parseProperty");
 
-  applySpanStart = this.wrapFn(applySpanStart, "applySpanStart");
-
   applyForce = this.wrapFn(applyForce, "applyForce");
 
   parseNextBatch = this.wrapFn(parseNextBatch, "parseNextBatch");
@@ -295,7 +292,6 @@ function wrapAll() {
     parseDocAssertionMaster.parseStyleRule,
     parseDocAssertionMaster.parseSelector,
     parseDocAssertionMaster.parseProperty,
-    parseDocAssertionMaster.applySpanStart,
     parseDocAssertionMaster.applyForce,
     parseDocAssertionMaster.parseNextBatch,
     parseDocAssertionMaster.parseNextBatches,

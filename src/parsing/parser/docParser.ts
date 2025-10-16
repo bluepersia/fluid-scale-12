@@ -20,7 +20,6 @@ import {
 } from "./docParser.types";
 import {
   applyForce,
-  applySpanStart,
   insertFluidData,
   parseBatches,
   parseNextBatch,
@@ -224,7 +223,6 @@ function wrap(
   parseStyleRuleWrapped: typeof parseStyleRule,
   parseSelectorWrapped: typeof parseSelector,
   parsePropertyWrapped: typeof parseProperty,
-  applySpanStartWrapped: typeof applySpanStart,
   applyForceWrapped: typeof applyForce,
   parseNextBatchWrapped: typeof parseNextBatch,
   parseNextBatchesWrapped: typeof parseNextBatches,
@@ -251,7 +249,6 @@ function wrap(
     parseStyleRuleWrapped,
     parseSelectorWrapped,
     parsePropertyWrapped,
-    applySpanStartWrapped,
     applyForceWrapped,
     parseNextBatchWrapped,
     parseNextBatchesWrapped,

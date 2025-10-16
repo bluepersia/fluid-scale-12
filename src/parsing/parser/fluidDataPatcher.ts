@@ -383,7 +383,6 @@ function wrap(
   parseStyleRuleWrapped: typeof parseStyleRule,
   parseSelectorWrapped: typeof parseSelector,
   parsePropertyWrapped: typeof parseProperty,
-  applySpanStartWrapped: typeof applySpanStart,
   applyForceWrapped: typeof applyForce,
   parseNextBatchWrapped: typeof parseNextBatch,
   parseNextBatchesWrapped: typeof parseNextBatches,
@@ -401,7 +400,6 @@ function wrap(
   parseStyleRule = parseStyleRuleWrapped;
   parseSelector = parseSelectorWrapped;
   parseProperty = parsePropertyWrapped;
-  applySpanStart = applySpanStartWrapped;
   applyForce = applyForceWrapped;
   parseNextBatch = parseNextBatchWrapped;
   parseNextBatches = parseNextBatchesWrapped;
@@ -430,4 +428,5 @@ export {
   applySpanStart,
   propListContains,
   parsePropsValues,
+  applySpanEnd,
 };

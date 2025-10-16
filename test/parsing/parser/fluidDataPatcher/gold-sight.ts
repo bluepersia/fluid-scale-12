@@ -19,6 +19,7 @@ import { toBeEqualDefined } from "../../../utils/vitest";
 
 import {
   applyForce,
+  applySpanEnd,
   applySpanStart,
   getAnchor,
   insertFluidData,
@@ -207,42 +208,6 @@ const parsePropertyAssertions: AssertionChainForFunc<
   },
 };
 
-const applySpanStartAssertions: AssertionChainForFunc<
-  State,
-  typeof applySpanStart
-> = {
-  "should apply a span start fluid data insertion": (state, args, result) => {
-    const [styleRule, property, ctx] = args;
-
-    const { docResultState, selector } = ctx;
-
-    const spanStart = styleRule.specialProps["--span-start"];
-    if (!spanStart) {
-      expect(result).toBeNull();
-      return;
-    }
-    const spanStartValues = parsePropsValues(spanStart);
-
-    if (!propListContains(spanStartValues, property)) {
-      expect(result).toBeNull();
-      return;
-    }
-
-    const propValue = styleRule.style[property];
-    if (!propValue) {
-      expect(result).toBeNull();
-      return;
-    }
-
-    expect(
-      result!.spans[selector][property],
-      JSON.stringify({
-        selector,
-        property,
-      })
-    ).toBe(propValue);
-  },
-};
 const applyForceAssertions: AssertionChainForFunc<State, typeof applyForce> = {
   "should apply a force fluid data insertion": (state, args, result) => {
     const [, property, ctx] = args;
@@ -412,7 +377,6 @@ export {
   parseStyleRuleAssertions,
   parseSelectorAssertions,
   parsePropertyAssertions,
-  applySpanStartAssertions,
   applyForceAssertions,
   parseNextBatchAssertions,
   parseNextBatchesAssertions,
