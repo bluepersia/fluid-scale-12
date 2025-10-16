@@ -4,6 +4,7 @@ import { STYLE_RULE_TYPE } from "../serialization/docSerializerConsts";
 import {
   ApplyForceContext,
   DocResultState,
+  DocSpans,
   FluidData,
   FluidValue,
   FluidValueSingle,
@@ -83,9 +84,11 @@ let parseSelector = (
 ): DocResultState => {
   let { docResultState } = ctx;
 
-  const spanEnds = applySpanEnd(styleRule, selector, ctx);
+  const spanEndsResult = applySpanEnd(styleRule, selector, ctx);
 
-  if (spanEnds.length > 0) {
+  if (spanEndsResult) {
+    const { spanEnds, spans } = spanEndsResult;
+    docResultState = { ...docResultState, spans };
     styleRule = { ...styleRule, style: { ...styleRule.style } };
     for (const [key, value] of spanEnds) {
       styleRule.style[key] = value;
@@ -101,32 +104,38 @@ let parseSelector = (
   return docResultState;
 };
 
-function applySpanEnd(
+let applySpanEnd = (
   styleRule: StyleRuleClone,
   selector: string,
   ctx: ParseSelectorContext
-): [string, string][] {
+): { spanEnds: [string, string][]; spans: DocSpans } | null => {
   const { docResultState } = ctx;
   const spanEnds: [string, string][] = [];
   const spanEndValue = styleRule.specialProps["--span-end"];
   if (spanEndValue) {
     const { spans } = docResultState;
-    if (!spans[selector]) return spanEnds;
+    if (!spans[selector]) return null;
     const spanEndValues = parsePropsValues(spanEndValue);
-    const all = spanEndValues.includes("all");
+    const spansNew = { ...spans, [selector]: { ...spans[selector] } };
     for (const [key, value] of Object.entries(spans[selector])) {
-      const shorthandKey = EXPLICIT_PROPS.get(key) || "";
-      if (
-        all ||
-        spanEndValues.includes(key) ||
-        spanEndValues.includes(shorthandKey)
-      ) {
+      if (propListContains(spanEndValues, key)) {
         spanEnds.push([key, value]);
-        delete spans[selector][key];
+        delete spansNew[selector][key];
       }
     }
+    return { spanEnds, spans: spansNew };
   }
-  return spanEnds;
+  return null;
+};
+
+function propListContains(propList: string[], property: string) {
+  if (propList.includes("all")) return true;
+  if (propList.includes(property)) return true;
+
+  if (EXPLICIT_PROPS.has(property))
+    return propList.includes(EXPLICIT_PROPS.get(property)!);
+
+  return false;
 }
 
 let parseProperty = (
@@ -145,21 +154,17 @@ let parseProperty = (
   return parseNextBatches(minValue, property, ctx);
 };
 
-function applySpanStart(
+let applySpanStart = (
   styleRule: StyleRuleClone,
   property: string,
   ctx: ParsePropertyContext
-): DocResultState | null {
+): DocResultState | null => {
   const { docResultState, selector } = ctx;
 
   const spanStart = styleRule.specialProps["--span-start"];
   if (spanStart) {
     const spanValues = parsePropsValues(spanStart);
-    if (
-      spanValues.includes("all") ||
-      spanValues.includes(property) ||
-      spanValues.includes(EXPLICIT_PROPS.get(property) || property)
-    ) {
+    if (propListContains(spanValues, property)) {
       const propValue = styleRule.style[property];
       if (!propValue) return null;
       let { spans } = docResultState;
@@ -172,7 +177,7 @@ function applySpanStart(
     }
   }
   return null;
-}
+};
 
 let applyForce = (
   styleRule: StyleRuleClone,
@@ -183,11 +188,7 @@ let applyForce = (
   const force = styleRule.specialProps["--force"];
   if (force) {
     const forceValues = parsePropsValues(force);
-    if (
-      forceValues.includes("all") ||
-      forceValues.includes(property) ||
-      forceValues.includes(EXPLICIT_PROPS.get(property) || property)
-    ) {
+    if (propListContains(forceValues, property)) {
       return parseNextRule(styleRule, {
         ...ctx,
         minValue,
@@ -382,6 +383,7 @@ function wrap(
   parseStyleRuleWrapped: typeof parseStyleRule,
   parseSelectorWrapped: typeof parseSelector,
   parsePropertyWrapped: typeof parseProperty,
+  applySpanStartWrapped: typeof applySpanStart,
   applyForceWrapped: typeof applyForce,
   parseNextBatchWrapped: typeof parseNextBatch,
   parseNextBatchesWrapped: typeof parseNextBatches,
@@ -399,6 +401,7 @@ function wrap(
   parseStyleRule = parseStyleRuleWrapped;
   parseSelector = parseSelectorWrapped;
   parseProperty = parsePropertyWrapped;
+  applySpanStart = applySpanStartWrapped;
   applyForce = applyForceWrapped;
   parseNextBatch = parseNextBatchWrapped;
   parseNextBatches = parseNextBatchesWrapped;
@@ -425,4 +428,6 @@ export {
   getAnchor,
   wrap,
   applySpanStart,
+  propListContains,
+  parsePropsValues,
 };
