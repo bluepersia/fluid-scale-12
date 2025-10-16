@@ -208,6 +208,25 @@ const parsePropertyAssertions: AssertionChainForFunc<
   },
 };
 
+const applySpanStartAssertions: AssertionChainForFunc<
+  State,
+  typeof applySpanStart
+> = {
+  "should apply a span start fluid data insertion": (state, args, result) => {
+    const [styleRule, property, ctx] = args;
+
+    const { selector } = ctx;
+
+    if (!result) {
+      return;
+    }
+
+    expect(result.spans[selector][property]).toBe(
+      state.master!.spans[selector][property]
+    );
+  },
+};
+
 const applyForceAssertions: AssertionChainForFunc<State, typeof applyForce> = {
   "should apply a force fluid data insertion": (state, args, result) => {
     const [, property, ctx] = args;
@@ -384,4 +403,5 @@ export {
   cloneFluidDataAssertions,
   insertFluidDataAssertions,
   assertChildFluidInsertions,
+  applySpanStartAssertions,
 };

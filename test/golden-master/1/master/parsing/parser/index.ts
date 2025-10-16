@@ -3,6 +3,7 @@ import { clearNullsForDoc } from "../../../../../parsing/serialization/masterCon
 import { docClone } from "../serialization/docClone/docClone";
 import { ruleBatches } from "./batches/batches";
 import { fluidData } from "./fluidData/fluidData";
+import { spans } from "./spans";
 
 const master: ParseDocMaster = {
   index: 1,
@@ -11,6 +12,7 @@ const master: ParseDocMaster = {
   inputDoc: clearNullsForDoc(docClone),
   ruleBatches,
   fluidData,
+  spans,
 };
 
 export { master };
