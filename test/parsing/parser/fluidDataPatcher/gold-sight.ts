@@ -18,6 +18,7 @@ import {
 import { toBeEqualDefined } from "../../../utils/vitest";
 
 import {
+  applyForce,
   getAnchor,
   insertFluidData,
   parseBatch,
@@ -202,6 +203,26 @@ const parsePropertyAssertions: AssertionChainForFunc<
     );
   },
 };
+const applyForceAssertions: AssertionChainForFunc<State, typeof applyForce> = {
+  "should apply a force fluid data insertion": (state, args, result) => {
+    const [, property, ctx] = args;
+
+    const { docResultState, selector } = ctx;
+    const { fluidData } = docResultState;
+
+    if (!result) {
+      return;
+    }
+
+    const anchor = getAnchor(selector);
+
+    assertFluidRangeInsertion(
+      result.fluidData,
+      { ...ctx, anchor, property, fluidData },
+      state
+    );
+  },
+};
 
 const parseNextBatchesAssertions: AssertionChainForFunc<
   State,
@@ -351,6 +372,7 @@ export {
   parseStyleRuleAssertions,
   parseSelectorAssertions,
   parsePropertyAssertions,
+  applyForceAssertions,
   parseNextBatchAssertions,
   parseNextBatchesAssertions,
   parseNextRuleAssertions,

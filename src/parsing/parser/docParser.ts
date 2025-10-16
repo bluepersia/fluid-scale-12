@@ -19,6 +19,7 @@ import {
   RuleBatch,
 } from "./docParser.types";
 import {
+  applyForce,
   insertFluidData,
   parseBatches,
   parseNextBatch,
@@ -222,6 +223,7 @@ function wrap(
   parseStyleRuleWrapped: typeof parseStyleRule,
   parseSelectorWrapped: typeof parseSelector,
   parsePropertyWrapped: typeof parseProperty,
+  applyForceWrapped: typeof applyForce,
   parseNextBatchWrapped: typeof parseNextBatch,
   parseNextBatchesWrapped: typeof parseNextBatches,
   parseNextRuleWrapped: typeof parseNextRule,
@@ -247,6 +249,7 @@ function wrap(
     parseStyleRuleWrapped,
     parseSelectorWrapped,
     parsePropertyWrapped,
+    applyForceWrapped,
     parseNextBatchWrapped,
     parseNextBatchesWrapped,
     parseNextRuleWrapped,

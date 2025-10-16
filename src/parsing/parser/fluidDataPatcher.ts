@@ -174,11 +174,11 @@ function applySpanStart(
   return null;
 }
 
-function applyForce(
+let applyForce = (
   styleRule: StyleRuleClone,
   property: string,
   ctx: ApplyForceContext
-) {
+) => {
   const { batches, docResultState, minValue } = ctx;
   const force = styleRule.specialProps["--force"];
   if (force) {
@@ -197,7 +197,7 @@ function applyForce(
       });
     }
   }
-}
+};
 
 function parsePropsValues(value: string) {
   return value.split(",").map((seg) => seg.trim());
@@ -382,6 +382,7 @@ function wrap(
   parseStyleRuleWrapped: typeof parseStyleRule,
   parseSelectorWrapped: typeof parseSelector,
   parsePropertyWrapped: typeof parseProperty,
+  applyForceWrapped: typeof applyForce,
   parseNextBatchWrapped: typeof parseNextBatch,
   parseNextBatchesWrapped: typeof parseNextBatches,
   parseNextRuleWrapped: typeof parseNextRule,
@@ -398,6 +399,7 @@ function wrap(
   parseStyleRule = parseStyleRuleWrapped;
   parseSelector = parseSelectorWrapped;
   parseProperty = parsePropertyWrapped;
+  applyForce = applyForceWrapped;
   parseNextBatch = parseNextBatchWrapped;
   parseNextBatches = parseNextBatchesWrapped;
   parseNextRule = parseNextRuleWrapped;
@@ -411,6 +413,7 @@ export {
   parseStyleRule,
   parseSelector,
   parseProperty,
+  applyForce,
   parseNextBatch,
   parseNextBatches,
   parseNextRule,
