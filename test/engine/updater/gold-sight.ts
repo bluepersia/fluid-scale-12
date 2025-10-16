@@ -93,11 +93,7 @@ const updateAssertionChain: AssertionChain<
     }
 
     for (const elState of result.hiddenEls) {
-      const props = Object.keys(
-        state.master!.coreDocStruct[elState.el.goldenId]
-      );
-
-      for (const prop of props) {
+      for (const prop of Object.keys(elState.inlineStyles)) {
         expect(elState.inlineStyles[prop]).toBe("");
       }
     }
@@ -120,9 +116,7 @@ const flushElementAssertionChain: AssertionChain<
   SerializedElementState
 > = {
   "should flush the element": (state, args, result) => {
-    const props = Object.keys(state.master!.coreDocStruct[result.el.goldenId]);
-
-    for (const prop of props) {
+    for (const prop of Object.keys(result.inlineStyles)) {
       expect(result.inlineStyles[prop]).toBe("");
     }
   },
@@ -325,6 +319,8 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
     updateFluidProperty,
     "updateFluidProperty",
     {
+      getId: (args) =>
+        args[2].elState.el.dataset.goldenId + "/" + args[0].metaData.property,
       resultConverter: (result, args) => {
         const [, , ctx] = args;
         const { elState } = ctx;
@@ -344,6 +340,10 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
   });
 
   interpolateValues = this.wrapFn(interpolateValues, "interpolateValues", {
+    getId: (args) =>
+      args[2].elState.el.dataset.goldenId +
+      "/" +
+      args[2].fluidProperty.metaData.property,
     argsConverter: (args) => {
       const ctx = args[2];
       const { elState, fluidProperty } = ctx;
@@ -363,6 +363,10 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
   });
 
   convertToPixels = this.wrapFn(convertToPixels, "convertToPixels", {
+    getId: (args) =>
+      args[1].elState.el.dataset.goldenId +
+      "/" +
+      args[1].fluidProperty.metaData.property,
     argsConverter: (args) => {
       const [fluidValue, ctx] = args;
 

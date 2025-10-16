@@ -175,12 +175,40 @@ function calcFluidArray(
   values: FluidValue[][] | string,
   ctx: ConvertToPixelsContext
 ) {
-  if (typeof values === "string")
-    throw Error("Absolute strings not implemented yet");
+  if (typeof values === "string") {
+    const { fluidProperty } = ctx;
+    const { property } = fluidProperty.metaData;
+    if (property.startsWith("grid-")) return computeGridValues(values, ctx);
+    throw Error(`Unknown property: ${property}`);
+  }
 
   return values.map((group) =>
     group.map((value) => computeFluidValue(value, ctx))
   );
+}
+
+function computeGridValues(
+  value: string,
+  ctx: ConvertToPixelsContext
+): number[][] {
+  const {
+    elState,
+    fluidProperty: {
+      metaData: { property },
+    },
+  } = ctx;
+  const { el } = elState;
+  const prevValue = el.style.getPropertyValue(property);
+  el.style.setProperty(property, value);
+
+  const computedStyle = window.getComputedStyle(el);
+  const gridTemplate = computedStyle.getPropertyValue(property);
+  el.style.setProperty(property, prevValue);
+  const gridTemplateArray = gridTemplate.split(" ");
+  const gridTemplateValues = gridTemplateArray.map((value) => {
+    return parseFloat(value);
+  });
+  return [gridTemplateValues];
 }
 
 let interpolateValues = (
@@ -189,21 +217,21 @@ let interpolateValues = (
   ctx: InterpolateValuesContext
 ) => {
   const { progress } = ctx;
-  if (typeof minValues === "string")
-    throw Error("Absolute strings not implemented yet");
-  if (typeof maxValues === "string")
-    throw Error("Absolute strings not implemented yet");
-  return minValues.map((group, groupIndex) =>
-    group.map((minValue, valueIndex) => {
-      const minValuePx = computeFluidValue(minValue, ctx);
+  const minValuesPx = calcFluidArray(minValues, ctx);
+  if (ctx.fluidProperty.metaData.property.startsWith("grid-"))
+    console.log("GRID MIN:", minValuesPx[0]);
+  const maxValuesPx = calcFluidArray(maxValues, ctx);
+  if (ctx.fluidProperty.metaData.property.startsWith("grid-"))
+    console.log("GRID MAX:", maxValuesPx[0]);
+  return minValuesPx.map((group, groupIndex) =>
+    group.map((minValuePx, valueIndex) => {
       if (groupIndex >= maxValues.length) return minValuePx;
 
-      const maxGroup = maxValues[groupIndex];
+      const maxGroup = maxValuesPx[groupIndex];
 
       if (valueIndex >= maxGroup.length) return minValuePx;
 
-      const maxValue = maxGroup[valueIndex];
-      const maxValuePx = computeFluidValue(maxValue, ctx);
+      const maxValuePx = maxGroup[valueIndex];
       return minValuePx + (maxValuePx - minValuePx) * progress;
     })
   );
@@ -281,7 +309,9 @@ function calcEm(value: number, ctx: ConvertToPixelsContext) {
   if (property === "font-size")
     return (
       value *
-      parseFloat((elState.el.parentElement || documentElement).style.fontSize)
+      parseFloat(
+        getComputedStyle(elState.el.parentElement || documentElement).fontSize
+      )
     );
   else return value * readPropertyValue(property, elState);
 }
