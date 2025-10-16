@@ -121,6 +121,7 @@ const insertFluidPropertiesForAnchorAssertionChain: AssertionChain<
       result,
       JSON.stringify({
         anchor,
+        result: result.map((property) => property.metaData.property),
       })
     ).toEqual(resultFluidProperties);
   },

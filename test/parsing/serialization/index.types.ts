@@ -14,10 +14,22 @@ type SerializeDocMaster = Master & {
 };
 
 type AssertFluidPropContext = {
+  rule: CSSStyleRule;
   isBrowser: boolean;
   style: Record<string, string>;
   styleArg: Record<string, string>;
   masterRule: StyleRuleClone | undefined;
 };
 
-export { SerializeDocMaster, NullRule, AssertFluidPropContext };
+type SerializedStyleRule = {
+  type: 1;
+  selectorText: string;
+  style: Record<string, string>;
+};
+
+export {
+  SerializeDocMaster,
+  NullRule,
+  AssertFluidPropContext,
+  SerializedStyleRule,
+};

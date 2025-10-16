@@ -89,11 +89,17 @@ class SerializeDocAssertionMaster extends AssertionMaster<
     },
   });
 
-  cloneStyleProps = this.wrapFn(serializeStyleProps, "serializeStyleProps");
+  cloneStyleProps = this.wrapFn(serializeStyleProps, "serializeStyleProps", {
+    getId: (args) => args[0].selectorText,
+  });
 
-  cloneStyleProp = this.wrapFn(serializeStyleProp, "serializeStyleProp");
+  cloneStyleProp = this.wrapFn(serializeStyleProp, "serializeStyleProp", {
+    getId: (args) => args[0].selectorText,
+  });
 
-  cloneFluidProp = this.wrapFn(serializeFluidProp, "serializeFluidProp");
+  cloneFluidProp = this.wrapFn(serializeFluidProp, "serializeFluidProp", {
+    getId: (args) => args[0].selectorText,
+  });
 
   applyExplicitPropsFromShorthand = this.wrapFn(
     applyExplicitPropsFromShorthand,

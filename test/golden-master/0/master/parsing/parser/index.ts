@@ -11,6 +11,7 @@ const master: ParseDocMaster = {
   inputDoc: clearNullsForDoc(docClone),
   ruleBatches,
   fluidData,
+  spans: {},
 };
 
 export { master };

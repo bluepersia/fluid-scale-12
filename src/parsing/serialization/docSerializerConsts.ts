@@ -188,7 +188,12 @@ const SHORTHAND_PROPERTIES: {
   ]),
 };
 
-const SPECIAL_PROPERTIES = new Set(["lock", "force", "span-start", "span-end"]);
+const SPECIAL_PROPERTIES = new Set([
+  "--lock",
+  "--force",
+  "--span-start",
+  "--span-end",
+]);
 
 export {
   FLUID_PROPERTY_NAMES,

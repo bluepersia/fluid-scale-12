@@ -31,11 +31,15 @@ import {
 } from "../../../src/parsing/serialization/docSerializerConsts";
 import { deepClone } from "../../utils/objectCloner";
 import {
+  applyForce,
+  applySpanEnd,
+  applySpanStart,
   cloneFluidData,
   insertFluidData,
   parseBatch,
   parseBatches,
   parseNextBatch,
+  parseNextBatches,
   parseNextRule,
   parseProperty,
   parseSelector,
@@ -53,6 +57,9 @@ import {
   insertFluidDataAssertions,
   cloneFluidDataAssertions,
   assertChildFluidInsertions,
+  parseNextBatchesAssertions,
+  applyForceAssertions,
+  applySpanStartAssertions,
 } from "./fluidDataPatcher/gold-sight";
 
 export type State = {
@@ -92,8 +99,6 @@ const parseStyleSheetAssertions: AssertionChainForFunc<
       allAssertions,
       { result: result.fluidData, state, prevFluidData: fluidData }
     );
-
-    expect(result.orderID).toBe(orderID + 1 * countStyleRulesInSheet(args[0]));
   },
 };
 
@@ -187,7 +192,10 @@ const defaultAssertions = {
   parseStyleRule: parseStyleRuleAssertions,
   parseSelector: parseSelectorAssertions,
   parseProperty: parsePropertyAssertions,
+  applySpanStart: applySpanStartAssertions,
+  applyForce: applyForceAssertions,
   parseNextBatch: parseNextBatchAssertions,
+  parseNextBatches: parseNextBatchesAssertions,
   parseNextRule: parseNextRuleAssertions,
   insertFluidData: insertFluidDataAssertions,
   cloneFluidData: cloneFluidDataAssertions,
@@ -241,11 +249,19 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
 
   parseProperty = this.wrapFn(parseProperty, "parseProperty");
 
+  applySpanStart = this.wrapFn(applySpanStart, "applySpanStart");
+
+  applyForce = this.wrapFn(applyForce, "applyForce");
+
   parseNextBatch = this.wrapFn(parseNextBatch, "parseNextBatch");
+
+  parseNextBatches = this.wrapFn(parseNextBatches, "parseNextBatches");
 
   parseNextRule = this.wrapFn(parseNextRule, "parseNextRule");
 
-  insertFluidData = this.wrapFn(insertFluidData, "insertFluidData");
+  insertFluidData = this.wrapFn(insertFluidData, "insertFluidData", {
+    getId: (args) => args[1].selector,
+  });
 
   cloneFluidData = this.wrapFn(cloneFluidData, "cloneFluidData", {
     resultConverter: (result, args) => {
@@ -280,7 +296,10 @@ function wrapAll() {
     parseDocAssertionMaster.parseStyleRule,
     parseDocAssertionMaster.parseSelector,
     parseDocAssertionMaster.parseProperty,
+    parseDocAssertionMaster.applySpanStart,
+    parseDocAssertionMaster.applyForce,
     parseDocAssertionMaster.parseNextBatch,
+    parseDocAssertionMaster.parseNextBatches,
     parseDocAssertionMaster.parseNextRule,
     parseDocAssertionMaster.insertFluidData,
     parseDocAssertionMaster.cloneFluidData

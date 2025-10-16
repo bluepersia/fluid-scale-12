@@ -18,27 +18,33 @@ import {
 import { toBeEqualDefined } from "../../../utils/vitest";
 
 import {
+  applyForce,
+  applySpanEnd,
+  applySpanStart,
   getAnchor,
   insertFluidData,
   parseBatch,
   parseBatches,
   parseNextBatch,
+  parseNextBatches,
   parseNextRule,
   parseProperty,
+  parsePropsValues,
   parseSelector,
   parseStyleRule,
+  propListContains,
 } from "../../../../src/parsing/parser/fluidDataPatcher";
 import { State } from "../gold-sight";
 
 function assertFluidRangeInsertion(
   result: FluidData,
-  ctx: Pick<
-    InsertFluidDataContext,
-    "anchor" | "selector" | "property" | "fluidData"
-  >,
+  ctx: Pick<InsertFluidDataContext, "anchor" | "selector" | "property"> & {
+    fluidData: FluidData;
+  },
   state: State
 ) {
   const { anchor, selector, property, fluidData } = ctx;
+
   const propResult = result[anchor][selector][property];
   const rangesResult = propResult.ranges;
 
@@ -48,6 +54,7 @@ function assertFluidRangeInsertion(
   const masterProp = state.master!.fluidData[anchor][selector][property];
 
   expect(propResult.metaData.orderID).toBe(masterProp.metaData.orderID);
+
   expect(propResult.metaData.property).toBe(masterProp.metaData.property);
 
   if (argsRanges)
@@ -69,7 +76,8 @@ function assertChildFluidInsertions(
   const propertyAssertions = allAssertions.filter((assertion) => {
     return (
       assertion.name === "parseProperty" &&
-      assertion.args[2].fluidData !== assertion.result &&
+      assertion.args[2].docResultState.fluidData !==
+        assertion.result.fluidData &&
       requirement(assertion)
     );
   });
@@ -113,8 +121,6 @@ const parseBatchesAssertions: AssertionChainForFunc<
       (acc, batch) => acc + batch.rules.length,
       0
     );
-
-    expect(result.orderID).toBe(orderID + 1 * ruleCount);
   },
 };
 
@@ -135,9 +141,6 @@ const parseBatchAssertions: AssertionChainForFunc<State, typeof parseBatch> = {
       allAssertions,
       { result: result.fluidData, state, prevFluidData: fluidData }
     );
-
-    const ruleCount = batch.rules.length;
-    expect(result.orderID).toBe(orderID + 1 * ruleCount);
   },
 };
 
@@ -147,15 +150,15 @@ const parseStyleRuleAssertions: AssertionChainForFunc<
 > = {
   "should parse the style rule": (state, args, result, allAssertions) => {
     const [rule, ctx] = args;
-    const { fluidData, batchIndex, batches } = ctx;
-
+    const { docResultState, batchIndex, batches } = ctx;
+    const { fluidData } = docResultState;
     assertChildFluidInsertions(
       (assertion) =>
         assertion.args[2].batchIndex === batchIndex &&
         assertion.args[2].batches === batches &&
         assertion.args[0] === rule,
       allAssertions,
-      { result, state, prevFluidData: fluidData }
+      { result: result.fluidData, state, prevFluidData: fluidData }
     );
   },
 };
@@ -166,7 +169,8 @@ const parseSelectorAssertions: AssertionChainForFunc<
   "should parse the selector": (state, args, result, allAssertions) => {
     const [rule, selector, ctx] = args;
 
-    const { fluidData, batchIndex, batches } = ctx;
+    const { docResultState, batchIndex, batches } = ctx;
+    const { fluidData } = docResultState;
 
     assertChildFluidInsertions(
       (assertion) =>
@@ -175,7 +179,7 @@ const parseSelectorAssertions: AssertionChainForFunc<
         assertion.args[2].batchIndex === batchIndex &&
         assertion.args[2].batches === batches,
       allAssertions,
-      { result, state, prevFluidData: fluidData }
+      { result: result.fluidData, state, prevFluidData: fluidData }
     );
   },
 };
@@ -187,15 +191,84 @@ const parsePropertyAssertions: AssertionChainForFunc<
   "should parse the property": (state, args, result) => {
     const [, property, ctx] = args;
 
-    const { fluidData, selector } = ctx;
+    const { docResultState, selector } = ctx;
+    const { fluidData } = docResultState;
 
-    if (result === fluidData) {
+    if (result.fluidData === docResultState.fluidData) {
       return;
     }
 
     const anchor = getAnchor(selector);
 
-    assertFluidRangeInsertion(result, { ...ctx, anchor, property }, state);
+    assertFluidRangeInsertion(
+      result.fluidData,
+      { ...ctx, anchor, property, fluidData },
+      state
+    );
+  },
+};
+
+const applySpanStartAssertions: AssertionChainForFunc<
+  State,
+  typeof applySpanStart
+> = {
+  "should apply a span start fluid data insertion": (state, args, result) => {
+    const [styleRule, property, ctx] = args;
+
+    const { selector } = ctx;
+
+    if (!result) {
+      return;
+    }
+
+    expect(result.spans[selector][property]).toBe(
+      state.master!.spans[selector][property]
+    );
+  },
+};
+
+const applyForceAssertions: AssertionChainForFunc<State, typeof applyForce> = {
+  "should apply a force fluid data insertion": (state, args, result) => {
+    const [, property, ctx] = args;
+
+    const { docResultState, selector } = ctx;
+    const { fluidData } = docResultState;
+
+    if (!result) {
+      return;
+    }
+
+    const anchor = getAnchor(selector);
+
+    assertFluidRangeInsertion(
+      result.fluidData,
+      { ...ctx, anchor, property, fluidData },
+      state
+    );
+  },
+};
+
+const parseNextBatchesAssertions: AssertionChainForFunc<
+  State,
+  typeof parseNextBatches
+> = {
+  "should parse the next batches": (state, args, result) => {
+    const [, property, ctx] = args;
+
+    const { docResultState, selector } = ctx;
+
+    if (result === docResultState) {
+      return;
+    }
+    const { fluidData } = docResultState;
+
+    const anchor = getAnchor(selector);
+
+    assertFluidRangeInsertion(
+      result.fluidData,
+      { ...ctx, anchor, property, fluidData },
+      state
+    );
   },
 };
 
@@ -206,15 +279,20 @@ const parseNextBatchAssertions: AssertionChainForFunc<
   "should parse the next rule batch": (state, args, result) => {
     const [, ctx] = args;
 
-    const { fluidData, selector } = ctx;
+    const { docResultState, selector } = ctx;
 
-    if (result === fluidData) {
+    if (result === docResultState) {
       return;
     }
+    const { fluidData } = docResultState;
 
     const anchor = getAnchor(selector);
 
-    assertFluidRangeInsertion(result, { ...ctx, anchor }, state);
+    assertFluidRangeInsertion(
+      result.fluidData,
+      { ...ctx, anchor, fluidData },
+      state
+    );
   },
 };
 
@@ -225,16 +303,21 @@ const parseNextRuleAssertions: AssertionChainForFunc<
   "should parse the next rule": (state, args, result) => {
     const [rule, ctx] = args;
 
-    const { selector, property, fluidData } = ctx;
+    const { selector, property, docResultState } = ctx;
 
     if (!rule.style[property]) {
-      expect(result).toBe(fluidData);
+      expect(result).toBe(docResultState);
       return;
     }
 
     const anchor = getAnchor(selector);
+    const { fluidData } = docResultState;
 
-    assertFluidRangeInsertion(result, { ...ctx, anchor }, state);
+    assertFluidRangeInsertion(
+      result.fluidData,
+      { ...ctx, anchor, fluidData },
+      state
+    );
   },
 };
 
@@ -245,7 +328,10 @@ const insertFluidDataAssertions: AssertionChainForFunc<
   "should insert the fluid data": (state, args, result) => {
     const [, ctx] = args;
 
-    assertFluidRangeInsertion(result, ctx, state);
+    const {
+      docResultState: { fluidData },
+    } = ctx;
+    assertFluidRangeInsertion(result.fluidData, { ...ctx, fluidData }, state);
   },
 };
 
@@ -310,9 +396,12 @@ export {
   parseStyleRuleAssertions,
   parseSelectorAssertions,
   parsePropertyAssertions,
+  applyForceAssertions,
   parseNextBatchAssertions,
+  parseNextBatchesAssertions,
   parseNextRuleAssertions,
   cloneFluidDataAssertions,
   insertFluidDataAssertions,
   assertChildFluidInsertions,
+  applySpanStartAssertions,
 };

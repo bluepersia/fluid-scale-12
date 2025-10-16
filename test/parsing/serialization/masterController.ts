@@ -154,9 +154,11 @@ function normalizeRule(rule: RuleClone): RuleClone {
 }
 
 function normalizeStyle(style: Record<string, string>): Record<string, string> {
-  return Object.fromEntries(
+  const normalizedZeros = Object.fromEntries(
     Object.entries(style).map(([key, value]) => [key, normalizeZero(value)])
   );
+
+  return normalizedZeros;
 }
 
 /** Nornalize all zeros to '0px' for conistency */

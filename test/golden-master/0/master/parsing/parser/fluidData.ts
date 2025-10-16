@@ -8,7 +8,7 @@ const fluidData: FluidData = {
     ".product-card": {
       "max-width": {
         metaData: {
-          orderID: 5,
+          orderID: 0,
           property: "max-width",
         },
         ranges: [
@@ -38,7 +38,7 @@ const fluidData: FluidData = {
       },
       "border-bottom-right-radius": {
         metaData: {
-          orderID: 5,
+          orderID: 0,
           property: "border-bottom-right-radius",
         },
         ranges: [
@@ -72,7 +72,7 @@ const fluidData: FluidData = {
     ".product-card__content": {
       "padding-top": {
         metaData: {
-          orderID: 7,
+          orderID: 1,
           property: "padding-top",
         },
         ranges: [
@@ -102,7 +102,7 @@ const fluidData: FluidData = {
       },
       "padding-right": {
         metaData: {
-          orderID: 7,
+          orderID: 1,
           property: "padding-right",
         },
         ranges: [
@@ -132,7 +132,7 @@ const fluidData: FluidData = {
       },
       "padding-bottom": {
         metaData: {
-          orderID: 7,
+          orderID: 1,
           property: "padding-bottom",
         },
         ranges: [
@@ -162,7 +162,7 @@ const fluidData: FluidData = {
       },
       "padding-left": {
         metaData: {
-          orderID: 7,
+          orderID: 1,
           property: "padding-left",
         },
         ranges: [
@@ -196,7 +196,7 @@ const fluidData: FluidData = {
     ".product-card__category": {
       "margin-bottom": {
         metaData: {
-          orderID: 8,
+          orderID: 2,
           property: "margin-bottom",
         },
         ranges: [
@@ -230,7 +230,7 @@ const fluidData: FluidData = {
     ".product-card__title": {
       "margin-bottom": {
         metaData: {
-          orderID: 9,
+          orderID: 3,
           property: "margin-bottom",
         },
         ranges: [
@@ -264,7 +264,7 @@ const fluidData: FluidData = {
     ".product-card__description": {
       "margin-bottom": {
         metaData: {
-          orderID: 10,
+          orderID: 4,
           property: "margin-bottom",
         },
         ranges: [
@@ -298,7 +298,7 @@ const fluidData: FluidData = {
     ".product-card__button": {
       "margin-top": {
         metaData: {
-          orderID: 14,
+          orderID: 5,
           property: "margin-top",
         },
         ranges: [

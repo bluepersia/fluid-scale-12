@@ -24,8 +24,8 @@ type FluidPropertyMetaData = {
 };
 
 type FluidRange = {
-  minValue: FluidValue[][];
-  maxValue: FluidValue[][];
+  minValue: FluidValue[][] | string;
+  maxValue: FluidValue[][] | string;
   minBpIndex: number;
   maxBpIndex: number;
 };
@@ -39,9 +39,22 @@ type FluidValueSingle = FluidValue & {
   unit: string;
 };
 
+type FluidValueString = FluidValue & {
+  type: "string";
+  value: string;
+};
+
 type DocResultState = {
   fluidData: FluidData;
   orderID: number;
+  spans: DocSpans;
+  isNew: boolean;
+};
+
+type DocSpans = {
+  [selector: string]: {
+    [property: string]: string;
+  };
 };
 
 type BatchState = {
@@ -70,13 +83,15 @@ type ParseBatchContext = ParseBatchesContext & {
 
 type ParseStyleRuleContext = ParseBatchContext & {
   batchWidth: number;
-  fluidData: FluidData;
-  orderID: number;
 };
 type ParseSelectorContext = ParseStyleRuleContext;
 
 type ParsePropertyContext = ParseSelectorContext & {
   selector: string;
+};
+
+type ApplyForceContext = ParsePropertyContext & {
+  minValue: string;
 };
 type ParseNextBatchContext = ParsePropertyContext & {
   property: string;
@@ -111,4 +126,7 @@ export {
   ParseStyleRuleContext,
   ParseStyleSheetContext,
   ParseBatchesContext,
+  FluidValueString,
+  ApplyForceContext,
+  DocSpans,
 };

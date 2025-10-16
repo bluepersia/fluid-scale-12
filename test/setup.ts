@@ -26,6 +26,19 @@ const realProjectsData: PlaywrightBlueprint[] = [
     htmlFilePath: "golden-master/0",
     addCss: ["css/global.css", "css/utils.css", "css/product-card.css"],
   },
+  {
+    htmlFilePath: "golden-master/1/src",
+    addCss: [
+      "css/global/global.css",
+      "css/blocks/site-logo.css",
+      "css/blocks/header.css",
+      "css/blocks/hero.css",
+      "css/blocks/home-page.css",
+      "css/blocks/course-card.css",
+      "css/blocks/footer.css",
+      "css/blocks/btn.css",
+    ],
+  },
 ];
 
 const JSDOMDocs = realProjectsData.map(({ htmlFilePath }, index) => {
@@ -34,7 +47,7 @@ const JSDOMDocs = realProjectsData.map(({ htmlFilePath }, index) => {
 });
 
 async function startBrowserPage(blueprint?: PlaywrightBlueprint) {
-  const { htmlFilePath, addCss } = blueprint ?? {};
+  const { htmlFilePath } = blueprint ?? {};
 
   const browser = await chromium.launch();
   const page = await browser.newPage();

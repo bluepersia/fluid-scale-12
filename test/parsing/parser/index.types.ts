@@ -1,5 +1,6 @@
 import { AssertionBlueprintForFunc } from "gold-sight";
 import {
+  DocSpans,
   FluidData,
   RuleBatch,
 } from "../../../src/parsing/parser/docParser.types";
@@ -14,6 +15,7 @@ type ParseDocMaster = Master & {
   inputDoc: DocumentClone;
   ruleBatches: RuleBatch[][];
   fluidData: FluidData;
+  spans: DocSpans;
 };
 
 type AssertChildFluidInsertionsContext = {

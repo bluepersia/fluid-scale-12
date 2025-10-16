@@ -1,0 +1,15 @@
+.site-logo {
+  width: 5.5625rem;
+  --span-start: width;
+}
+
+@media (min-width: 768px) {
+  .site-logo {
+    --span-end: width;
+  }
+}
+@media (min-width: 1200px) {
+  .site-logo {
+    width: 7.125rem;
+  }
+}

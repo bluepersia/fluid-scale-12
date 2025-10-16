@@ -1,0 +1,19 @@
+{
+  "name": "e-skilled",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluepersia/e-skilled-page-.git"
+  },
+  "author": "Marco Enrique Zimmermann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bluepersia/e-skilled-page-/issues"
+  },
+  "homepage": "https://github.com/bluepersia/e-skilled-page-#readme",
+  "description": ""
+}

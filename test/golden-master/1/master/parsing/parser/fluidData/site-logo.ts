@@ -1,0 +1,57 @@
+import {
+  FluidData,
+  FluidPropertyData,
+  FluidRange,
+  FluidValueSingle,
+} from "../../../../../../../src/parsing/parser/docParser.types";
+import { applyProperty } from "./controller";
+import { counter } from "./counter";
+
+let orderID = counter.next();
+
+const fluidDataSiteLogo: FluidData = {};
+
+const widthRanges: FluidRange[] = [];
+
+const widthRange1: FluidRange = {
+  minBpIndex: 1,
+  maxBpIndex: 2,
+  minValue: [
+    [
+      {
+        value: 5.5625,
+        unit: "rem",
+        type: "single",
+      } as FluidValueSingle,
+    ],
+  ],
+  maxValue: [
+    [
+      {
+        value: 7.125,
+        unit: "rem",
+        type: "single",
+      } as FluidValueSingle,
+    ],
+  ],
+};
+
+widthRanges.push(widthRange1);
+
+const widthProperty: FluidPropertyData = {
+  metaData: {
+    orderID,
+    property: "width",
+  },
+  ranges: widthRanges,
+};
+
+applyProperty(
+  fluidDataSiteLogo,
+  ".site-logo",
+  ".site-logo",
+  "width",
+  widthProperty
+);
+
+export { fluidDataSiteLogo };
