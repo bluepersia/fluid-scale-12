@@ -33,7 +33,7 @@ function fillDocWithNullRanges(
             null
           ) as FluidRange[];
           for (const range of fluidProperty.ranges as FluidRange[]) {
-            fullRanges[range.minBpIndex] = range;
+            if (range) fullRanges[range.minBpIndex] = range;
           }
           fluidProperty.ranges = fullRanges;
         }
