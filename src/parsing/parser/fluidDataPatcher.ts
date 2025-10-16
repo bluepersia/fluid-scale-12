@@ -160,11 +160,13 @@ function applySpanStart(
       spanValues.includes(property) ||
       spanValues.includes(EXPLICIT_PROPS.get(property) || property)
     ) {
+      const propValue = styleRule.style[property];
+      if (!propValue) return null;
       let { spans } = docResultState;
       spans = { ...spans };
       if (spans[selector]) spans[selector] = { ...spans[selector] };
       else if (!spans[selector]) spans[selector] = {};
-      spans[selector][property] = styleRule.style[property];
+      spans[selector][property] = propValue;
 
       return { ...docResultState, spans };
     }
@@ -419,4 +421,5 @@ export {
   parseFluidValue,
   getAnchor,
   wrap,
+  applySpanStart,
 };
