@@ -18,6 +18,7 @@ const docCloneCourseCard: StyleSheetClone = {
         "border-bottom-right-radius": "0.625rem",
         "border-bottom-left-radius": "0.625rem",
         "border-top-left-radius": "0.625rem",
+        "font-size": "1rem",
         height: "16rem",
       },
       specialProps: {
@@ -41,6 +42,7 @@ const docCloneCourseCard: StyleSheetClone = {
       style: {
         "line-height": "1.625",
         "margin-bottom": "1.5rem",
+        "font-size": "1em",
       },
       specialProps: {},
     } as StyleRuleClone,

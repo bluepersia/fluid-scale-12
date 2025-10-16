@@ -75,6 +75,34 @@ applyProperty(
 
 orderID = counter.next();
 
+const courseCardDescriptionFontSizeRanges: FluidRange[] = [];
+
+const courseCardDescriptionFontSizeRange0: FluidRange = {
+  minBpIndex: 0,
+  maxBpIndex: 2,
+  minValue: [[{ value: 1, unit: "em", type: "single" } as FluidValueSingle]],
+  maxValue: [
+    [{ value: 1.125, unit: "em", type: "single" } as FluidValueSingle],
+  ],
+};
+
+courseCardDescriptionFontSizeRanges.push(courseCardDescriptionFontSizeRange0);
+
+const courseCardDescriptionFontSizeProperty: FluidPropertyData = {
+  metaData: { orderID, property: "font-size" },
+  ranges: courseCardDescriptionFontSizeRanges,
+};
+
+applyProperty(
+  fluidDataCourseCard,
+  ".course-card__description",
+  ".course-card__description",
+  "font-size",
+  courseCardDescriptionFontSizeProperty
+);
+
+orderID = counter.next();
+
 const courseCardPaddingTopRanges: FluidRange[] = [];
 const courseCardPaddingTopRange1: FluidRange = {
   minBpIndex: 1,

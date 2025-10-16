@@ -8,6 +8,7 @@
   --span-start: height, padding-top;
   display: flex;
   flex-direction: column;
+  font-size: 1rem;
 }
 
 .course-card__title {
@@ -21,6 +22,7 @@
 .course-card__description {
   font-weight: 500;
   line-height: 1.625;
+  font-size: 1em;
   color: var(--color-light-gray);
   margin-bottom: 1.5rem;
 }

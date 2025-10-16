@@ -148,6 +148,15 @@ const docStructureBase: RuntimeGoldenDoc = {
       ".course-card__title": courseCardTitleProperties,
     },
   },
+  "course-card-description-2": {
+    ".course-card__description": {
+      ".course-card__description": [
+        fluidData[".course-card__description"][".course-card__description"][
+          "font-size"
+        ],
+      ],
+    },
+  },
   "course-card-btn-2": {
     ".btn": {
       ".btn": btnProperties,
@@ -166,6 +175,15 @@ const docStructureBase: RuntimeGoldenDoc = {
   "course-card-title-3": {
     ".course-card__title": {
       ".course-card__title": courseCardTitleProperties,
+    },
+  },
+  "course-card-description-3": {
+    ".course-card__description": {
+      ".course-card__description": [
+        fluidData[".course-card__description"][".course-card__description"][
+          "font-size"
+        ],
+      ],
     },
   },
   "course-card-btn-3": {
@@ -188,6 +206,15 @@ const docStructureBase: RuntimeGoldenDoc = {
       ".course-card__title": courseCardTitleProperties,
     },
   },
+  "course-card-description-4": {
+    ".course-card__description": {
+      ".course-card__description": [
+        fluidData[".course-card__description"][".course-card__description"][
+          "font-size"
+        ],
+      ],
+    },
+  },
   "course-card-btn-4": {
     ".btn": {
       ".btn": btnProperties,
@@ -208,6 +235,15 @@ const docStructureBase: RuntimeGoldenDoc = {
       ".course-card__title": courseCardTitleProperties,
     },
   },
+  "course-card-description-5": {
+    ".course-card__description": {
+      ".course-card__description": [
+        fluidData[".course-card__description"][".course-card__description"][
+          "font-size"
+        ],
+      ],
+    },
+  },
   "course-card-btn-5": {
     ".btn": {
       ".btn": btnProperties,
@@ -226,6 +262,15 @@ const docStructureBase: RuntimeGoldenDoc = {
   "course-card-title-6": {
     ".course-card__title": {
       ".course-card__title": courseCardTitleProperties,
+    },
+  },
+  "course-card-description-6": {
+    ".course-card__description": {
+      ".course-card__description": [
+        fluidData[".course-card__description"][".course-card__description"][
+          "font-size"
+        ],
+      ],
     },
   },
   "course-card-btn-6": {

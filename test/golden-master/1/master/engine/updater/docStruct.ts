@@ -121,6 +121,31 @@ const courseCardPaddingBottom550 = {
   },
 };
 
+orderID = counter.next();
+
+const courseCardDescriptionFontSize550 = {
+  conversions: {
+    "1em": 16,
+    "1.125em": 18,
+  },
+  computedValues: {
+    actual: [[16.42]],
+    actualOrderID: orderID,
+  },
+};
+
+orderID = counter.next();
+
+const footerVerticalPadding550 = {
+  conversions: {
+    "1rem": 16,
+    "2.25rem": 36,
+  },
+  computedValues: {
+    actual: [[24.9]],
+    actualOrderID: orderID,
+  },
+};
 const docStruct550: UpdateDocStruc = {
   header: {
     ...uContainerPadding550,
@@ -139,6 +164,15 @@ const docStruct550: UpdateDocStruc = {
     "padding-right": courseCardPaddingHorizontal550,
     "padding-bottom": courseCardPaddingBottom550,
   },
-  footer: { ...uContainerPadding550 },
+  "course-card-description": {
+    "font-size": courseCardDescriptionFontSize550,
+  },
+  footer: {
+    ...uContainerPadding550,
+    "padding-top": footerVerticalPadding550,
+    "padding-bottom": footerVerticalPadding550,
+  },
   "site-logo": siteLogo550,
 };
+
+export { docStruct550 };
