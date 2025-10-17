@@ -35,7 +35,7 @@ type CloneStylePropContext = SerializeDocContext & {
 
 type ApplyExplicitPropsFromShorthandContext = Pick<
   CloneStylePropContext,
-  "styleResults"
+  "styleResults" | "isBrowser"
 > & {
   shorthandOuterMap: Map<number, Map<number, string[]>>;
 };

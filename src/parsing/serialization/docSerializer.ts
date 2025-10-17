@@ -17,6 +17,7 @@ import {
   FLUID_PROPERTY_NAMES,
   SPECIAL_PROPERTIES,
 } from "./docSerializerConsts";
+import { normalizeSelector, normalizeZero } from "./normalizer";
 
 let serializeDocument = (
   document: Document,
@@ -86,9 +87,14 @@ let serializeStyleRule = (
   const { style, specialProps } = serializeStyleProps(rule, ctx);
   if (Object.keys(style).length <= 0 && Object.keys(specialProps).length <= 0)
     return null;
+
+  const { isBrowser } = ctx;
+  const selectorText = isBrowser
+    ? rule.selectorText
+    : normalizeSelector(rule.selectorText);
   return {
     type: STYLE_RULE_TYPE,
-    selectorText: rule.selectorText,
+    selectorText,
     style,
     specialProps,
   } as StyleRuleClone;
@@ -180,7 +186,9 @@ let serializeFluidProp = (
     });
   } else {
     style = { ...style };
-    style[prop] = rule.style.getPropertyValue(prop);
+    let value = rule.style.getPropertyValue(prop);
+    if (!isBrowser) value = normalizeZero(value);
+    style[prop] = value;
   }
   return style;
 };
@@ -190,7 +198,7 @@ let applyExplicitPropsFromShorthand = (
   prop: string,
   ctx: ApplyExplicitPropsFromShorthandContext
 ): Record<string, string> => {
-  const { shorthandOuterMap } = ctx;
+  const { shorthandOuterMap, isBrowser } = ctx;
   let {
     styleResults: { style },
   } = ctx;
@@ -201,9 +209,10 @@ let applyExplicitPropsFromShorthand = (
   const shorthandInnerMap = shorthandOuterMap.get(mapLength);
   if (shorthandInnerMap) {
     for (let j = 0; j < shorthandValues.length; j++) {
-      const shorthandValue = shorthandValues[j];
+      let shorthandValue = shorthandValues[j];
       const properties = shorthandInnerMap.get(j);
       if (properties) {
+        if (!isBrowser) shorthandValue = normalizeZero(shorthandValue);
         for (const explicitProp of properties)
           style[explicitProp] = shorthandValue;
       }

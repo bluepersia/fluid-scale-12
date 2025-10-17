@@ -1,3 +1,12 @@
+import {
+  DocumentClone,
+  MediaRuleClone,
+  RuleClone,
+  StyleRuleClone,
+  StyleSheetClone,
+} from "./docSerializer.types";
+import { MEDIA_RULE_TYPE, STYLE_RULE_TYPE } from "./docSerializerConsts";
+
 function normalizeDoc(docClone: DocumentClone): DocumentClone {
   return {
     styleSheets: normalizeStyleSheets(docClone.styleSheets),

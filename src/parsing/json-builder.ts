@@ -4,7 +4,6 @@ import { JSDOM } from "jsdom";
 import { FluidScaleConfig } from "../index.types";
 import { serializeDocument } from "./serialization/docSerializer";
 import { parseDocument } from "./parser/docParser";
-import { normalizeDoc } from "./serialization/normalizer";
 
 function getArg(name: string): string | undefined {
   const arg = process.argv.find((a) => a.startsWith(`--${name}=`));
@@ -26,8 +25,6 @@ function build(configPath?: string) {
     const document = generateJSDOMDocument(value);
 
     let serializedDoc = serializeDocument(document, { isBrowser: false });
-
-    if (!isExecutedDirectly) serializedDoc = normalizeDoc(serializedDoc);
 
     const parseDocResults = parseDocument(serializedDoc);
 

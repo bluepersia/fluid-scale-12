@@ -45,7 +45,6 @@ import {
   parseSelector,
   parseStyleRule,
 } from "../../../src/parsing/parser/fluidDataPatcher";
-import { countStyleRulesInSheet } from "./masterController";
 import {
   parseBatchesAssertions,
   parseBatchAssertions,

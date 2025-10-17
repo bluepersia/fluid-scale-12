@@ -21,14 +21,7 @@ import {
   getRulesByAbsIndex,
   getRuleByAbsIndex,
   getStyleRuleByAbsIndex,
-  normalizeDoc,
-  normalizeStyleSheets,
-  normalizeStyleSheet,
-  normalizeRules,
-  normalizeRule,
-  normalizeStyle,
 } from "../masterController";
-
 import {
   FLUID_PROPERTY_NAMES,
   SHORTHAND_PROPERTIES,
@@ -55,7 +48,6 @@ const serializeDocAssertions: AssertionChainForFunc<
   typeof serializeDocument
 > = {
   "should serialize the document": (state, args, result) => {
-    result = normalizeDoc(result);
     expect(result).toEqual(clearNullsForDoc(state.master!.docClone));
   },
 };
@@ -73,7 +65,6 @@ const serializeStyleSheetsAssertions: AssertionChainForFunc<
   typeof serializeStyleSheets
 > = {
   "should serialize the style sheets": (state, args, result) => {
-    result = normalizeStyleSheets(result);
     expect(result).toEqual(
       clearNullsForStyleSheets(state.master!.docClone.styleSheets)
     );
@@ -85,7 +76,6 @@ const serializeStyleSheetAssertions: AssertionChainForFunc<
   typeof serializeStyleSheet
 > = {
   "should serialize the style sheet": (state, args, result) => {
-    result = normalizeStyleSheet(result);
     toBeEqualDefined(
       result,
       clearNullsForStyleSheet(
@@ -100,7 +90,6 @@ const serializeRulesAssertions: AssertionChainForFunc<
   typeof serializeRules
 > = {
   "should serialize the rules": (state, args, result) => {
-    result = normalizeRules(result);
     let rules = getRulesByAbsIndex(state.master!.docClone, state.rulesIndex);
 
     if (rules) rules = clearNullsForRules(rules);
@@ -114,7 +103,6 @@ const serializeRuleAssertions: AssertionChainForFunc<
   typeof serializeRule
 > = {
   "should serialize the rule": (state, args, result) => {
-    result = result ? normalizeRule(result) : null;
     let masterRule = getRuleByAbsIndex(state.master!.docClone, state.ruleIndex);
 
     if (result === null) {
@@ -133,8 +121,6 @@ const serializeStyleRuleAssertions: AssertionChainForFunc<
   typeof serializeStyleRule
 > = {
   "should serialize the style rule": (state, args, result) => {
-    result = result ? (normalizeRule(result) as StyleRuleClone) : null;
-
     const masterRule = getStyleRuleByAbsIndex(
       state.master!.docClone,
       state.styleRuleIndex
@@ -152,8 +138,6 @@ const serializeMediaRuleAssertions: AssertionChainForFunc<
   typeof serializeMediaRule
 > = {
   "should serialize the media rule": (state, args, result) => {
-    result = result ? (normalizeRule(result) as MediaRuleClone) : null;
-
     let masterRule = getMediaRuleByAbsIndex(
       state.master!.docClone,
       state.mediaRuleIndex
@@ -175,8 +159,6 @@ const serializeStylePropsAssertions: AssertionChainForFunc<
 > = {
   "should clone the style props": (state, args, result) => {
     let { style, specialProps } = result;
-
-    style = normalizeStyle(style);
 
     const masterRule = getStyleRuleByAbsIndex(
       state.master!.docClone,
@@ -208,8 +190,6 @@ const serializeStylePropAssertions: AssertionChainForFunc<
     } = ctx;
 
     let { style, specialProps } = result;
-
-    style = normalizeStyle(style);
 
     let masterRule = getStyleRuleByAbsIndex(
       state.master!.docClone,
@@ -263,8 +243,6 @@ const serializeFluidPropAssertions: AssertionChainForFunc<
       state.styleRuleIndex - 1
     );
 
-    result = normalizeStyle(result);
-
     assertFluidProp(prop, {
       rule,
       isBrowser,
@@ -289,8 +267,6 @@ const applyExplicitPropsFromShorthandAssertions: AssertionChainForFunc<
       state.master!.docClone,
       state.styleRuleIndex - 1
     );
-
-    result = normalizeStyle(result);
 
     const filteredResult = { ...result };
     for (const key in filteredResult) {
