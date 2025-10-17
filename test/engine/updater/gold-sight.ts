@@ -23,6 +23,7 @@ import {
 } from "../../../src/engine/engineUpdater";
 import { SerializedElementState } from "../index.types";
 import {
+  ConvertToPixelsContext,
   ElementState,
   FluidProperty,
   FluidPropertyState,
@@ -70,8 +71,8 @@ function assertStyleValues(
       const expectedValue = expected[i][j];
 
       if (isNaN(actualValue) || isNaN(expectedValue)) {
-        expect(actualValue).toBeNaN();
-        expect(expectedValue).toBeNaN();
+        expect(actualValue, msg).toBeNaN();
+        expect(expectedValue, msg).toBeNaN();
       } else {
         expect(actual[i][j], msg).toBeCloseTo(expected[i][j], 1);
       }
@@ -134,6 +135,7 @@ const updateFluidPropertiesAssertionChain: AssertionChain<
       fluidPropertiesStateArr
     );
 
+    const [, , ctx] = args;
     for (const [prop, value] of Object.entries(
       state.master!.coreDocStruct[elState.el.goldenId]
     )) {
@@ -167,17 +169,6 @@ const updateFluidPropertyAssertionChain: AssertionChain<
   },
 };
 
-const getCurrentRangeAssertionChain: AssertionChainForFunc<
-  State,
-  typeof getCurrentRange
-> = {
-  "should get the current range": (state, args, result) => {
-    if (result) {
-      expect(result.minBpIndex).toBe(state.master!.coreDocStructRange);
-    }
-  },
-};
-
 const computeValuesAssertionChain: AssertionChain<
   State,
   [FluidRange, FluidProperty, SerializedElementState],
@@ -186,12 +177,16 @@ const computeValuesAssertionChain: AssertionChain<
   "should compute the values": (state, args, result) => {
     const [, fluidProperty, serializedElState] = args;
 
-    assertStyleValues(
-      result,
+    const masterProp =
       state.master!.coreDocStruct[serializedElState.el.goldenId][
         fluidProperty.metaData.property
-      ].computedValues.actual
-    );
+      ];
+    if (
+      fluidProperty.metaData.orderID !== masterProp.computedValues.actualOrderID
+    )
+      return;
+
+    assertStyleValues(result, masterProp.computedValues.actual);
   },
 };
 
@@ -202,12 +197,17 @@ const interpolateValuesAssertionChain: AssertionChain<
 > = {
   "should interpolate the values": (state, args, result) => {
     const { elState, fluidProperty } = args;
-    assertStyleValues(
-      result,
+
+    const masterProp =
       state.master!.coreDocStruct[elState.el.goldenId][
         fluidProperty.metaData.property
-      ].computedValues.actual
-    );
+      ];
+    if (
+      fluidProperty.metaData.orderID !== masterProp.computedValues.actualOrderID
+    )
+      return;
+
+    assertStyleValues(result, masterProp.computedValues.actual);
   },
 };
 
@@ -221,17 +221,22 @@ const computeFluidValueAssertionChain: AssertionChain<
 > = {
   "should compute the fluid value": (state, args, result) => {
     const [fluidValue, { elState, fluidProperty }] = args;
+
+    const masterProp =
+      state.master!.coreDocStruct[elState.el.goldenId][
+        fluidProperty.metaData.property
+      ];
+    if (
+      fluidProperty.metaData.orderID !== masterProp.computedValues.actualOrderID
+    )
+      return;
+
     let key;
     if (fluidValue.type === "single") {
       const { value, unit } = fluidValue as FluidValueSingle;
       key = `${value}${unit}`;
     }
-    expect(result).toBeCloseTo(
-      state.master!.coreDocStruct[elState.el.goldenId][
-        fluidProperty.metaData.property
-      ].conversions[`${key}`],
-      1
-    );
+    expect(result).toBeCloseTo(masterProp.conversions[`${key}`], 1);
   },
 };
 
@@ -239,17 +244,25 @@ const convertToPixelsAssertionChain: AssertionChain<
   State,
   [
     FluidValueSingle,
-    { elState: SerializedElementState; fluidProperty: FluidProperty }
+    { elState: SerializedElementState; fluidProperty: FluidProperty },
+    ConvertToPixelsContext
   ],
   number
 > = {
   "should convert the fluid value to pixels": (state, args, result) => {
     const [fluidValue, { elState, fluidProperty }] = args;
 
-    expect(result).toBeCloseTo(
+    const masterProp =
       state.master!.coreDocStruct[elState.el.goldenId][
         fluidProperty.metaData.property
-      ].conversions[`${fluidValue.value}${fluidValue.unit}`],
+      ];
+    if (
+      fluidProperty.metaData.orderID !== masterProp.computedValues.actualOrderID
+    )
+      return;
+
+    expect(result).toBeCloseTo(
+      masterProp.conversions[`${fluidValue.value}${fluidValue.unit}`],
       1
     );
   },
@@ -261,7 +274,6 @@ const defaultAssertions = {
   flushElement: flushElementAssertionChain,
   updateFluidProperties: updateFluidPropertiesAssertionChain,
   updateFluidProperty: updateFluidPropertyAssertionChain,
-  getCurrentRange: getCurrentRangeAssertionChain,
   computeValues: computeValuesAssertionChain,
   interpolateValues: interpolateValuesAssertionChain,
   computeFluidValue: computeFluidValueAssertionChain,
@@ -324,7 +336,7 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
       resultConverter: (result, args) => {
         const [, , ctx] = args;
         const { elState } = ctx;
-        return [serializeElementState(elState), result];
+        return [serializeElementState(elState), result, ctx];
       },
     }
   );
@@ -375,6 +387,7 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
       return [
         fluidValue,
         { elState: serializeElementState(elState), fluidProperty },
+        ctx,
       ];
     },
   });
@@ -389,7 +402,6 @@ function wrapAll() {
     engineUpdateAssertionMaster.flushElement,
     engineUpdateAssertionMaster.updateFluidProperties,
     engineUpdateAssertionMaster.updateFluidProperty,
-    engineUpdateAssertionMaster.getCurrentRange,
     engineUpdateAssertionMaster.computeValues,
     engineUpdateAssertionMaster.interpolateValues,
     engineUpdateAssertionMaster.computeFluidValue,

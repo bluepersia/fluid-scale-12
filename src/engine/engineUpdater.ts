@@ -111,7 +111,8 @@ let updateFluidProperty = (
   ctx: UpdateFluidPropertyContext
 ): FluidPropertyState | undefined => {
   const { property, orderID } = fluidProperty.metaData;
-  if (currentPropertyState?.value) return;
+  if (currentPropertyState?.value && currentPropertyState.orderID > orderID)
+    return;
 
   let value = "";
   const currentRange = getCurrentRange(fluidProperty, ctx);
@@ -218,11 +219,21 @@ let interpolateValues = (
 ) => {
   const { progress } = ctx;
   const minValuesPx = calcFluidArray(minValues, ctx);
-  if (ctx.fluidProperty.metaData.property.startsWith("grid-"))
-    console.log("GRID MIN:", minValuesPx[0]);
+  /*if (
+    ctx.fluidProperty.metaData.property.startsWith("grid-") &&
+    ctx.windowWidth === 550
+  ) {
+    console.log(`GRID MIN for width ${ctx.windowWidth}`, minValuesPx[0]);
+    console.log(minValues);
+  }*/
   const maxValuesPx = calcFluidArray(maxValues, ctx);
-  if (ctx.fluidProperty.metaData.property.startsWith("grid-"))
-    console.log("GRID MAX:", maxValuesPx[0]);
+  /*if (
+    ctx.fluidProperty.metaData.property.startsWith("grid-") &&
+    ctx.windowWidth === 550
+  ) {
+    console.log(`GRID MAX for width ${ctx.windowWidth}`, maxValuesPx[0]);
+    console.log(maxValues);
+  }*/
   return minValuesPx.map((group, groupIndex) =>
     group.map((minValuePx, valueIndex) => {
       if (groupIndex >= maxValues.length) return minValuePx;
@@ -327,7 +338,6 @@ function wrap(
   flushElementWrapped: typeof flushElement,
   updateFluidPropertiesWrapped: typeof updateFluidProperties,
   updateFluidPropertyWrapped: typeof updateFluidProperty,
-  getCurrentRangeWrapped: typeof getCurrentRange,
   computeValuesWrapped: typeof computeValues,
   interpolateValuesWrapped: typeof interpolateValues,
   computeFluidValueWrapped: typeof computeFluidValue,
@@ -338,7 +348,6 @@ function wrap(
   flushElement = flushElementWrapped;
   updateFluidProperties = updateFluidPropertiesWrapped;
   updateFluidProperty = updateFluidPropertyWrapped;
-  getCurrentRange = getCurrentRangeWrapped;
   computeValues = computeValuesWrapped;
   interpolateValues = interpolateValuesWrapped;
   computeFluidValue = computeFluidValueWrapped;

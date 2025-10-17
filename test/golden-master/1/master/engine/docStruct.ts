@@ -164,6 +164,10 @@ const docStructureBase: RuntimeGoldenDoc = {
     ".btn--transparent": {
       ".btn--transparent": [
         fluidData[".btn--transparent"][".btn--transparent"]["font-size"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-top"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-right"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-bottom"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-left"],
       ],
     },
   },

@@ -71,7 +71,7 @@ let addElements = (
       parentEl: undefined,
       fluidPropertiesState: new Map(),
     };
-    const fluidProperties: FluidProperty[] = elState.fluidProperties;
+    let fluidProperties: FluidProperty[] = elState.fluidProperties;
 
     for (const anchorRoute of insertFluidPropertiesForAnchorRouter) {
       fluidProperties.push(...anchorRoute(el, ctx));

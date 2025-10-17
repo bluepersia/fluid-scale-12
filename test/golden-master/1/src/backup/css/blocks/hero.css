@@ -54,7 +54,6 @@
   }
   .hero__image--tablet {
     display: block;
-    visibility: visible;
     position: absolute;
     right: -18rem;
     top: -9rem;
@@ -83,7 +82,7 @@
   }
 
   .hero__image--tablet {
-    visibility: hidden;
+    display: none;
     width: 65rem;
   }
   .hero__image--desktop {

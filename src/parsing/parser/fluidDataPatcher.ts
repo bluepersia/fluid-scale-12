@@ -184,7 +184,7 @@ let applyForce = (
   property: string,
   ctx: ApplyForceContext
 ) => {
-  const { batches, docResultState, minValue } = ctx;
+  const { docResultState, minValue, breakpoints } = ctx;
   const force = styleRule.specialProps["--force"];
   if (force) {
     const forceValues = parsePropsValues(force);
@@ -193,7 +193,7 @@ let applyForce = (
         ...ctx,
         minValue,
         property,
-        nextBatchWidth: Math.max(...batches.map((batch) => batch.width)),
+        nextBatchWidth: breakpoints[breakpoints.length - 1],
         docResultState,
       });
     }

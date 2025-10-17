@@ -38,6 +38,31 @@ const paddingTopRange: FluidRange = {
 
 paddingTopRanges.push(paddingTopRange);
 
+const paddingTopRange1: FluidRange = {
+  minBpIndex: 1,
+  maxBpIndex: 2,
+  minValue: [
+    [
+      {
+        value: 1.5,
+        unit: "rem",
+        type: "single",
+      } as FluidValueSingle,
+    ],
+  ],
+  maxValue: [
+    [
+      {
+        value: 1.5,
+        unit: "rem",
+        type: "single",
+      } as FluidValueSingle,
+    ],
+  ],
+};
+
+paddingTopRanges.push(paddingTopRange1);
+
 const paddingTopProperty: FluidPropertyData = {
   metaData: {
     orderID,

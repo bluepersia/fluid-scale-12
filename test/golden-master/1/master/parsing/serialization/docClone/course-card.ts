@@ -19,10 +19,10 @@ const docCloneCourseCard: StyleSheetClone = {
         "border-bottom-left-radius": "0.625rem",
         "border-top-left-radius": "0.625rem",
         "font-size": "1rem",
-        height: "16rem",
+        height: "100%",
       },
       specialProps: {
-        "--span-start": "height, padding-top",
+        "--span-start": "padding-top",
       },
     } as StyleRuleClone,
     {
@@ -96,7 +96,7 @@ const docCloneCourseCard: StyleSheetClone = {
             "padding-left": "2rem",
           },
           specialProps: {
-            "--span-end": "height, padding-top",
+            "--span-end": "padding-top",
           },
         } as StyleRuleClone,
         {

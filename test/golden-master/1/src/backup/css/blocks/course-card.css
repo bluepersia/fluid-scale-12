@@ -4,11 +4,11 @@
   border-radius: 0.625rem;
   background-color: white;
   position: relative;
-  --span-start: padding-top;
+  height: 16rem;
+  --span-start: height, padding-top;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
-  height: 100%;
 }
 
 .course-card__title {
@@ -55,7 +55,7 @@
   .course-card {
     padding-left: 2rem;
     padding-right: 2rem;
-    --span-end: padding-top;
+    --span-end: height, padding-top;
   }
 
   .course-card__title {
@@ -69,6 +69,7 @@
 
 @media (min-width: 1200px) {
   .course-card {
+    height: 20.125rem;
     padding-top: 4rem;
     padding-bottom: 2.5rem;
   }

@@ -5,7 +5,7 @@ const counter = new Counter();
 
 let orderID = counter.next();
 
-const uContainerPaddingVertical550 = {
+const uContainerPaddingVertical = {
   conversions: {
     "0px": 0,
   },
@@ -15,7 +15,7 @@ const uContainerPaddingVertical550 = {
   },
 };
 
-const uContainerPaddingHorizontal550 = {
+const uContainerPaddingHorizontal = {
   conversions: {
     "1rem": 16,
     "2.4375rem": 39,
@@ -26,16 +26,16 @@ const uContainerPaddingHorizontal550 = {
   },
 };
 
-const uContainerPadding550 = {
-  "padding-top": uContainerPaddingVertical550,
-  "padding-bottom": uContainerPaddingVertical550,
-  "padding-left": uContainerPaddingHorizontal550,
-  "padding-right": uContainerPaddingHorizontal550,
+const uContainerPadding = {
+  "padding-top": uContainerPaddingVertical,
+  "padding-bottom": uContainerPaddingVertical,
+  "padding-left": uContainerPaddingHorizontal,
+  "padding-right": uContainerPaddingHorizontal,
 };
 
 orderID = counter.next();
 
-const siteLogo550 = {
+const siteLogo = {
   width: {
     conversions: {},
     computedValues: {
@@ -47,7 +47,7 @@ const siteLogo550 = {
 
 orderID = counter.next();
 
-const headerPaddingTop550 = {
+const headerPaddingTop = {
   conversions: {
     "1rem": 16,
     "1.5rem": 24,
@@ -60,7 +60,7 @@ const headerPaddingTop550 = {
 
 orderID = counter.next();
 
-const heroPaddingTop550 = {
+const heroPaddingTop = {
   conversions: {
     "2.375rem": 38,
     "6.1875rem": 99,
@@ -73,7 +73,7 @@ const heroPaddingTop550 = {
 
 orderID = counter.next();
 
-const heroTitleFontSize550 = {
+const heroTitleFontSize = {
   conversions: {},
   computedValues: {
     actual: [[NaN]],
@@ -83,7 +83,7 @@ const heroTitleFontSize550 = {
 
 orderID = counter.next();
 
-const heroDescriptionMarginBottom550 = {
+const heroDescriptionMarginBottom = {
   conversions: {},
   computedValues: {
     actual: [[NaN]],
@@ -92,7 +92,7 @@ const heroDescriptionMarginBottom550 = {
 };
 orderID = counter.next();
 
-const coursesPaddingBottom550 = {
+const coursesPaddingBottom = {
   conversions: {
     "5rem": 80,
     "5.375rem": 86,
@@ -105,7 +105,7 @@ const coursesPaddingBottom550 = {
 
 orderID = counter.next();
 
-const courseListRowGap550 = {
+const courseListRowGap = {
   conversions: {
     "2.5rem": 40,
     "3.5rem": 56,
@@ -116,7 +116,7 @@ const courseListRowGap550 = {
   },
 };
 
-const courseListColumnGap550 = {
+const courseListColumnGap = {
   conversions: {},
   computedValues: {
     actual: [[NaN]],
@@ -124,7 +124,7 @@ const courseListColumnGap550 = {
   },
 };
 
-const courseListGridTemplateColumns550 = {
+const courseListGridTemplateColumns = {
   conversions: {},
   computedValues: {
     actual: [[497.531]],
@@ -134,7 +134,7 @@ const courseListGridTemplateColumns550 = {
 
 orderID = counter.next();
 
-const courseCardPaddingHorizontal550 = {
+const courseCardPaddingHorizontal = {
   conversions: {
     "1.75rem": 28,
     "2rem": 32,
@@ -145,7 +145,7 @@ const courseCardPaddingHorizontal550 = {
   },
 };
 
-const courseCardPaddingBottom550 = {
+const courseCardPaddingBottom = {
   conversions: {
     "2rem": 32,
     "2.5rem": 40,
@@ -164,7 +164,7 @@ const courseCardPaddingTop = {
   },
 };
 
-const courseCardHeight550 = {
+const courseCardHeight = {
   conversions: {},
   computedValues: {
     actual: [[NaN]],
@@ -174,7 +174,7 @@ const courseCardHeight550 = {
 
 orderID = counter.next();
 
-const courseCardTitleFontSize550 = {
+const courseCardTitleFontSize = {
   conversions: {},
   computedValues: {
     actual: [[NaN]],
@@ -182,7 +182,7 @@ const courseCardTitleFontSize550 = {
   },
 };
 
-const courseCardDescriptionFontSize550 = {
+const courseCardDescriptionFontSize = {
   conversions: {
     "1em": 16,
     "1.125em": 18,
@@ -195,7 +195,7 @@ const courseCardDescriptionFontSize550 = {
 
 orderID = counter.next();
 
-const footerVerticalPadding550 = {
+const footerVerticalPadding = {
   conversions: {
     "1rem": 16,
     "2.25rem": 36,
@@ -208,7 +208,7 @@ const footerVerticalPadding550 = {
 
 orderID = counter.next();
 
-const btnFontSize550 = {
+const btnFontSize = {
   conversions: {},
   computedValues: {
     actual: [[NaN]],
@@ -217,7 +217,7 @@ const btnFontSize550 = {
 };
 
 orderID = counter.next();
-const btnRadiantVerticalPadding550 = {
+const btnRadiantVerticalPadding = {
   conversions: {
     "0.9375rem": 15,
   },
@@ -227,7 +227,7 @@ const btnRadiantVerticalPadding550 = {
   },
 };
 
-const btnRadiantHorizontalPadding550 = {
+const btnRadiantHorizontalPadding = {
   conversions: {
     "2.375rem": 38,
   },
@@ -239,7 +239,7 @@ const btnRadiantHorizontalPadding550 = {
 
 orderID = counter.next();
 
-const btnTransparentFontSize550 = {
+const btnTransparentFontSize = {
   conversions: {
     "1.125rem": 18,
   },
@@ -248,48 +248,72 @@ const btnTransparentFontSize550 = {
     actualOrderID: orderID,
   },
 };
+const btnTransparentPaddingVertical = {
+  conversions: {
+    "0px": 0,
+  },
+  computedValues: {
+    actual: [[0]],
+    actualOrderID: orderID,
+  },
+};
+const btnTransparentPaddingHorizontal = {
+  conversions: {
+    "0px": 0,
+  },
+  computedValues: {
+    actual: [[0]],
+    actualOrderID: orderID,
+  },
+};
+const btnTransparentPadding = {
+  "padding-top": btnTransparentPaddingVertical,
+  "padding-right": btnTransparentPaddingHorizontal,
+  "padding-bottom": btnTransparentPaddingVertical,
+  "padding-left": btnTransparentPaddingHorizontal,
+};
 
 const courseCard = {
-  "padding-left": courseCardPaddingHorizontal550,
-  "padding-right": courseCardPaddingHorizontal550,
-  "padding-bottom": courseCardPaddingBottom550,
+  "padding-left": courseCardPaddingHorizontal,
+  "padding-right": courseCardPaddingHorizontal,
+  "padding-bottom": courseCardPaddingBottom,
   "padding-top": courseCardPaddingTop,
-  height: courseCardHeight550,
+  height: courseCardHeight,
 };
 
 const generalBtnPadding = {
-  "padding-top": btnFontSize550,
-  "padding-right": btnFontSize550,
-  "padding-bottom": btnFontSize550,
-  "padding-left": btnFontSize550,
+  "padding-top": btnFontSize,
+  "padding-right": btnFontSize,
+  "padding-bottom": btnFontSize,
+  "padding-left": btnFontSize,
 };
 
 const docStruct550: UpdateDocStruc = {
-  "header-logo": siteLogo550,
+  "header-logo": siteLogo,
   "header-btn": {
-    "font-size": btnFontSize550,
+    "font-size": btnFontSize,
     ...generalBtnPadding,
   },
   header: {
-    ...uContainerPadding550,
-    "padding-top": headerPaddingTop550,
+    ...uContainerPadding,
+    "padding-top": headerPaddingTop,
   },
-  hero: { ...uContainerPadding550, "padding-top": heroPaddingTop550 },
+  hero: { ...uContainerPadding, "padding-top": heroPaddingTop },
   "hero-title": {
-    "font-size": heroTitleFontSize550,
-    "margin-bottom": heroTitleFontSize550,
+    "font-size": heroTitleFontSize,
+    "margin-bottom": heroTitleFontSize,
   },
   "hero-description": {
-    "margin-bottom": heroDescriptionMarginBottom550,
+    "margin-bottom": heroDescriptionMarginBottom,
   },
   courses: {
-    ...uContainerPadding550,
-    "padding-bottom": coursesPaddingBottom550,
+    ...uContainerPadding,
+    "padding-bottom": coursesPaddingBottom,
   },
   "course-list": {
-    "row-gap": courseListRowGap550,
-    "column-gap": courseListColumnGap550,
-    "grid-template-columns": courseListGridTemplateColumns550,
+    "row-gap": courseListRowGap,
+    "column-gap": courseListColumnGap,
+    "grid-template-columns": courseListGridTemplateColumns,
   },
   "course-card-intro": courseCard,
   "course-card-2": courseCard,
@@ -298,70 +322,74 @@ const docStruct550: UpdateDocStruc = {
   "course-card-5": courseCard,
   "course-card-6": courseCard,
   "course-card-title-1": {
-    "font-size": courseCardTitleFontSize550,
+    "font-size": courseCardTitleFontSize,
   },
   "course-card-title-2": {
-    "font-size": courseCardTitleFontSize550,
+    "font-size": courseCardTitleFontSize,
   },
   "course-card-title-3": {
-    "font-size": courseCardTitleFontSize550,
+    "font-size": courseCardTitleFontSize,
   },
   "course-card-title-4": {
-    "font-size": courseCardTitleFontSize550,
+    "font-size": courseCardTitleFontSize,
   },
   "course-card-title-5": {
-    "font-size": courseCardTitleFontSize550,
+    "font-size": courseCardTitleFontSize,
   },
   "course-card-title-6": {
-    "font-size": courseCardTitleFontSize550,
+    "font-size": courseCardTitleFontSize,
   },
   "course-card-description-2": {
-    "font-size": courseCardDescriptionFontSize550,
+    "font-size": courseCardDescriptionFontSize,
   },
   "course-card-description-3": {
-    "font-size": courseCardDescriptionFontSize550,
+    "font-size": courseCardDescriptionFontSize,
   },
   "course-card-description-4": {
-    "font-size": courseCardDescriptionFontSize550,
+    "font-size": courseCardDescriptionFontSize,
   },
   "course-card-description-5": {
-    "font-size": courseCardDescriptionFontSize550,
+    "font-size": courseCardDescriptionFontSize,
   },
   "course-card-description-6": {
-    "font-size": courseCardDescriptionFontSize550,
+    "font-size": courseCardDescriptionFontSize,
   },
   footer: {
-    ...uContainerPadding550,
-    "padding-top": footerVerticalPadding550,
-    "padding-bottom": footerVerticalPadding550,
+    ...uContainerPadding,
+    "padding-top": footerVerticalPadding,
+    "padding-bottom": footerVerticalPadding,
   },
-  "footer-logo": siteLogo550,
+  "footer-logo": siteLogo,
   "hero-btn": {
-    "font-size": btnFontSize550,
-    "padding-top": btnRadiantVerticalPadding550,
-    "padding-right": btnRadiantHorizontalPadding550,
-    "padding-bottom": btnRadiantVerticalPadding550,
-    "padding-left": btnRadiantHorizontalPadding550,
+    "font-size": btnFontSize,
+    "padding-top": btnRadiantVerticalPadding,
+    "padding-right": btnRadiantHorizontalPadding,
+    "padding-bottom": btnRadiantVerticalPadding,
+    "padding-left": btnRadiantHorizontalPadding,
   },
   "course-card-btn-2": {
     ...generalBtnPadding,
-    "font-size": btnTransparentFontSize550,
+    "font-size": btnTransparentFontSize,
+    ...btnTransparentPadding,
   },
   "course-card-btn-3": {
     ...generalBtnPadding,
-    "font-size": btnTransparentFontSize550,
+    "font-size": btnTransparentFontSize,
+    ...btnTransparentPadding,
   },
   "course-card-btn-4": {
     ...generalBtnPadding,
-    "font-size": btnTransparentFontSize550,
+    "font-size": btnTransparentFontSize,
+    ...btnTransparentPadding,
   },
   "course-card-btn-5": {
     ...generalBtnPadding,
-    "font-size": btnTransparentFontSize550,
+    "font-size": btnTransparentFontSize,
   },
   "course-card-btn-6": {
     ...generalBtnPadding,
-    "font-size": btnTransparentFontSize550,
+    "font-size": btnTransparentFontSize,
+    ...btnTransparentPadding,
   },
 };
 

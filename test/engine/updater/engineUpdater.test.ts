@@ -11,7 +11,10 @@ import { masterCollection, masterFlowCollection } from "./masterCollection";
 import { engineUpdateAssertionMaster } from "./gold-sight";
 import { PlaywrightPage } from "../../index.types";
 import { AssertionBlueprint } from "gold-sight";
-import { getFlushProps } from "../../../src/engine/engineUpdater";
+import {
+  getCurrentRange,
+  getFlushProps,
+} from "../../../src/engine/engineUpdater";
 
 let playwrightPages: PlaywrightPage[] = [];
 
@@ -185,5 +188,71 @@ describe("readPropertyValue", () => {
     );
 
     expect(result).toBe(testCase.expected);
+  });
+});
+
+describe("getCurrentRange", () => {
+  const testCases = [
+    {
+      fluidProperty: {
+        ranges: [
+          {
+            minBpIndex: 0,
+            maxBpIndex: 1,
+          },
+          null,
+        ],
+      },
+      ctx: {
+        breakpoints: [375, 768, 1200],
+        windowWidth: 500,
+      },
+      expected: {
+        minBpIndex: 0,
+        maxBpIndex: 1,
+      },
+    },
+    {
+      fluidProperty: {
+        ranges: [
+          null,
+          {
+            minBpIndex: 1,
+            maxBpIndex: 2,
+          },
+        ],
+      },
+      ctx: {
+        breakpoints: [375, 768, 1200],
+        windowWidth: 1000,
+      },
+      expected: {
+        minBpIndex: 1,
+        maxBpIndex: 2,
+      },
+    },
+    {
+      fluidProperty: {
+        ranges: [
+          null,
+          {
+            minBpIndex: 1,
+            maxBpIndex: 2,
+          },
+        ],
+      },
+      ctx: {
+        breakpoints: [375, 768, 1200],
+        windowWidth: 600,
+      },
+      expected: undefined,
+    },
+  ];
+
+  test.each(testCases)("should get the current range", (testCase) => {
+    const { ctx, fluidProperty, expected } = testCase;
+    const result = getCurrentRange(fluidProperty as any, ctx as any);
+
+    expect(result).toEqual(expected);
   });
 });
