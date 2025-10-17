@@ -18,6 +18,11 @@ type GlobalState = {
   config: Config;
 };
 
+type JSDOMData = {
+  fluidData: FluidData;
+  breakpoints: number[];
+};
+
 type ElementState = {
   el: HTMLElement;
   fluidProperties: FluidProperty[];
@@ -75,4 +80,5 @@ export type {
   UpdateFluidPropertyContext,
   ConvertToPixelsContext,
   InterpolateValuesContext,
+  JSDOMData,
 };

@@ -10,6 +10,7 @@ import {
   ElementState,
   FluidProperty,
   InsertFluidPropertiesForAnchorContext,
+  JSDOMData,
 } from "./index.types";
 
 const intersectionObserver = new IntersectionObserver(handleIntersection);
@@ -122,6 +123,12 @@ let assignParentEls = () => {
     }
   }
 };
+
+async function loadJSDOMData(jsonID: string): Promise<JSDOMData> {
+  const raw = await fetch(`/fluid-scale/${jsonID}.json`);
+  const json = await raw.json();
+  return json as JSDOMData;
+}
 
 function wrap(
   addElementsWrapped: typeof addElements,
