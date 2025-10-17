@@ -3,6 +3,7 @@ import {
   wrap as wrapEngine,
   insertFluidPropertiesForAnchor,
   assignParentEls,
+  loadJSDOMData,
 } from "./engine/engineSetup";
 import {
   getState,
@@ -13,6 +14,7 @@ import {
 import { update } from "./engine/engineUpdater";
 import { Config } from "./index.types";
 import { parseDocument } from "./parsing/parser/docParser";
+import { ParseDocResults } from "./parsing/parser/docParser.types";
 import { serializeDocument } from "./parsing/serialization/docSerializer";
 
 let addElements = (els: Node[]): void => {
@@ -28,14 +30,27 @@ let addElements = (els: Node[]): void => {
   observeElements(toAddEls.map((el) => el.el));
 };
 
-let init = (config?: Config): void => {
+let loadParseDocResults = async (jsonID?: string): Promise<ParseDocResults> => {
+  if (jsonID) {
+    return await loadJSDOMData(jsonID);
+  } else {
+    const docClone = serializeDocument(document, { isBrowser: true });
+    return parseDocument(docClone);
+  }
+};
+
+let init = async (config?: Config): Promise<void> => {
   config = {
     startEngine: true,
     ...(config ?? {}),
   };
-  const docClone = serializeDocument(document, { isBrowser: true });
 
-  const { breakpoints, fluidData } = parseDocument(docClone);
+  const parseDocResults: ParseDocResults = await loadParseDocResults(
+    config.jsonID
+  );
+  if (!parseDocResults) throw new Error("Failed to parse document");
+
+  const { breakpoints, fluidData } = parseDocResults;
 
   initEngineState(breakpoints, fluidData, config);
 

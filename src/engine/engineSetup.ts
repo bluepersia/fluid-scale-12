@@ -1,3 +1,4 @@
+import { ParseDocResults } from "../parsing/parser/docParser.types";
 import { getState, setInterObserverIsInitialized } from "./engineState";
 import {
   addHiddenElement,
@@ -10,7 +11,6 @@ import {
   ElementState,
   FluidProperty,
   InsertFluidPropertiesForAnchorContext,
-  JSDOMData,
 } from "./index.types";
 
 const intersectionObserver = new IntersectionObserver(handleIntersection);
@@ -124,10 +124,10 @@ let assignParentEls = () => {
   }
 };
 
-async function loadJSDOMData(jsonID: string): Promise<JSDOMData> {
+async function loadJSDOMData(jsonID: string): Promise<ParseDocResults> {
   const raw = await fetch(`/fluid-scale/${jsonID}.json`);
   const json = await raw.json();
-  return json as JSDOMData;
+  return json as ParseDocResults;
 }
 
 function wrap(
@@ -148,4 +148,5 @@ export {
   assignParentEls,
   intersectionObserver,
   wrap,
+  loadJSDOMData,
 };
