@@ -3,4 +3,11 @@ type Config = {
   startEngine?: boolean;
 };
 
-export type { Config };
+type FluidScaleConfig = {
+  inputFiles: {
+    [key: string]: string[];
+  };
+  outputDir?: string;
+};
+
+export type { Config, FluidScaleConfig };
