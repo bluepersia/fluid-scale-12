@@ -7,6 +7,7 @@ type PlaywrightPage = {
 };
 
 type PlaywrightBlueprint = {
+  useServer: boolean;
   htmlFilePath: string;
   addCss: string[];
 };

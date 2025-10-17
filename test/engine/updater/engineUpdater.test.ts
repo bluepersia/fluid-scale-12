@@ -134,7 +134,13 @@ describe("getFlushProps", () => {
 });
 
 describe("readPropertyValue", () => {
-  let browserCtx: { browser: Browser; page: Page } | undefined;
+  let browserCtx:
+    | {
+        browser: Browser;
+        page: Page;
+        server: { url: string; close: () => void };
+      }
+    | undefined;
   beforeAll(async () => {
     browserCtx = await startBrowserPage();
   });

@@ -144,7 +144,13 @@ const updateFluidPropertiesAssertionChain: AssertionChain<
       );
       const expectedValue = value.computedValues.actual;
 
-      assertStyleValues(actualValue, expectedValue);
+      assertStyleValues(
+        actualValue,
+        expectedValue,
+        JSON.stringify({
+          prop,
+        })
+      );
     }
   },
 };
@@ -320,6 +326,7 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
     updateFluidProperties,
     "updateFluidProperties",
     {
+      getId: (args) => args[0].el.dataset.goldenId || "",
       resultConverter: (result, args) => {
         const [elState] = args;
         return [serializeElementState(elState), Array.from(result.entries())];
