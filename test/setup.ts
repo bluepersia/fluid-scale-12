@@ -28,6 +28,7 @@ const realProjectsData: PlaywrightBlueprint[] = [
   {
     htmlFilePath: "golden-master/0",
     addCss: ["css/global.css", "css/utils.css", "css/product-card.css"],
+    useServer: true,
   },
   {
     htmlFilePath: "golden-master/1",
@@ -41,6 +42,7 @@ const realProjectsData: PlaywrightBlueprint[] = [
       "css/blocks/footer.css",
       "css/blocks/btn.css",
     ],
+    useServer: true,
   },
 ];
 

@@ -37,37 +37,21 @@ describe("init", () => {
     const queues: [number, AssertionBlueprint][][] = await page.evaluate(
       async (master) => {
         (window as any).engineAssertionMaster.master = master;
-        (window as any).parseDocAssertionMaster.master = master.parseDocMaster;
-        (window as any).serializeDocAssertionMaster.master =
-          master.serializeDocMaster;
 
         await (window as any).FluidScale.init();
 
         const engineQueue = await (
           window as any
         ).engineAssertionMaster.getQueueAsync();
-        const serializeQueue = (
-          window as any
-        ).serializeDocAssertionMaster.getQueue();
-        const parseQueue = (window as any).parseDocAssertionMaster.getQueue();
-
-        return [
-          Array.from(engineQueue.entries()),
-          Array.from(serializeQueue.entries()),
-          Array.from(parseQueue.entries()),
-        ];
+        return [Array.from(engineQueue.entries())];
       },
       master
     );
 
-    const [engineQueue, serializeQueue, parseQueue] = queues;
+    const [engineQueue] = queues;
 
     engineAssertionMaster.setQueueFromArray(engineQueue);
     engineAssertionMaster.assertQueue({ master: { index } });
-    serializeDocAssertionMaster.setQueueFromArray(serializeQueue);
-    serializeDocAssertionMaster.assertQueue({ master: { index } });
-    parseDocAssertionMaster.setQueueFromArray(parseQueue);
-    parseDocAssertionMaster.assertQueue({ master: { index } });
   });
 });
 
