@@ -126,30 +126,6 @@ applyProperty(
   courseCardPaddingTopProperty
 );
 
-const courseCardHeightRanges: FluidRange[] = [];
-const courseCardHeightRange1: FluidRange = {
-  minBpIndex: 1,
-  maxBpIndex: 2,
-  minValue: [[{ value: 16, unit: "rem", type: "single" } as FluidValueSingle]],
-  maxValue: [
-    [{ value: 20.125, unit: "rem", type: "single" } as FluidValueSingle],
-  ],
-};
-
-courseCardHeightRanges.push(courseCardHeightRange1);
-
-const courseCardHeightProperty: FluidPropertyData = {
-  metaData: { orderID, property: "height" },
-  ranges: courseCardHeightRanges,
-};
-applyProperty(
-  fluidDataCourseCard,
-  ".course-card",
-  ".course-card",
-  "height",
-  courseCardHeightProperty
-);
-
 orderID = counter.next();
 
 const courseCardTitleFontSizeRanges: FluidRange[] = [];

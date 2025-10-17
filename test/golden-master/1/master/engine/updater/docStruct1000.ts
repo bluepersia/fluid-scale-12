@@ -230,17 +230,6 @@ const courseCardPaddingTop = {
   },
 };
 
-const courseCardHeight = {
-  conversions: {
-    "16rem": 256,
-    "20.125rem": 322,
-  },
-  computedValues: {
-    actual: [[291.44]],
-    actualOrderID: orderID,
-  },
-};
-
 orderID = counter.next();
 
 const courseCardTitleFontSize = {
@@ -383,7 +372,6 @@ const courseCard = {
   "padding-right": courseCardPaddingHorizontal,
   "padding-bottom": courseCardPaddingBottom,
   "padding-top": courseCardPaddingTop,
-  height: courseCardHeight,
 };
 
 const generalBtnPadding = {

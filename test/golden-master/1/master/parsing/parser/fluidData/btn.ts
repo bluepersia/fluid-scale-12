@@ -227,14 +227,14 @@ const btnTransparentPaddingRanges: FluidRange[] = [];
 const btnTransparentPaddingRange0: FluidRange = {
   minBpIndex: 0,
   maxBpIndex: 2,
-  minValue: [[{ value: 0, unit: "rem", type: "single" } as FluidValueSingle]],
-  maxValue: [[{ value: 0, unit: "rem", type: "single" } as FluidValueSingle]],
+  minValue: [[{ value: 0, unit: "px", type: "single" } as FluidValueSingle]],
+  maxValue: [[{ value: 0, unit: "px", type: "single" } as FluidValueSingle]],
 };
 
 btnTransparentPaddingRanges.push(btnTransparentPaddingRange0);
 
 const btnTransparentPaddingProperty: FluidPropertyData = {
-  metaData: { orderID, property: "padding" },
+  metaData: { orderID, property: "padding-top" },
   ranges: btnTransparentPaddingRanges,
 };
 
@@ -242,8 +242,46 @@ applyProperty(
   fluidDataBtn,
   ".btn--transparent",
   ".btn--transparent",
-  "padding",
+  "padding-top",
   btnTransparentPaddingProperty
 );
 
+const btnTransparentPaddingBottomProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-bottom" },
+  ranges: btnTransparentPaddingRanges,
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn--transparent",
+  ".btn--transparent",
+  "padding-bottom",
+  btnTransparentPaddingBottomProperty
+);
+
+const btnTransparentPaddingLeftProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-left" },
+  ranges: btnTransparentPaddingRanges,
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn--transparent",
+  ".btn--transparent",
+  "padding-left",
+  btnTransparentPaddingLeftProperty
+);
+
+const btnTransparentPaddingRightProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-right" },
+  ranges: btnTransparentPaddingRanges,
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn--transparent",
+  ".btn--transparent",
+  "padding-right",
+  btnTransparentPaddingRightProperty
+);
 export { fluidDataBtn };

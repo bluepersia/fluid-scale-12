@@ -126,7 +126,6 @@ const docCloneCourseCard: StyleSheetClone = {
           type: 1,
           selectorText: ".course-card",
           style: {
-            height: "20.125rem",
             "padding-top": "4rem",
             "padding-bottom": "2.5rem",
           },

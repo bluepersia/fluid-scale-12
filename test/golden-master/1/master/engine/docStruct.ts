@@ -14,7 +14,6 @@ const courseCardProperties = [
   fluidData[".course-card"][".course-card"]["padding-bottom"],
   fluidData[".course-card"][".course-card"]["padding-left"],
   fluidData[".course-card"][".course-card"]["padding-top"],
-  fluidData[".course-card"][".course-card"]["height"],
 ];
 
 const courseCardTitleProperties = [
@@ -197,6 +196,10 @@ const docStructureBase: RuntimeGoldenDoc = {
     ".btn--transparent": {
       ".btn--transparent": [
         fluidData[".btn--transparent"][".btn--transparent"]["font-size"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-top"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-right"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-bottom"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-left"],
       ],
     },
   },
@@ -226,6 +229,10 @@ const docStructureBase: RuntimeGoldenDoc = {
     ".btn--transparent": {
       ".btn--transparent": [
         fluidData[".btn--transparent"][".btn--transparent"]["font-size"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-top"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-right"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-bottom"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-left"],
       ],
     },
   },
@@ -255,6 +262,10 @@ const docStructureBase: RuntimeGoldenDoc = {
     ".btn--transparent": {
       ".btn--transparent": [
         fluidData[".btn--transparent"][".btn--transparent"]["font-size"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-top"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-right"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-bottom"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-left"],
       ],
     },
   },
@@ -284,6 +295,10 @@ const docStructureBase: RuntimeGoldenDoc = {
     ".btn--transparent": {
       ".btn--transparent": [
         fluidData[".btn--transparent"][".btn--transparent"]["font-size"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-top"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-right"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-bottom"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-left"],
       ],
     },
   },
