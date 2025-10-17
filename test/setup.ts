@@ -106,7 +106,9 @@ async function onLoadBrowserPage(page: Page, blueprint?: PlaywrightBlueprint) {
   // Inject the IIFE bundle and expose cloneDocument on window for tests
   const clonerBundlePath = path.resolve(__dirname, "../bundle/dist/bundle.js");
   page.on("console", (msg) => {
-    console.log("BROWSER LOG:", msg.text());
+    const text = msg.text();
+    if (text.includes("Failed to load resource")) return;
+    console.log("BROWSER LOG:", text);
   });
   page.on("pageerror", (err) => {
     console.log("PAGE ERROR:", err);

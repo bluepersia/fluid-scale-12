@@ -67,10 +67,12 @@ function wrap(
   initWrapped: typeof init,
   addElementsEngineWrapped: typeof addElementsToEngine,
   insertFluidPropertiesForAnchorWrapped: typeof insertFluidPropertiesForAnchor,
-  assignParentElsWrapped: typeof assignParentEls
+  assignParentElsWrapped: typeof assignParentEls,
+  loadParseDocResultsWrapped: typeof loadParseDocResults
 ) {
   addElements = addElementsWrapped;
   init = initWrapped;
+  loadParseDocResults = loadParseDocResultsWrapped;
   wrapEngine(
     addElementsEngineWrapped,
     insertFluidPropertiesForAnchorWrapped,
@@ -78,6 +80,6 @@ function wrap(
   );
 }
 
-export { addElements, init, wrap };
+export { addElements, init, wrap, loadParseDocResults };
 
 export default init;

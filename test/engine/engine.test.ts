@@ -35,15 +35,17 @@ describe("init", () => {
     const { index } = master;
     const { page } = playwrightPages[index];
     const queues: [number, AssertionBlueprint][][] = await page.evaluate(
-      (master) => {
+      async (master) => {
         (window as any).engineAssertionMaster.master = master;
         (window as any).parseDocAssertionMaster.master = master.parseDocMaster;
         (window as any).serializeDocAssertionMaster.master =
           master.serializeDocMaster;
 
-        (window as any).FluidScale.init();
+        await (window as any).FluidScale.init();
 
-        const engineQueue = (window as any).engineAssertionMaster.getQueue();
+        const engineQueue = await (
+          window as any
+        ).engineAssertionMaster.getQueueAsync();
         const serializeQueue = (
           window as any
         ).serializeDocAssertionMaster.getQueue();

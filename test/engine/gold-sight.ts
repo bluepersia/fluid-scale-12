@@ -2,7 +2,10 @@ let expect;
 if (process.env.NODE_ENV === "test") {
   expect = (await import("vitest")).expect;
 }
-import AssertionMaster, { AssertionChain } from "gold-sight";
+import AssertionMaster, {
+  AssertionChain,
+  AssertionChainForFunc,
+} from "gold-sight";
 import {
   EngineMaster,
   SerializedElement,
@@ -14,7 +17,7 @@ import {
   assignParentEls,
 } from "../../src/engine/engineSetup";
 import { getState } from "../../src/engine/engineState";
-import init, { addElements, wrap } from "../../src";
+import init, { addElements, loadParseDocResults, wrap } from "../../src";
 import {
   AddElementsContext,
   ElementState,
@@ -142,12 +145,24 @@ const assignParentElsAssertionChain: AssertionChain<
   },
 };
 
+const loadParseDocResultsAssertionChain: AssertionChainForFunc<
+  State,
+  typeof loadParseDocResults
+> = {
+  "should load parse doc results": async (state, args, result) => {
+    const { breakpoints, fluidData } = await result;
+    expect(fluidData).toEqual(state.master!.parseDocMaster.fluidData);
+    expect(breakpoints).toEqual(state.master!.parseDocMaster.breakpoints);
+  },
+};
+
 const defaultAssertions = {
   init: initAssertionChain,
   insertFluidPropertiesForAnchor: insertFluidPropertiesForAnchorAssertionChain,
   addElements: addElementsAssertionChain,
   addElementsEngine: addElementsEngineAssertionChain,
   assignParentEls: assignParentElsAssertionChain,
+  loadParseDocResults: loadParseDocResultsAssertionChain,
 };
 
 class EngineAssertionMaster extends AssertionMaster<State, EngineMaster> {
@@ -232,6 +247,8 @@ class EngineAssertionMaster extends AssertionMaster<State, EngineMaster> {
       });
     },
   });
+
+  loadParseDocResults = this.wrapFn(loadParseDocResults, "loadParseDocResults");
 }
 
 const engineAssertionMaster = new EngineAssertionMaster();
@@ -242,7 +259,8 @@ function wrapAll() {
     engineAssertionMaster.init,
     engineAssertionMaster.addElementsEngine,
     engineAssertionMaster.insertFluidPropertiesForAnchor,
-    engineAssertionMaster.assignParentEls
+    engineAssertionMaster.assignParentEls,
+    engineAssertionMaster.loadParseDocResults
   );
 }
 
