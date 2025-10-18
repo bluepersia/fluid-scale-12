@@ -71,7 +71,10 @@ describe("update", () => {
         );
 
         engineUpdateAssertionMaster.setQueueFromArray(queue);
-        engineUpdateAssertionMaster.assertQueue({ master: masterStep });
+        engineUpdateAssertionMaster.assertQueue({
+          master: masterStep,
+          logMasterName: "deterministic update",
+        });
       }
     }
   );
@@ -119,7 +122,10 @@ describe("update", () => {
           }
         );
         engineUpdateAssertionMaster.setQueueFromArray(queue);
-        engineUpdateAssertionMaster.assertQueue({ master: masterStep });
+        engineUpdateAssertionMaster.assertQueue({
+          master: masterStep,
+          logMasterName: "non-deterministic update",
+        });
       }
     }
   );
