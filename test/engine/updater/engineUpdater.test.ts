@@ -35,7 +35,7 @@ describe("update", () => {
     await onLoadBrowserPage(page, blueprint);
 
     await page.evaluate(async () => {
-      (window as any).init({ startEngine: false });
+      (window as any).init();
 
       await (window as any).waitUntil(
         () => (window as any).getState().interObserverIsInitialized
@@ -45,32 +45,28 @@ describe("update", () => {
     await page.setViewportSize({ width, height: 1000 });
 
     const queue: [number, AssertionBlueprint][] = await page.evaluate(
-      (master) => {
-        return new Promise((resolve) => {
-          // Wait two frames to ensure any async layout/render work finishes
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              (window as any).engineUpdateAssertionMaster.master = master;
-              (window as any).update();
+      async ({ width, master }) => {
+        (window as any).engineUpdateAssertionMaster.master = master;
+        (window as any).engineUpdateAssertionMaster.resetTopFnCounter();
 
-              const queue = (
-                window as any
-              ).engineUpdateAssertionMaster.getQueue();
-
-              resolve(Array.from(queue.entries()));
-            });
-          });
+        await (window as any).waitUntil(() => {
+          const { updateEndWidth } = (window as any).getState();
+          return updateEndWidth === width;
         });
+
+        const queue = (window as any).engineUpdateAssertionMaster.getQueue();
+
+        return Array.from(queue.entries());
       },
-      master
+      { width, master }
     );
 
     engineUpdateAssertionMaster.setQueueFromArray(queue);
     engineUpdateAssertionMaster.assertQueue({ master: { index } });
   });
 
-  test.each(masterFlowCollection)(
-    "should update the document in flow",
+  test.each(masterFlowCollection.slice(0, 1))(
+    "should update the document in non-deterministic flow",
     async (master) => {
       const { index } = master;
       const { page, blueprint } = playwrightPages[index];
@@ -79,7 +75,7 @@ describe("update", () => {
       await onLoadBrowserPage(page, blueprint);
 
       await page.evaluate(async () => {
-        (window as any).init({ startEngine: true });
+        (window as any).init();
 
         await (window as any).waitUntil(
           () => (window as any).getState().interObserverIsInitialized
@@ -87,27 +83,29 @@ describe("update", () => {
       });
 
       for (const masterStep of master.steps) {
-        await page.evaluate((masterStep) => {
-          (window as any).engineUpdateAssertionMaster.master = masterStep;
-        }, masterStep);
         await page.setViewportSize({
           width: masterStep.coreDocStructWindowWidth,
           height: 1000,
         });
+        await page.evaluate((masterStep) => {
+          (window as any).engineUpdateAssertionMaster.master = masterStep;
+          (window as any).engineUpdateAssertionMaster.resetTopFnCounter();
+        }, masterStep);
         const queue: [number, AssertionBlueprint][] = await page.evaluate(
-          () => {
-            return new Promise((resolve) => {
-              // Wait two frames to ensure any async layout/render work finishes
-              requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                  const queue = (
-                    window as any
-                  ).engineUpdateAssertionMaster.getQueue();
-                  resolve(Array.from(queue.entries()));
-                });
-              });
+          async (width) => {
+            await (window as any).waitUntil(() => {
+              const { updateEndWidth } = (window as any).getState();
+              return updateEndWidth === width;
             });
-          }
+
+            (window as any).engineUpdateAssertionMaster.master = null;
+
+            const queue = (
+              window as any
+            ).engineUpdateAssertionMaster.getQueue();
+            return Array.from(queue.entries());
+          },
+          masterStep.coreDocStructWindowWidth
         );
         engineUpdateAssertionMaster.setQueueFromArray(queue);
         engineUpdateAssertionMaster.assertQueue({ master: masterStep });

@@ -109,6 +109,7 @@ async function onLoadBrowserPage(page: Page, blueprint?: PlaywrightBlueprint) {
   const clonerBundlePath = path.resolve(__dirname, "../bundle/dist/bundle.js");
   page.on("console", (msg) => {
     const text = msg.text();
+    if (text.includes("Failed to load resource")) return;
     console.log("BROWSER LOG:", text);
   });
   page.on("pageerror", (err) => {
@@ -150,6 +151,9 @@ async function onLoadBrowserPage(page: Page, blueprint?: PlaywrightBlueprint) {
 
     (window as any).getState = (window as any).FluidScale.getState;
     (window as any).resetState = (window as any).FluidScale.resetState;
+    (window as any).setUpdateEndWidth = (
+      window as any
+    ).FluidScale.setUpdateEndWidth;
   });
 }
 

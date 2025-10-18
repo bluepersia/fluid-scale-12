@@ -14,6 +14,8 @@ type GlobalState = {
   pendingHiddenEls: Set<ElementState>;
   hiddenEls: Set<ElementState>;
   windowWidth: number;
+  updateEndWidth: number;
+  updateEndWidthCounter: number;
   interObserverIsInitialized: boolean;
   config: Config;
 };

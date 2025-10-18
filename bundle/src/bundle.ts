@@ -34,7 +34,11 @@ wrapAllEngineUpdate();
 import { readPropertyValue, update } from "../../src/engine/engineUpdater";
 
 import { waitUntil } from "../../src/utils/waitUntil";
-import { getState, resetState } from "../../src/engine/engineState";
+import {
+  getState,
+  resetState,
+  setUpdateEndWidth,
+} from "../../src/engine/engineState";
 
 export {
   getQueue,
@@ -49,4 +53,5 @@ export {
   waitUntil,
   getState,
   resetState,
+  setUpdateEndWidth,
 };

@@ -1,6 +1,5 @@
 type Config = {
   jsonID?: string;
-  startEngine?: boolean;
 };
 
 type FluidScaleConfig = {

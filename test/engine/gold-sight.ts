@@ -32,7 +32,6 @@ import {
   serializeElementState,
 } from "./serialization";
 import { convertToFlat } from "./masterController";
-import { sortObjectRecursively } from "../utils/objectUtils";
 
 type State = {
   master?: EngineMaster;

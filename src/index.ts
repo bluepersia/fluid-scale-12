@@ -41,7 +41,6 @@ let loadParseDocResults = async (jsonID?: string): Promise<ParseDocResults> => {
 
 let init = async (config?: Config): Promise<void> => {
   config = {
-    startEngine: true,
     ...(config ?? {}),
   };
 
@@ -57,9 +56,7 @@ let init = async (config?: Config): Promise<void> => {
   const allElements = Array.from(document.querySelectorAll("*"));
   addElements(allElements);
 
-  if (config.startEngine) {
-    requestAnimationFrame(update);
-  }
+  requestAnimationFrame(update);
 };
 
 function wrap(
