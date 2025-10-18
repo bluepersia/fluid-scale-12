@@ -289,7 +289,6 @@ type RequirementContext = {
   hasMaster: boolean;
   masterWidth: number;
   windowWidth: number;
-  updateEndWidthCounter: number;
 };
 const requirement = (context: RequirementContext) => {
   const { hasMaster, masterWidth, windowWidth } = context;
