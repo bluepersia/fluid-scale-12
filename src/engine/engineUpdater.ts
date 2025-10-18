@@ -217,21 +217,21 @@ let interpolateValues = (
 ) => {
   const { progress } = ctx;
   const minValuesPx = calcFluidArray(minValues, ctx);
-  /*if (
+  if (
     ctx.fluidProperty.metaData.property.startsWith("grid-") &&
-    ctx.windowWidth === 550
+    ctx.windowWidth === 1000
   ) {
     console.log(`GRID MIN for width ${ctx.windowWidth}`, minValuesPx[0]);
     console.log(minValues);
-  }*/
+  }
   const maxValuesPx = calcFluidArray(maxValues, ctx);
-  /*if (
+  if (
     ctx.fluidProperty.metaData.property.startsWith("grid-") &&
-    ctx.windowWidth === 550
+    ctx.windowWidth === 1000
   ) {
     console.log(`GRID MAX for width ${ctx.windowWidth}`, maxValuesPx[0]);
     console.log(maxValues);
-  }*/
+  }
   return minValuesPx.map((group, groupIndex) =>
     group.map((minValuePx, valueIndex) => {
       if (groupIndex >= maxValues.length) return minValuePx;

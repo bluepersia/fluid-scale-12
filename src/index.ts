@@ -38,6 +38,7 @@ let loadParseDocResults = async (jsonID?: string): Promise<ParseDocResults> => {
     return parseDocument(docClone);
   }
 };
+let isInitialized = false;
 
 let init = async (config?: Config): Promise<void> => {
   config = {
@@ -56,6 +57,8 @@ let init = async (config?: Config): Promise<void> => {
   const allElements = Array.from(document.querySelectorAll("*"));
   addElements(allElements);
 
+  if (isInitialized) return;
+  isInitialized = true;
   requestAnimationFrame(update);
 };
 

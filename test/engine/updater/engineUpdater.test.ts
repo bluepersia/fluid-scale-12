@@ -34,21 +34,21 @@ describe("update", () => {
     await page.reload();
     await onLoadBrowserPage(page, blueprint);
 
-    await page.evaluate(async () => {
+    await page.evaluate(async (master) => {
       (window as any).init();
 
       await (window as any).waitUntil(
         () => (window as any).getState().interObserverIsInitialized
       );
-    });
+
+      (window as any).engineUpdateAssertionMaster.master = master;
+      (window as any).engineUpdateAssertionMaster.resetTopFnCounter();
+    }, master);
 
     await page.setViewportSize({ width, height: 1000 });
 
     const queue: [number, AssertionBlueprint][] = await page.evaluate(
-      async ({ width, master }) => {
-        (window as any).engineUpdateAssertionMaster.master = master;
-        (window as any).engineUpdateAssertionMaster.resetTopFnCounter();
-
+      async ({ width }) => {
         await (window as any).waitUntil(() => {
           const { updateEndWidth } = (window as any).getState();
           return updateEndWidth === width;
@@ -58,14 +58,14 @@ describe("update", () => {
 
         return Array.from(queue.entries());
       },
-      { width, master }
+      { width }
     );
 
     engineUpdateAssertionMaster.setQueueFromArray(queue);
     engineUpdateAssertionMaster.assertQueue({ master: { index } });
   });
 
-  test.each(masterFlowCollection.slice(0, 1))(
+  test.each(masterFlowCollection)(
     "should update the document in non-deterministic flow",
     async (master) => {
       const { index } = master;
@@ -83,14 +83,14 @@ describe("update", () => {
       });
 
       for (const masterStep of master.steps) {
-        await page.setViewportSize({
-          width: masterStep.coreDocStructWindowWidth,
-          height: 1000,
-        });
         await page.evaluate((masterStep) => {
           (window as any).engineUpdateAssertionMaster.master = masterStep;
           (window as any).engineUpdateAssertionMaster.resetTopFnCounter();
         }, masterStep);
+        await page.setViewportSize({
+          width: masterStep.coreDocStructWindowWidth,
+          height: 1000,
+        });
         const queue: [number, AssertionBlueprint][] = await page.evaluate(
           async (width) => {
             await (window as any).waitUntil(() => {

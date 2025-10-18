@@ -305,7 +305,6 @@ function getContext(state: State) {
   const globalState = getState();
   return {
     hasMaster: state.master ? true : false,
-    updateEndWidthCounter: globalState.updateEndWidthCounter,
     masterWidth: state.master?.coreDocStructWindowWidth ?? 0,
     windowWidth: globalState.windowWidth,
   };
