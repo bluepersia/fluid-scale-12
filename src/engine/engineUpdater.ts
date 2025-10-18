@@ -3,7 +3,7 @@ import {
   FluidValue,
   FluidValueSingle,
 } from "../parsing/parser/docParser.types";
-import { getState, setUpdateEndWidth, updateWindowWidth } from "./engineState";
+import { getState, updateWindowWidth } from "./engineState";
 import { removeElement } from "./engineState";
 import {
   ConvertToPixelsContext,
@@ -34,8 +34,7 @@ let update = () => {
       documentElement: document.documentElement,
     });
   }
-  setUpdateEndWidth(globalState.windowWidth);
-  requestAnimationFrame(update);
+  if (!(window as any).dontStartEngine) requestAnimationFrame(update);
 };
 
 let flushElement = (elState: ElementState) => {

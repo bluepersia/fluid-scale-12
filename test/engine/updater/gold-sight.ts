@@ -37,6 +37,7 @@ import {
 } from "../../../src/parsing/parser/docParser.types";
 import { getState } from "../../../src/engine/engineState";
 import { serializeElementState } from "../serialization";
+import { C } from "vitest/dist/chunks/reporters.d.BFLkQcL6.js";
 
 type State = {
   master?: EngineUpdateMaster;
@@ -149,6 +150,7 @@ const updateFluidPropertiesAssertionChain: AssertionChain<
         expectedValue,
         JSON.stringify({
           prop,
+          windowWidth: ctx.windowWidth,
         })
       );
     }
@@ -293,31 +295,6 @@ const defaultAssertions = {
   computeFluidValue: computeFluidValueAssertionChain,
   convertToPixels: convertToPixelsAssertionChain,
 };
-type RequirementContext = {
-  hasMaster: boolean;
-  masterWidth: number;
-  windowWidth: number;
-};
-const requirement = (context: RequirementContext) => {
-  const { hasMaster, masterWidth, windowWidth } = context;
-
-  if (!hasMaster) return false;
-
-  const sameWidth = windowWidth === masterWidth;
-
-  return sameWidth;
-};
-
-function getReqContext(state: State, args: any) {
-  const globalState = getState();
-  const ctx = args.find((arg) => arg.windowWidth ?? false) || globalState;
-  return {
-    hasMaster: state.master ? true : false,
-    masterWidth: state.master?.coreDocStructWindowWidth ?? 0,
-    windowWidth: ctx.windowWidth,
-    updateEndWidth: globalState.updateEndWidth,
-  };
-}
 
 class EngineUpdateAssertionMaster extends AssertionMaster<
   State,
@@ -325,10 +302,16 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
 > {
   constructor() {
     super(defaultAssertions, "engineUpdate", {
-      insertionRequirement: requirement,
-      assertionRequirement: requirement,
-      onlyRunFirstTopFn: true,
-      getReqContext,
+      getSnapshot: (state, args) => {
+        const globalState = getState();
+        const ctx = args.find((arg) => arg.windowWidth ?? false) || globalState;
+
+        return {
+          hasMaster: state.master ? true : false,
+          masterWidth: state.master?.coreDocStructWindowWidth ?? 0,
+          windowWidth: ctx.windowWidth,
+        };
+      },
     });
   }
 
@@ -365,6 +348,7 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
     "updateFluidProperties",
     {
       getId: (args) => args[0].el.dataset.goldenId || "",
+
       resultConverter: (result, args) => {
         const [elState] = args;
         return [serializeElementState(elState), Array.from(result.entries())];

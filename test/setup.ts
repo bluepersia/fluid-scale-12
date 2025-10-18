@@ -151,9 +151,6 @@ async function onLoadBrowserPage(page: Page, blueprint?: PlaywrightBlueprint) {
 
     (window as any).getState = (window as any).FluidScale.getState;
     (window as any).resetState = (window as any).FluidScale.resetState;
-    (window as any).setUpdateEndWidth = (
-      window as any
-    ).FluidScale.setUpdateEndWidth;
   });
 }
 

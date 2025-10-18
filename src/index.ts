@@ -59,7 +59,10 @@ let init = async (config?: Config): Promise<void> => {
 
   if (isInitialized) return;
   isInitialized = true;
-  requestAnimationFrame(update);
+
+  if (!(window as any).dontStartEngine) {
+    requestAnimationFrame(update);
+  }
 };
 
 function wrap(

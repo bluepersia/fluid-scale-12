@@ -19,8 +19,6 @@ function newState(): GlobalState {
     hiddenEls: new Set(),
     elsObserving: new Set(),
     windowWidth: 0,
-    updateEndWidth: 0,
-    updateEndWidthCounter: 0,
     interObserverIsInitialized: false,
     config: {},
   };
@@ -88,10 +86,6 @@ function setInterObserverIsInitialized() {
   state.interObserverIsInitialized = true;
 }
 
-function setUpdateEndWidth(width: number) {
-  state.updateEndWidth = width;
-}
-
 export {
   getState,
   newState,
@@ -106,5 +100,4 @@ export {
   updateWindowWidth,
   observeElements,
   setInterObserverIsInitialized,
-  setUpdateEndWidth,
 };

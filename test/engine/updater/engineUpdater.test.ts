@@ -15,6 +15,8 @@ import {
   getCurrentRange,
   getFlushProps,
 } from "../../../src/engine/engineUpdater";
+import { engineAssertionMaster } from "../gold-sight";
+import { waitUntil } from "../../../src/utils/waitUntil";
 
 let playwrightPages: PlaywrightPage[] = [];
 
@@ -37,6 +39,7 @@ describe("update", () => {
       await onLoadBrowserPage(page, blueprint);
 
       await page.evaluate(async (master) => {
+        (window as any).dontStartEngine = true;
         (window as any).init();
 
         await (window as any).waitUntil(
@@ -47,7 +50,6 @@ describe("update", () => {
       for (const masterStep of steps) {
         await page.evaluate((masterStep) => {
           (window as any).engineUpdateAssertionMaster.master = masterStep;
-          (window as any).engineUpdateAssertionMaster.resetTopFnCounter();
         }, masterStep);
 
         await page.setViewportSize({
@@ -57,11 +59,7 @@ describe("update", () => {
 
         const queue: [number, AssertionBlueprint][] = await page.evaluate(
           async () => {
-            await new Promise((resolve) => {
-              requestAnimationFrame(() => {
-                resolve(true);
-              });
-            });
+            (window as any).update();
             const queue = (
               window as any
             ).engineUpdateAssertionMaster.getQueue();
@@ -97,14 +95,13 @@ describe("update", () => {
       });
 
       for (const masterStep of master.steps) {
-        await page.evaluate((masterStep) => {
-          (window as any).engineUpdateAssertionMaster.master = masterStep;
-          (window as any).engineUpdateAssertionMaster.resetTopFnCounter();
-        }, masterStep);
         await page.setViewportSize({
           width: masterStep.coreDocStructWindowWidth,
           height: 1000,
         });
+        await page.evaluate(async (masterStep) => {
+          (window as any).engineUpdateAssertionMaster.master = masterStep;
+        }, masterStep);
         const queue: [number, AssertionBlueprint][] = await page.evaluate(
           async () => {
             await new Promise((resolve) => {
@@ -113,15 +110,25 @@ describe("update", () => {
               });
             });
 
-            (window as any).engineUpdateAssertionMaster.master = null;
-
             const queue = (
               window as any
             ).engineUpdateAssertionMaster.getQueue();
             return Array.from(queue.entries());
           }
         );
+
         engineUpdateAssertionMaster.setQueueFromArray(queue);
+        const realQueue = engineUpdateAssertionMaster.getQueue();
+
+        for (const [index, assertion] of realQueue) {
+          const pass =
+            assertion.snapshot.hasMaster &&
+            assertion.snapshot.masterWidth === assertion.snapshot.windowWidth;
+
+          if (!pass) {
+            realQueue.delete(index);
+          }
+        }
         engineUpdateAssertionMaster.assertQueue({
           master: masterStep,
           logMasterName: "non-deterministic update",
