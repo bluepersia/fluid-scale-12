@@ -20,6 +20,7 @@ function newState(): GlobalState {
     elsObserving: new Set(),
     windowWidth: 0,
     interObserverIsInitialized: false,
+    updateCounter: 0,
     config: {},
   };
 }
@@ -85,7 +86,12 @@ function observeElements(els: HTMLElement[]) {
 function setInterObserverIsInitialized() {
   state.interObserverIsInitialized = true;
 }
-
+function incrementUpdateCounter() {
+  state.updateCounter++;
+}
+function resetUpdateCounter() {
+  state.updateCounter = 0;
+}
 export {
   getState,
   newState,
@@ -100,4 +106,6 @@ export {
   updateWindowWidth,
   observeElements,
   setInterObserverIsInitialized,
+  incrementUpdateCounter,
+  resetUpdateCounter,
 };

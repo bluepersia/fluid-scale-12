@@ -15,6 +15,7 @@ type GlobalState = {
   hiddenEls: Set<ElementState>;
   windowWidth: number;
   interObserverIsInitialized: boolean;
+  updateCounter: number;
   config: Config;
 };
 

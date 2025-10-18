@@ -3,7 +3,11 @@ import {
   FluidValue,
   FluidValueSingle,
 } from "../parsing/parser/docParser.types";
-import { getState, updateWindowWidth } from "./engineState";
+import {
+  getState,
+  incrementUpdateCounter,
+  updateWindowWidth,
+} from "./engineState";
 import { removeElement } from "./engineState";
 import {
   ConvertToPixelsContext,
@@ -34,6 +38,7 @@ let update = () => {
       documentElement: document.documentElement,
     });
   }
+  incrementUpdateCounter();
   if (!(window as any).dontStartEngine) requestAnimationFrame(update);
 };
 

@@ -101,12 +101,14 @@ describe("update", () => {
         });
         await page.evaluate(async (masterStep) => {
           (window as any).engineUpdateAssertionMaster.master = masterStep;
+          (window as any).resetUpdateCounter();
         }, masterStep);
         const queue: [number, AssertionBlueprint][] = await page.evaluate(
           async () => {
-            await new Promise((resolve) => {
-              requestAnimationFrame(() => {
-                resolve(true);
+            await new Promise<void>((resolve) => {
+              (window as any).engineUpdateOnCompleted.push(() => {
+                (window as any).engineUpdateOnCompleted = [];
+                resolve();
               });
             });
 
@@ -120,11 +122,16 @@ describe("update", () => {
         engineUpdateAssertionMaster.setQueueFromArray(queue);
         const realQueue = engineUpdateAssertionMaster.getQueue();
 
+        const minCounter = Math.min(
+          ...Array.from(realQueue.values()).map(
+            (assertion) => assertion.snapshot.updateCounter
+          )
+        );
         for (const [index, assertion] of realQueue) {
           const pass =
             assertion.snapshot.hasMaster &&
-            assertion.snapshot.masterWidth === assertion.snapshot.windowWidth;
-
+            assertion.snapshot.masterWidth === assertion.snapshot.windowWidth &&
+            assertion.snapshot.updateCounter <= minCounter;
           if (!pass) {
             realQueue.delete(index);
           }

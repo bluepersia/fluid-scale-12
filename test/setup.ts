@@ -151,6 +151,14 @@ async function onLoadBrowserPage(page: Page, blueprint?: PlaywrightBlueprint) {
 
     (window as any).getState = (window as any).FluidScale.getState;
     (window as any).resetState = (window as any).FluidScale.resetState;
+
+    (window as any).resetUpdateCounter = (
+      window as any
+    ).FluidScale.resetUpdateCounter;
+
+    (window as any).engineUpdateOnCompleted = (
+      window as any
+    ).FluidScale.engineUpdateOnCompleted;
   });
 }
 

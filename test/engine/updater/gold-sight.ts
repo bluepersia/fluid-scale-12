@@ -296,6 +296,8 @@ const defaultAssertions = {
   convertToPixels: convertToPixelsAssertionChain,
 };
 
+const onCompleted: (() => void)[] = [];
+
 class EngineUpdateAssertionMaster extends AssertionMaster<
   State,
   EngineUpdateMaster
@@ -310,6 +312,7 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
           hasMaster: state.master ? true : false,
           masterWidth: state.master?.coreDocStructWindowWidth ?? 0,
           windowWidth: ctx.windowWidth,
+          updateCounter: globalState.updateCounter,
         };
       },
     });
@@ -320,6 +323,7 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
   }
 
   update = this.wrapTopFn(update, "update", {
+    onCompleted,
     resultConverter: () => {
       const { visibleEls, hiddenEls } = getState();
       return {
@@ -438,4 +442,4 @@ function wrapAll() {
   );
 }
 
-export { engineUpdateAssertionMaster, wrapAll };
+export { engineUpdateAssertionMaster, wrapAll, onCompleted };
