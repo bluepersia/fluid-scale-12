@@ -18,10 +18,11 @@ type EngineUpdateMaster = Master & {
   coreDocStruct: UpdateDocStruc;
   coreDocStructWindowWidth: number;
   coreDocStructRange: number;
+  step: number;
 };
 
 type EngineUpdateMasterFlow = Master & {
-  steps: (EngineUpdateMaster & { step: number })[];
+  steps: EngineUpdateMaster[];
 };
 
 export { EngineUpdateMaster, UpdateDocStruc, EngineUpdateMasterFlow };

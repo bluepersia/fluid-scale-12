@@ -7,6 +7,7 @@ import { docStruct1000 } from "./docStruct1000";
 
 const master: EngineUpdateMaster = {
   index: 1,
+  step: 0,
   coreDocStruct: docStruct550,
   coreDocStructWindowWidth: 550,
   coreDocStructRange: 0,
