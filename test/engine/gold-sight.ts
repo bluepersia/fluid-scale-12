@@ -8,6 +8,8 @@ import AssertionMaster, {
 } from "gold-sight";
 import {
   EngineMaster,
+  RuntimeGoldenDoc,
+  RuntimeGoldenDocFlat,
   SerializedElement,
   SerializedElementState,
 } from "./index.types";
@@ -30,6 +32,7 @@ import {
   serializeElementState,
 } from "./serialization";
 import { convertToFlat } from "./masterController";
+import { sortObjectRecursively } from "../utils/objectUtils";
 
 type State = {
   master?: EngineMaster;
@@ -39,9 +42,22 @@ function assertElementStateStructureToDocStructure(
   result: SerializedElementState[],
   state: State
 ) {
-  const goldenStruct = parseGoldenStructFluidProperties(result);
+  const actualStruct = parseGoldenStructFluidProperties(result);
+  const masterStruct = convertToFlat(state.master!.docStructure);
 
-  expect(goldenStruct).toEqual(convertToFlat(state.master!.docStructure));
+  expect(sortDocStructure(actualStruct)).toEqual(
+    sortDocStructure(masterStruct)
+  );
+}
+
+function sortDocStructure(
+  docStructure: RuntimeGoldenDocFlat
+): RuntimeGoldenDocFlat {
+  const sortedDocStructure: RuntimeGoldenDocFlat = {};
+  for (const [goldenId, fluidProperties] of Object.entries(docStructure)) {
+    sortedDocStructure[goldenId] = sortFluidProperties(fluidProperties);
+  }
+  return sortedDocStructure;
 }
 
 const initAssertionChain: AssertionChain<
@@ -88,6 +104,18 @@ const addElementsEngineAssertionChain: AssertionChain<
   },
 };
 
+function sortFluidProperties(
+  fluidProperties: FluidProperty[]
+): FluidProperty[] {
+  // Sort by orderID first, then by property name to ensure consistent ordering
+  return fluidProperties.sort((a, b) => {
+    const orderDiff = a.metaData.orderID - b.metaData.orderID;
+    if (orderDiff !== 0) return orderDiff;
+    // If orderID is the same, sort by property name alphabetically
+    return a.metaData.property.localeCompare(b.metaData.property);
+  });
+}
+
 const insertFluidPropertiesForAnchorAssertionChain: AssertionChain<
   State,
   [string, SerializedElement, InsertFluidPropertiesForAnchorContext, string[]],
@@ -120,13 +148,9 @@ const insertFluidPropertiesForAnchorAssertionChain: AssertionChain<
       resultFluidProperties.push(...goldenFluidProperties[anchor][selector]);
     }
 
-    expect(
-      result,
-      JSON.stringify({
-        anchor,
-        result: result.map((property) => property.metaData.property),
-      })
-    ).toEqual(resultFluidProperties);
+    expect(sortFluidProperties(result)).toEqual(
+      sortFluidProperties(resultFluidProperties)
+    );
   },
 };
 

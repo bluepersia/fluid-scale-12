@@ -13,7 +13,7 @@ import { AssertionBlueprint } from "gold-sight";
 import { serializeDocAssertionMaster } from "../parsing/serialization/gold-sight/gold-sight";
 import { parseDocAssertionMaster } from "../parsing/parser/gold-sight";
 import { engineAssertionMaster } from "./gold-sight";
-import { getState, resetState } from "../../src/engine/engineState";
+import { getState } from "../../src/engine/engineState";
 import { handleIntersection } from "../../src/engine/engineSetup";
 
 let playwrightPages: PlaywrightPage[] = [];
@@ -26,10 +26,6 @@ afterAll(async () => {
   await teardownPlaywrightPages(playwrightPages);
 });
 
-beforeEach(() => {
-  resetState();
-});
-
 describe("init", () => {
   test.each(masterCollection)("should initialize engine", async (master) => {
     const { index } = master;
@@ -39,10 +35,7 @@ describe("init", () => {
         (window as any).engineAssertionMaster.master = master;
 
         await (window as any).FluidScale.init();
-
-        const engineQueue = await (
-          window as any
-        ).engineAssertionMaster.getQueueAsync();
+        const engineQueue = (window as any).engineAssertionMaster.getQueue();
         return [Array.from(engineQueue.entries())];
       },
       master
@@ -53,6 +46,34 @@ describe("init", () => {
     engineAssertionMaster.setQueueFromArray(engineQueue);
     engineAssertionMaster.assertQueue({ master: { index } });
   });
+
+  test.each(masterCollection)(
+    "should initialize engine with JSDOM",
+    async (master) => {
+      const { index } = master;
+      const { page } = playwrightPages[index];
+      await page.evaluate(async () => {
+        (window as any).resetState();
+      });
+      const queues: [number, AssertionBlueprint][][] = await page.evaluate(
+        async (master) => {
+          (window as any).engineAssertionMaster.master = master;
+
+          await (window as any).FluidScale.init({
+            jsonID: "index",
+          });
+
+          const engineQueue = (window as any).engineAssertionMaster.getQueue();
+          return [Array.from(engineQueue.entries())];
+        },
+        master
+      );
+      const [engineQueue] = queues;
+
+      engineAssertionMaster.setQueueFromArray(engineQueue);
+      engineAssertionMaster.assertQueue({ master: { index } });
+    }
+  );
 });
 
 describe("handleIntersection", () => {

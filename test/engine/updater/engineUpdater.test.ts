@@ -46,12 +46,21 @@ describe("update", () => {
 
     const queue: [number, AssertionBlueprint][] = await page.evaluate(
       (master) => {
-        (window as any).engineUpdateAssertionMaster.master = master;
-        (window as any).update();
+        return new Promise((resolve) => {
+          // Wait two frames to ensure any async layout/render work finishes
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              (window as any).engineUpdateAssertionMaster.master = master;
+              (window as any).update();
 
-        const queue = (window as any).engineUpdateAssertionMaster.getQueue();
+              const queue = (
+                window as any
+              ).engineUpdateAssertionMaster.getQueue();
 
-        return Array.from(queue.entries());
+              resolve(Array.from(queue.entries()));
+            });
+          });
+        });
       },
       master
     );

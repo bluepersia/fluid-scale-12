@@ -164,13 +164,19 @@ const updateFluidPropertyAssertionChain: AssertionChain<
     const { property, orderID } = args[0].metaData;
     const [elState, fluidPropertyState] = result;
 
-    const masterProp =
-      state.master!.coreDocStruct[elState.el.goldenId][property];
+    try {
+      const masterProp =
+        state.master!.coreDocStruct[elState.el.goldenId][property];
 
-    if (masterProp.computedValues.actualOrderID === orderID) {
-      const actualValue = parseStyleValues(fluidPropertyState.value);
+      if (masterProp.computedValues.actualOrderID === orderID) {
+        const actualValue = parseStyleValues(fluidPropertyState.value);
 
-      assertStyleValues(actualValue, masterProp.computedValues.actual);
+        assertStyleValues(actualValue, masterProp.computedValues.actual);
+      }
+    } catch (e) {
+      throw Error(
+        `${e.message} - ${property} - ${orderID} - ${elState.el.goldenId}`
+      );
     }
   },
 };

@@ -82,6 +82,7 @@ let addElements = (
 
     toAddEls.push(elState);
   }
+
   return toAddEls;
 };
 
