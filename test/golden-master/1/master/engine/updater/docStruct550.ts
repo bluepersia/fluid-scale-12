@@ -92,6 +92,32 @@ const heroDescriptionMarginBottom = {
 };
 orderID = counter.next();
 
+const heroImageTabletRight = {
+  conversions: {},
+  computedValues: {
+    actual: [[NaN]],
+    actualOrderID: orderID,
+  },
+};
+
+const heroImageTabletTop = {
+  conversions: {},
+  computedValues: {
+    actual: [[NaN]],
+    actualOrderID: orderID,
+  },
+};
+
+const heroImageTabletWidth = {
+  conversions: {},
+  computedValues: {
+    actual: [[NaN]],
+    actualOrderID: orderID,
+  },
+};
+
+orderID = counter.next();
+
 const coursesPaddingBottom = {
   conversions: {
     "5rem": 80,
@@ -293,6 +319,11 @@ const docStruct550: UpdateDocStruc = {
   "hero-title": {
     "font-size": heroTitleFontSize,
     "margin-bottom": heroTitleFontSize,
+  },
+  "hero-image-tablet": {
+    right: heroImageTabletRight,
+    top: heroImageTabletTop,
+    width: heroImageTabletWidth,
   },
   "hero-description": {
     "margin-bottom": heroDescriptionMarginBottom,

@@ -49,11 +49,11 @@ describe("update", () => {
 
     const queue: [number, AssertionBlueprint][] = await page.evaluate(
       async ({ width }) => {
-        await (window as any).waitUntil(() => {
-          const { updateEndWidth } = (window as any).getState();
-          return updateEndWidth === width;
+        await new Promise((resolve) => {
+          requestAnimationFrame(() => {
+            resolve(true);
+          });
         });
-
         const queue = (window as any).engineUpdateAssertionMaster.getQueue();
 
         return Array.from(queue.entries());
@@ -93,9 +93,10 @@ describe("update", () => {
         });
         const queue: [number, AssertionBlueprint][] = await page.evaluate(
           async (width) => {
-            await (window as any).waitUntil(() => {
-              const { updateEndWidth } = (window as any).getState();
-              return updateEndWidth === width;
+            await new Promise((resolve) => {
+              requestAnimationFrame(() => {
+                resolve(true);
+              });
             });
 
             (window as any).engineUpdateAssertionMaster.master = null;

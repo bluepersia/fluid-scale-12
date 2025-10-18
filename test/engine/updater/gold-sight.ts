@@ -164,13 +164,21 @@ const updateFluidPropertyAssertionChain: AssertionChain<
     const { property, orderID } = args[0].metaData;
     const [elState, fluidPropertyState] = result;
 
-    const masterProp =
-      state.master!.coreDocStruct[elState.el.goldenId][property];
+    try {
+      const masterProp =
+        state.master!.coreDocStruct[elState.el.goldenId][property];
 
-    if (masterProp.computedValues.actualOrderID === orderID) {
-      const actualValue = parseStyleValues(fluidPropertyState.value);
+      if (masterProp.computedValues.actualOrderID === orderID) {
+        const actualValue = parseStyleValues(fluidPropertyState.value);
 
-      assertStyleValues(actualValue, masterProp.computedValues.actual);
+        assertStyleValues(actualValue, masterProp.computedValues.actual);
+      }
+    } catch (e) {
+      throw Error(
+        `${args[2].windowWidth} = ${state.master!.coreDocStructWindowWidth} = ${
+          fluidPropertyState.value
+        }`
+      );
     }
   },
 };
@@ -300,12 +308,14 @@ const requirement = (context: RequirementContext) => {
   return sameWidth;
 };
 
-function getContext(state: State) {
+function getContext(state: State, args: any) {
   const globalState = getState();
+  const ctx = globalState;
   return {
     hasMaster: state.master ? true : false,
     masterWidth: state.master?.coreDocStructWindowWidth ?? 0,
-    windowWidth: globalState.windowWidth,
+    windowWidth: ctx.windowWidth,
+    updateEndWidth: globalState.updateEndWidth,
   };
 }
 

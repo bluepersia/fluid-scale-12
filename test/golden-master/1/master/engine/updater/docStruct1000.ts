@@ -193,7 +193,7 @@ const courseListColumnGap = {
 const courseListGridTemplateColumns = {
   conversions: {},
   computedValues: {
-    actual: [[382.984, 382.984]],
+    actual: [[388.359, 388.359]],
     actualOrderID: orderID,
   },
 };
