@@ -48,7 +48,7 @@ describe("update", () => {
     await page.setViewportSize({ width, height: 1000 });
 
     const queue: [number, AssertionBlueprint][] = await page.evaluate(
-      async ({ width }) => {
+      async () => {
         await new Promise((resolve) => {
           requestAnimationFrame(() => {
             resolve(true);
@@ -57,8 +57,7 @@ describe("update", () => {
         const queue = (window as any).engineUpdateAssertionMaster.getQueue();
 
         return Array.from(queue.entries());
-      },
-      { width }
+      }
     );
 
     engineUpdateAssertionMaster.setQueueFromArray(queue);
@@ -92,7 +91,7 @@ describe("update", () => {
           height: 1000,
         });
         const queue: [number, AssertionBlueprint][] = await page.evaluate(
-          async (width) => {
+          async () => {
             await new Promise((resolve) => {
               requestAnimationFrame(() => {
                 resolve(true);
@@ -105,8 +104,7 @@ describe("update", () => {
               window as any
             ).engineUpdateAssertionMaster.getQueue();
             return Array.from(queue.entries());
-          },
-          masterStep.coreDocStructWindowWidth
+          }
         );
         engineUpdateAssertionMaster.setQueueFromArray(queue);
         engineUpdateAssertionMaster.assertQueue({ master: masterStep });
