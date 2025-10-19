@@ -73,6 +73,15 @@ const heroPaddingTop = {
 
 orderID = counter.next();
 
+const heroPaddingBottom = {
+  conversions: {},
+  computedValues: {
+    actual: [[NaN]],
+    actualOrderID: orderID,
+  },
+};
+
+orderID = counter.next();
 const heroTitleFontSize = {
   conversions: {},
   computedValues: {
@@ -311,11 +320,19 @@ const docStruct550: UpdateDocStruc = {
     "font-size": btnFontSize,
     ...generalBtnPadding,
   },
+  "footer-btn": {
+    "font-size": btnFontSize,
+    ...generalBtnPadding,
+  },
   header: {
     ...uContainerPadding,
     "padding-top": headerPaddingTop,
   },
-  hero: { ...uContainerPadding, "padding-top": heroPaddingTop },
+  hero: {
+    ...uContainerPadding,
+    "padding-top": heroPaddingTop,
+    "padding-bottom": heroPaddingBottom,
+  },
   "hero-title": {
     "font-size": heroTitleFontSize,
     "margin-bottom": heroTitleFontSize,
@@ -407,6 +424,7 @@ const docStruct550: UpdateDocStruc = {
   "course-card-btn-5": {
     ...generalBtnPadding,
     "font-size": btnTransparentFontSize,
+    ...btnTransparentPadding,
   },
   "course-card-btn-6": {
     ...generalBtnPadding,

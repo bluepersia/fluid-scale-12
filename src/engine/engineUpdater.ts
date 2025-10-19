@@ -113,11 +113,24 @@ let updateFluidProperty = (
   ctx: UpdateFluidPropertyContext
 ): FluidPropertyState | undefined => {
   const { property, orderID } = fluidProperty.metaData;
-  if (currentPropertyState?.value && currentPropertyState.orderID > orderID)
-    return;
+
+  if (property.startsWith("grid-")) {
+    console.log(`[${ctx.windowWidth}] Processing ${property}`);
+  }
+
+  if (currentPropertyState && currentPropertyState.orderID > orderID) return;
 
   let value = "";
   const currentRange = getCurrentRange(fluidProperty, ctx);
+
+  if (property.startsWith("grid-")) {
+    console.log(
+      `[${ctx.windowWidth}] currentRange:`,
+      currentRange
+        ? `${currentRange.minBpIndex}-${currentRange.maxBpIndex}`
+        : "undefined"
+    );
+  }
 
   if (currentRange) {
     const result = computeValues(currentRange, fluidProperty, ctx);
@@ -181,7 +194,11 @@ function calcFluidArray(
   if (typeof values === "string") {
     const { fluidProperty } = ctx;
     const { property } = fluidProperty.metaData;
-    if (property.startsWith("grid-")) return computeGridValues(values, ctx);
+    if (property.startsWith("grid-")) {
+      const result = computeGridValues(values, ctx);
+      console.log(`GRID VALUES for width ${ctx.windowWidth}`, result);
+      return result;
+    }
     throw Error(`Unknown property: ${property}`);
   }
 
@@ -224,23 +241,14 @@ let interpolateValues = (
 
   const maxValuesPx = calcFluidArray(maxValues, ctx);
 
-  if (!(window as any).didLogGrid) {
-    if (
-      ctx.fluidProperty.metaData.property.startsWith("grid-") &&
-      ctx.windowWidth === 1000
-    ) {
-      (window as any).didLogGrid = true;
-      console.log(`GRID MIN for width ${ctx.windowWidth}`, minValuesPx[0]);
-      console.log(minValues);
-    }
-    if (
-      ctx.fluidProperty.metaData.property.startsWith("grid-") &&
-      ctx.windowWidth === 1000
-    ) {
-      (window as any).didLogGrid = true;
-      console.log(`GRID MAX for width ${ctx.windowWidth}`, maxValuesPx[0]);
-      console.log(maxValues);
-    }
+  if (ctx.fluidProperty.metaData.property.startsWith("grid-")) {
+    console.log(`ACTUAL ctx.windowWidth:`, ctx.windowWidth);
+    console.log(`GRID MIN for width ${ctx.windowWidth}`, minValuesPx[0]);
+    console.log(minValues);
+  }
+  if (ctx.fluidProperty.metaData.property.startsWith("grid-")) {
+    console.log(`GRID MAX for width ${ctx.windowWidth}`, maxValuesPx[0]);
+    console.log(maxValues);
   }
   return minValuesPx.map((group, groupIndex) =>
     group.map((minValuePx, valueIndex) => {

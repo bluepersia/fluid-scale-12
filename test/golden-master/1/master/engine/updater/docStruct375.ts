@@ -11,17 +11,17 @@ const uContainerPaddingVertical = {
   },
   computedValues: {
     actual: [[0]],
-    actualOrderID: orderID,
+    actualOrderID: 0,
   },
 };
 
 const uContainerPaddingHorizontal = {
   conversions: {
+    "1rem": 16,
     "2.4375rem": 39,
-    "10.3125rem": 165,
   },
   computedValues: {
-    actual: [[106.66]],
+    actual: [[16]],
     actualOrderID: orderID,
   },
 };
@@ -37,12 +37,9 @@ orderID = counter.next();
 
 const siteLogo = {
   width: {
-    conversions: {
-      "5.5625rem": 89,
-      "7.125rem": 114,
-    },
+    conversions: {},
     computedValues: {
-      actual: [[102.42]],
+      actual: [[NaN]],
       actualOrderID: orderID,
     },
   },
@@ -52,10 +49,11 @@ orderID = counter.next();
 
 const headerPaddingTop = {
   conversions: {
+    "1rem": 16,
     "1.5rem": 24,
   },
   computedValues: {
-    actual: [[24]],
+    actual: [[16]],
     actualOrderID: orderID,
   },
 };
@@ -64,22 +62,21 @@ orderID = counter.next();
 
 const heroPaddingTop = {
   conversions: {
+    "2.375rem": 38,
     "6.1875rem": 99,
-    "10.75rem": 172,
   },
   computedValues: {
-    actual: [[138.2]],
+    actual: [[38]],
     actualOrderID: orderID,
   },
 };
 
+orderID = counter.next();
+
 const heroPaddingBottom = {
-  conversions: {
-    "11.625rem": 186,
-    "14.125rem": 226,
-  },
+  conversions: {},
   computedValues: {
-    actual: [[207.48]],
+    actual: [[NaN]],
     actualOrderID: orderID,
   },
 };
@@ -87,23 +84,9 @@ const heroPaddingBottom = {
 orderID = counter.next();
 
 const heroTitleFontSize = {
-  conversions: {
-    "2.5em": 40,
-    "3.5em": 56,
-  },
+  conversions: {},
   computedValues: {
-    actual: [[48.59]],
-    actualOrderID: orderID,
-  },
-};
-
-const heroTitleMarginBottom = {
-  conversions: {
-    "1.625rem": 26,
-    "1.8125rem": 29,
-  },
-  computedValues: {
-    actual: [[27.61]],
+    actual: [[NaN]],
     actualOrderID: orderID,
   },
 };
@@ -111,57 +94,47 @@ const heroTitleMarginBottom = {
 orderID = counter.next();
 
 const heroDescriptionMarginBottom = {
-  conversions: {
-    "1.5rem": 24,
-    "2.5rem": 40,
-  },
+  conversions: {},
   computedValues: {
-    actual: [[32.59]],
+    actual: [[NaN]],
     actualOrderID: orderID,
   },
 };
 orderID = counter.next();
 
-const heroImageTabletTop = {
-  conversions: {
-    "-9rem": -144,
-    "-14rem": -224,
-  },
+const heroImageTabletRight = {
+  conversions: {},
   computedValues: {
+    actual: [[NaN]],
     actualOrderID: orderID,
-    actual: [[-186.96]],
   },
 };
 
-const heroImageTabletRight = {
-  conversions: {
-    "-18rem": -288,
-    "-20rem": -320,
-  },
+const heroImageTabletTop = {
+  conversions: {},
   computedValues: {
+    actual: [[NaN]],
     actualOrderID: orderID,
-    actual: [[-305.18]],
   },
 };
 
 const heroImageTabletWidth = {
-  conversions: {
-    "43.43rem": 694.88,
-    "65rem": 1040,
-  },
+  conversions: {},
   computedValues: {
+    actual: [[NaN]],
     actualOrderID: orderID,
-    actual: [[880.22]],
   },
 };
 
+orderID = counter.next();
+
 const coursesPaddingBottom = {
   conversions: {
+    "5rem": 80,
     "5.375rem": 86,
-    "8.75rem": 140,
   },
   computedValues: {
-    actual: [[115]],
+    actual: [[80]],
     actualOrderID: orderID,
   },
 };
@@ -170,22 +143,19 @@ orderID = counter.next();
 
 const courseListRowGap = {
   conversions: {
+    "2.5rem": 40,
     "3.5rem": 56,
-    "5rem": 80,
   },
   computedValues: {
-    actual: [[68.88]],
+    actual: [[40]],
     actualOrderID: orderID,
   },
 };
 
 const courseListColumnGap = {
-  conversions: {
-    "0.624rem": 9.984,
-    "1.875rem": 30,
-  },
+  conversions: {},
   computedValues: {
-    actual: [[20.73]],
+    actual: [[NaN]],
     actualOrderID: orderID,
   },
 };
@@ -193,7 +163,7 @@ const courseListColumnGap = {
 const courseListGridTemplateColumns = {
   conversions: {},
   computedValues: {
-    actual: [[382.984, 382.984]],
+    actual: [[343]],
     actualOrderID: orderID,
   },
 };
@@ -201,9 +171,12 @@ const courseListGridTemplateColumns = {
 orderID = counter.next();
 
 const courseCardPaddingHorizontal = {
-  conversions: {},
+  conversions: {
+    "1.75rem": 28,
+    "2rem": 32,
+  },
   computedValues: {
-    actual: [[NaN]],
+    actual: [[28]],
     actualOrderID: orderID,
   },
 };
@@ -214,60 +187,12 @@ const courseCardPaddingBottom = {
     "2.5rem": 40,
   },
   computedValues: {
-    actual: [[38.06]],
+    actual: [[32]],
     actualOrderID: orderID,
   },
 };
 
 const courseCardPaddingTop = {
-  conversions: {
-    "3.5rem": 56,
-    "4rem": 64,
-  },
-  computedValues: {
-    actual: [[60.29]],
-    actualOrderID: orderID,
-  },
-};
-
-orderID = counter.next();
-
-const courseCardTitleFontSize = {
-  conversions: {
-    "1.25em": 20,
-    "1.5em": 24,
-  },
-  computedValues: {
-    actual: [[22.14]],
-    actualOrderID: orderID,
-  },
-};
-
-const courseCardIntroTitle = {
-  conversions: {
-    "1.5em": 24,
-    "2em": 32,
-  },
-  computedValues: {
-    actual: [[28.29]],
-    actualOrderID: orderID,
-  },
-};
-
-const courseCardDescriptionFontSize550 = {
-  conversions: {
-    "1em": 16,
-    "1.125em": 18,
-  },
-  computedValues: {
-    actual: [[17.51]],
-    actualOrderID: orderID,
-  },
-};
-
-orderID = counter.next();
-
-const footerVerticalPadding = {
   conversions: {},
   computedValues: {
     actual: [[NaN]],
@@ -277,41 +202,50 @@ const footerVerticalPadding = {
 
 orderID = counter.next();
 
-const btnFontSize550 = {
-  conversions: {
-    "1rem": 16,
-    "1.125rem": 18,
-  },
+const courseCardTitleFontSize = {
+  conversions: {},
   computedValues: {
-    actual: [[17.07]],
+    actual: [[NaN]],
     actualOrderID: orderID,
   },
 };
 
-const generalBtnPaddingVertical = {
+const courseCardDescriptionFontSize = {
   conversions: {
-    "0.625rem": 10,
-    "0.875rem": 14,
+    "1em": 16,
+    "1.125em": 18,
   },
   computedValues: {
-    actual: [[12.14]],
-    actualOrderID: orderID,
-  },
-};
-
-const generalBtnPaddingHorizontal = {
-  conversions: {
-    "1.5rem": 24,
-    "2rem": 32,
-  },
-  computedValues: {
-    actual: [[28.29]],
+    actual: [[16]],
     actualOrderID: orderID,
   },
 };
 
 orderID = counter.next();
-const btnRadiantVerticalPadding550 = {
+
+const footerVerticalPadding = {
+  conversions: {
+    "1rem": 16,
+    "2.25rem": 36,
+  },
+  computedValues: {
+    actual: [[16]],
+    actualOrderID: orderID,
+  },
+};
+
+orderID = counter.next();
+
+const btnFontSize = {
+  conversions: {},
+  computedValues: {
+    actual: [[NaN]],
+    actualOrderID: orderID,
+  },
+};
+
+orderID = counter.next();
+const btnRadiantVerticalPadding = {
   conversions: {
     "0.9375rem": 15,
   },
@@ -321,7 +255,7 @@ const btnRadiantVerticalPadding550 = {
   },
 };
 
-const btnRadiantHorizontalPadding550 = {
+const btnRadiantHorizontalPadding = {
   conversions: {
     "2.375rem": 38,
   },
@@ -342,7 +276,6 @@ const btnTransparentFontSize = {
     actualOrderID: orderID,
   },
 };
-
 const btnTransparentPaddingVertical = {
   conversions: {
     "0px": 0,
@@ -367,6 +300,7 @@ const btnTransparentPadding = {
   "padding-bottom": btnTransparentPaddingVertical,
   "padding-left": btnTransparentPaddingHorizontal,
 };
+
 const courseCard = {
   "padding-left": courseCardPaddingHorizontal,
   "padding-right": courseCardPaddingHorizontal,
@@ -375,20 +309,20 @@ const courseCard = {
 };
 
 const generalBtnPadding = {
-  "padding-top": generalBtnPaddingVertical,
-  "padding-right": generalBtnPaddingHorizontal,
-  "padding-bottom": generalBtnPaddingVertical,
-  "padding-left": generalBtnPaddingHorizontal,
+  "padding-top": btnFontSize,
+  "padding-right": btnFontSize,
+  "padding-bottom": btnFontSize,
+  "padding-left": btnFontSize,
 };
 
-const docStruct1000: UpdateDocStruc = {
+const docStruct375: UpdateDocStruc = {
   "header-logo": siteLogo,
   "header-btn": {
-    "font-size": btnFontSize550,
+    "font-size": btnFontSize,
     ...generalBtnPadding,
   },
   "footer-btn": {
-    "font-size": btnFontSize550,
+    "font-size": btnFontSize,
     ...generalBtnPadding,
   },
   header: {
@@ -402,15 +336,15 @@ const docStruct1000: UpdateDocStruc = {
   },
   "hero-title": {
     "font-size": heroTitleFontSize,
-    "margin-bottom": heroTitleMarginBottom,
-  },
-  "hero-description": {
-    "margin-bottom": heroDescriptionMarginBottom,
+    "margin-bottom": heroTitleFontSize,
   },
   "hero-image-tablet": {
     right: heroImageTabletRight,
     top: heroImageTabletTop,
     width: heroImageTabletWidth,
+  },
+  "hero-description": {
+    "margin-bottom": heroDescriptionMarginBottom,
   },
   courses: {
     ...uContainerPadding,
@@ -428,7 +362,7 @@ const docStruct1000: UpdateDocStruc = {
   "course-card-5": courseCard,
   "course-card-6": courseCard,
   "course-card-title-1": {
-    "font-size": courseCardIntroTitle,
+    "font-size": courseCardTitleFontSize,
   },
   "course-card-title-2": {
     "font-size": courseCardTitleFontSize,
@@ -446,19 +380,19 @@ const docStruct1000: UpdateDocStruc = {
     "font-size": courseCardTitleFontSize,
   },
   "course-card-description-2": {
-    "font-size": courseCardDescriptionFontSize550,
+    "font-size": courseCardDescriptionFontSize,
   },
   "course-card-description-3": {
-    "font-size": courseCardDescriptionFontSize550,
+    "font-size": courseCardDescriptionFontSize,
   },
   "course-card-description-4": {
-    "font-size": courseCardDescriptionFontSize550,
+    "font-size": courseCardDescriptionFontSize,
   },
   "course-card-description-5": {
-    "font-size": courseCardDescriptionFontSize550,
+    "font-size": courseCardDescriptionFontSize,
   },
   "course-card-description-6": {
-    "font-size": courseCardDescriptionFontSize550,
+    "font-size": courseCardDescriptionFontSize,
   },
   footer: {
     ...uContainerPadding,
@@ -467,11 +401,11 @@ const docStruct1000: UpdateDocStruc = {
   },
   "footer-logo": siteLogo,
   "hero-btn": {
-    "font-size": btnFontSize550,
-    "padding-top": btnRadiantVerticalPadding550,
-    "padding-right": btnRadiantHorizontalPadding550,
-    "padding-bottom": btnRadiantVerticalPadding550,
-    "padding-left": btnRadiantHorizontalPadding550,
+    "font-size": btnFontSize,
+    "padding-top": btnRadiantVerticalPadding,
+    "padding-right": btnRadiantHorizontalPadding,
+    "padding-bottom": btnRadiantVerticalPadding,
+    "padding-left": btnRadiantHorizontalPadding,
   },
   "course-card-btn-2": {
     ...generalBtnPadding,
@@ -500,4 +434,4 @@ const docStruct1000: UpdateDocStruc = {
   },
 };
 
-export { docStruct1000 };
+export { docStruct375 };

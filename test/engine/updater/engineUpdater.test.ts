@@ -62,7 +62,21 @@ describe("update", () => {
 
         const queue: [number, AssertionBlueprint][] = await page.evaluate(
           async () => {
+            function scrollToPercentage(percent) {
+              const scrollableHeight =
+                document.body.scrollHeight - window.innerHeight;
+              const targetY = (percent / 100) * scrollableHeight;
+              window.scrollTo({ top: targetY, behavior: "smooth" });
+            }
+            scrollToPercentage(0);
             (window as any).update();
+
+            scrollToPercentage(50);
+            (window as any).update();
+
+            scrollToPercentage(100);
+            (window as any).update();
+
             const queue = (
               window as any
             ).engineUpdateAssertionMaster.getQueue();

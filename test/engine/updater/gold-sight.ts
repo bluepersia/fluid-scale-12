@@ -162,19 +162,31 @@ const updateFluidPropertyAssertionChain: AssertionChain<
   [FluidProperty, FluidPropertyState | undefined, UpdateFluidPropertyContext],
   [SerializedElementState, FluidPropertyState]
 > = {
-  "should update the fluid property": (state, args, result) => {
+  "should update the fluid property": (state, args, result, allAssertions) => {
     const { property, orderID } = args[0].metaData;
     const [elState, fluidPropertyState] = result;
 
+    if (!fluidPropertyState) return;
+
+    const otherHigher = allAssertions.find((a) => {
+      if (a.name !== "updateFluidProperty") return false;
+      const { property: otherProperty, orderID: otherOrderID } =
+        a.args[0].metaData;
+      if (property === otherProperty && otherOrderID > orderID) {
+        const [elStateOther] = a.result;
+        return elStateOther.el.goldenId === elState.el.goldenId;
+      }
+    });
+    if (otherHigher) return;
+
+    console.log("CALC FP FOR:", elState.el.goldenId);
     try {
       const masterProp =
         state.master!.coreDocStruct[elState.el.goldenId][property];
 
-      if (masterProp.computedValues.actualOrderID === orderID) {
-        const actualValue = parseStyleValues(fluidPropertyState.value);
+      const actualValue = parseStyleValues(fluidPropertyState.value);
 
-        assertStyleValues(actualValue, masterProp.computedValues.actual);
-      }
+      assertStyleValues(actualValue, masterProp.computedValues.actual);
     } catch (e) {
       throw Error(
         `${args[2].windowWidth} = ${state.master!.coreDocStructWindowWidth} = ${
@@ -369,7 +381,11 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
     "updateFluidProperty",
     {
       getId: (args) =>
-        args[2].elState.el.dataset.goldenId + "/" + args[0].metaData.property,
+        args[2].elState.el.dataset.goldenId +
+        "/" +
+        args[0].metaData.property +
+        "/" +
+        args[2].windowWidth,
       resultConverter: (result, args) => {
         const [, , ctx] = args;
         const { elState } = ctx;
@@ -415,7 +431,9 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
     getId: (args) =>
       args[1].elState.el.dataset.goldenId +
       "/" +
-      args[1].fluidProperty.metaData.property,
+      args[1].fluidProperty.metaData.property +
+      "/" +
+      args[1].windowWidth,
     argsConverter: (args) => {
       const [fluidValue, ctx] = args;
 
