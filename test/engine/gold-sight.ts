@@ -169,6 +169,7 @@ const assignParentElsAssertionChain: AssertionChain<
     for (const { parentGoldenIdVanilla, parentGoldenIdState } of result) {
       expect(parentGoldenIdVanilla).toEqual(parentGoldenIdState);
     }
+    return true;
   },
 };
 

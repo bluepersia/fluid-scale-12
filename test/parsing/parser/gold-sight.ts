@@ -70,6 +70,7 @@ const parseDocAssertions: AssertionChainForFunc<State, typeof parseDocument> = {
   "should parse the document": (state, args, result) => {
     expect(result.breakpoints).toEqual(state.master!.breakpoints);
     expect(result.fluidData).toEqual(state.master!.fluidData);
+    return true;
   },
 };
 
@@ -79,6 +80,7 @@ const parseStyleSheetsAssertions: AssertionChainForFunc<
 > = {
   "should parse the style sheets": (state, args, result) => {
     expect(result).toEqual(state.master!.fluidData);
+    return true;
   },
 };
 
@@ -107,6 +109,7 @@ const batchStyleSheetAssertions: AssertionChainForFunc<
 > = {
   "should batch the style sheet": (state, args, result) => {
     toBeEqualDefined(result, state.master!.ruleBatches[state.sheetIndex - 1]);
+    return true;
   },
 };
 
@@ -122,6 +125,7 @@ const determineBaselineWidthAssertions: AssertionChainForFunc<
 const batchRulesAssertions: AssertionChainForFunc<State, typeof batchRules> = {
   "should batch the rules": (state, args, result) => {
     toBeEqualDefined(result, state.master!.ruleBatches[state.sheetIndex - 1]);
+    return true;
   },
 };
 
@@ -152,6 +156,8 @@ const batchRuleAssertions: AssertionChainForFunc<State, typeof batchRule> = {
     if (rule.type === MEDIA_RULE_TYPE) expect(result.currentBatch).toBeNull();
     else if (rule.type === STYLE_RULE_TYPE)
       expect(result.currentBatch).toBe(lastBatch);
+
+    return true;
   },
 };
 
@@ -174,6 +180,7 @@ const cloneBatchStateAssertions: AssertionChain<
     }
 
     expect(batchesRef).not.toBe(arg.batches);
+    return true;
   },
 };
 

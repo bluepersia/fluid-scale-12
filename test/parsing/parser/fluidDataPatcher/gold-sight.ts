@@ -19,7 +19,6 @@ import { toBeEqualDefined } from "../../../utils/vitest";
 
 import {
   applyForce,
-  applySpanEnd,
   applySpanStart,
   getAnchor,
   insertFluidData,

@@ -100,6 +100,7 @@ const updateAssertionChain: AssertionChain<
         expect(elState.inlineStyles[prop]).toBe("");
       }
     }
+    return true;
   },
 };
 
@@ -409,7 +410,6 @@ const defaultAssertions = {
 const updateState = {
   hasUpdateBeenCalled: false,
 };
-
 class EngineUpdateAssertionMaster extends AssertionMaster<
   State,
   EngineUpdateMaster
