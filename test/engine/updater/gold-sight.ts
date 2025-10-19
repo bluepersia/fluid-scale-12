@@ -296,6 +296,10 @@ const defaultAssertions = {
   convertToPixels: convertToPixelsAssertionChain,
 };
 
+const updateState = {
+  hasUpdateBeenCalled: false,
+};
+
 class EngineUpdateAssertionMaster extends AssertionMaster<
   State,
   EngineUpdateMaster
@@ -321,6 +325,9 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
   }
 
   update = this.wrapTopFn(update, "update", {
+    pre: () => {
+      updateState.hasUpdateBeenCalled = true;
+    },
     resultConverter: () => {
       const { visibleEls, hiddenEls } = getState();
       return {
@@ -439,4 +446,4 @@ function wrapAll() {
   );
 }
 
-export { engineUpdateAssertionMaster, wrapAll };
+export { engineUpdateAssertionMaster, wrapAll, updateState };

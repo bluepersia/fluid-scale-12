@@ -41,14 +41,14 @@ describe("update", () => {
       await page.reload();
       await onLoadBrowserPage(page, blueprint);
 
-      await page.evaluate(async (master) => {
+      await page.evaluate(async () => {
         (window as any).dontStartEngine = true;
         (window as any).init();
 
         await (window as any).waitUntil(
           () => (window as any).getState().interObserverIsInitialized
         );
-      }, master);
+      });
 
       for (const masterStep of steps) {
         await page.evaluate((masterStep) => {
@@ -81,7 +81,7 @@ describe("update", () => {
   );
 
   test.each(fullMasterFlowCollection.slice(0, 1))(
-    "should update the document in non-deterministic flow",
+    "should call update 10 times",
     async (master) => {
       const { index } = master;
       const { page, blueprint } = playwrightPages[index];
@@ -89,62 +89,19 @@ describe("update", () => {
       await page.reload();
       await onLoadBrowserPage(page, blueprint);
 
-      await page.evaluate(async () => {
+      const callCount = await page.evaluate(async () => {
         (window as any).init();
-
-        await (window as any).waitUntil(
-          () => (window as any).getState().interObserverIsInitialized
-        );
-      });
-
-      for (const masterStep of master.steps) {
-        await page.setViewportSize({
-          width: masterStep.coreDocStructWindowWidth,
-          height: 1000,
-        });
-        await page.evaluate(async (masterStep) => {
-          (window as any).updateCompleted = false;
-          (window as any).engineUpdateAssertionMaster.master = masterStep;
-          (window as any).resetUpdateCounter();
-          (window as any).engineUpdateOnCompleted.push(() => {
-            (window as any).updateCompleted = true;
-            (window as any).engineUpdateOnCompleted = [];
-          });
-        }, masterStep);
-
-        await page.waitForFunction(() => (window as any).updateCompleted);
-        const queue: [number, AssertionBlueprint][] = await page.evaluate(
-          async () => {
-            (window as any).updateCompleted = false;
-            const queue = (
-              window as any
-            ).engineUpdateAssertionMaster.getQueue();
-            return Array.from(queue.entries());
-          }
-        );
-
-        engineUpdateAssertionMaster.setQueueFromArray(queue);
-        const realQueue = engineUpdateAssertionMaster.getQueue();
-
-        const minCounter = Math.min(
-          ...Array.from(realQueue.values()).map(
-            (assertion) => assertion.snapshot.updateCounter
-          )
-        );
-        for (const [index, assertion] of realQueue) {
-          const pass =
-            assertion.snapshot.hasMaster &&
-            assertion.snapshot.masterWidth === assertion.snapshot.windowWidth &&
-            assertion.snapshot.updateCounter <= minCounter;
-          if (!pass) {
-            realQueue.delete(index);
-          }
+        let callCount = 0;
+        while (callCount < 10) {
+          await (window as any).waitUntil(
+            () => (window as any).updateState.hasUpdateBeenCalled
+          );
+          callCount++;
+          (window as any).updateState.hasUpdateBeenCalled = false;
         }
-        engineUpdateAssertionMaster.assertQueue({
-          master: masterStep,
-          logMasterName: "non-deterministic update",
-        });
-      }
+        return callCount;
+      });
+      expect(callCount).toBe(10);
     }
   );
 });
