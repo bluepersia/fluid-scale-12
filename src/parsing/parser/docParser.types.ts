@@ -38,6 +38,9 @@ type FluidValueSingle = FluidValue & {
   value: number | string;
   unit: string;
 };
+type FluidValueNumber = FluidValueSingle & {
+  value: number;
+};
 
 type FluidValueString = FluidValue & {
   type: "string";
@@ -129,4 +132,5 @@ export {
   FluidValueString,
   ApplyForceContext,
   DocSpans,
+  FluidValueNumber,
 };

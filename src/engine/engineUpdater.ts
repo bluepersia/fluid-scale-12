@@ -1,6 +1,7 @@
 import {
   FluidRange,
   FluidValue,
+  FluidValueNumber,
   FluidValueSingle,
 } from "../parsing/parser/docParser.types";
 import {
@@ -114,29 +115,22 @@ let updateFluidProperty = (
 ): FluidPropertyState | undefined => {
   const { property, orderID } = fluidProperty.metaData;
 
-  if (property.startsWith("grid-")) {
-    console.log(`[${ctx.windowWidth}] Processing ${property}`);
-  }
-
   if (currentPropertyState && currentPropertyState.orderID > orderID) return;
 
   let value = "";
   const currentRange = getCurrentRange(fluidProperty, ctx);
 
-  if (property.startsWith("grid-")) {
-    console.log(
-      `[${ctx.windowWidth}] currentRange:`,
-      currentRange
-        ? `${currentRange.minBpIndex}-${currentRange.maxBpIndex}`
-        : "undefined"
-    );
-  }
-
   if (currentRange) {
     const result = computeValues(currentRange, fluidProperty, ctx);
 
     value = result
-      .map((group) => group.map((value) => `${value.toString()}px`).join(" "))
+      .map((group) =>
+        group
+          .map((value) =>
+            typeof value === "string" ? value : `${value.toString()}px`
+          )
+          .join(" ")
+      )
       .join(",");
   }
 
@@ -175,7 +169,7 @@ let computeValues = (
   const progress = (windowWidth - minBp) / (maxBp - minBp);
 
   const childCtx = { ...ctx, fluidProperty };
-  let result: number[][];
+  let result: (number | string)[][];
   if (progress <= 0) result = calcFluidArray(currentRange.minValue, childCtx);
   else if (progress >= 1)
     result = calcFluidArray(currentRange.maxValue, childCtx);
@@ -252,13 +246,17 @@ let interpolateValues = (
   }
   return minValuesPx.map((group, groupIndex) =>
     group.map((minValuePx, valueIndex) => {
-      if (groupIndex >= maxValues.length) return minValuePx;
+      if (groupIndex >= maxValues.length || typeof minValuePx === "string")
+        return minValuePx;
 
       const maxGroup = maxValuesPx[groupIndex];
 
       if (valueIndex >= maxGroup.length) return minValuePx;
 
       const maxValuePx = maxGroup[valueIndex];
+
+      if (typeof maxValuePx === "string") return minValuePx;
+
       return minValuePx + (maxValuePx - minValuePx) * progress;
     })
   );
@@ -275,12 +273,39 @@ function readPropertyValue(property: string, elState: ElementState) {
 let computeFluidValue = (
   fluidValue: FluidValue,
   ctx: ConvertToPixelsContext
-): number => {
+): number | string => {
   if (fluidValue.type === "single") {
-    return convertToPixels(fluidValue as FluidValueSingle, ctx);
+    const fluidValueSingle = fluidValue as FluidValueSingle;
+    if (typeof fluidValueSingle.value === "string") {
+      return measureKeyword(fluidValueSingle.value, ctx);
+    }
+    return convertToPixels(fluidValueSingle as FluidValueNumber, ctx);
   }
   throw Error(`Unknown fluid value type: ${fluidValue.type}`);
 };
+
+function measureKeyword(
+  value: string,
+  ctx: ConvertToPixelsContext
+): string | number {
+  const {
+    elState: { el },
+    fluidProperty: {
+      metaData: { property },
+    },
+  } = ctx;
+
+  if (property.startsWith("margin") && value === "auto") return "auto";
+
+  const prevValue = el.style.getPropertyValue(property);
+  el.style.setProperty(property, value);
+
+  const px = window.getComputedStyle(el).getPropertyValue(property);
+
+  el.style.setProperty(property, prevValue);
+
+  return parseFloat(px) || px;
+}
 
 const unitConversionRouter: Record<
   string,
@@ -293,7 +318,7 @@ const unitConversionRouter: Record<
 };
 
 let convertToPixels = (
-  value: FluidValueSingle,
+  value: FluidValueNumber,
   ctx: ConvertToPixelsContext
 ) => {
   const route = unitConversionRouter[value.unit];
