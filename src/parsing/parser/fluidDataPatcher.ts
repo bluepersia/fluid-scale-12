@@ -151,6 +151,7 @@ let parseProperty = (
   if (shouldApplyForce(styleRule, property)) {
     return applyForce(styleRule, property, { ...ctx, minValue });
   }
+  return parseNextBatches(minValue, property, ctx);
   const { docResultState, batchIndex } = ctx;
   const newDocResultState = parseNextBatches(minValue, property, ctx);
   if (newDocResultState === docResultState && batchIndex === 0)
@@ -284,7 +285,7 @@ function getAnchor(selector: string) {
 }
 
 let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
-  const { anchor, selector, property, minValue, maxValue, isForce } = ctx;
+  const { anchor, selector, property, minValue, maxValue } = ctx;
   const { docResultState, breakpoints, batchWidth, nextBatchWidth } = ctx;
   const { orderID } = docResultState;
   const newFluidData = cloneFluidData(fluidData, anchor, selector, property);
@@ -297,7 +298,6 @@ let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
       metaData: {
         orderID,
         property,
-        isForce,
       },
       ranges: [],
     };
