@@ -4,6 +4,7 @@ if (process.env.NODE_ENV === "test") {
 }
 
 import AssertionMaster, {
+  AssertionBlueprint,
   AssertionChain,
   AssertionChainForFunc,
 } from "gold-sight";
@@ -109,6 +110,7 @@ const updateElementAssertionChain: AssertionChain<
 > = {
   "should update the element": (state, args, result) => {
     assertElementState(result, state);
+    return true;
   },
 };
 
@@ -121,6 +123,7 @@ const flushElementAssertionChain: AssertionChain<
     for (const prop of Object.keys(result.inlineStyles)) {
       expect(result.inlineStyles[prop]).toBe("");
     }
+    return true;
   },
 };
 
@@ -154,8 +157,46 @@ const updateFluidPropertiesAssertionChain: AssertionChain<
         })
       );
     }
+    return true;
   },
 };
+
+function findOtherHigher(
+  allAssertions: AssertionBlueprint<any, any, any>[],
+  property: string,
+  orderID: number,
+  goldenId: string,
+  getFluidProperty: (
+    assertion: AssertionBlueprint<any, any, any>
+  ) => FluidProperty,
+  getElState: (
+    assertion: AssertionBlueprint<any, any, any>
+  ) => SerializedElementState
+) {
+  const otherHigher = allAssertions.find((assertion) => {
+    let fluidProperty;
+    try {
+      fluidProperty = getFluidProperty(assertion);
+    } catch (e) {
+      return false;
+    }
+    if (!fluidProperty || !fluidProperty.metaData) return false;
+    const { property: otherProperty, orderID: otherOrderID } =
+      fluidProperty.metaData;
+    if (property === otherProperty && otherOrderID > orderID) {
+      let elStateOther;
+      try {
+        elStateOther = getElState(assertion);
+      } catch (e) {
+        return false;
+      }
+      if (!elStateOther || !elStateOther.el || !elStateOther.el.goldenId)
+        return false;
+      return elStateOther.el.goldenId === goldenId;
+    }
+  });
+  return otherHigher;
+}
 
 const updateFluidPropertyAssertionChain: AssertionChain<
   State,
@@ -168,18 +209,20 @@ const updateFluidPropertyAssertionChain: AssertionChain<
 
     if (!fluidPropertyState) return;
 
-    const otherHigher = allAssertions.find((a) => {
-      if (a.name !== "updateFluidProperty") return false;
-      const { property: otherProperty, orderID: otherOrderID } =
-        a.args[0].metaData;
-      if (property === otherProperty && otherOrderID > orderID) {
-        const [elStateOther] = a.result;
-        return elStateOther.el.goldenId === elState.el.goldenId;
+    const otherHigher = findOtherHigher(
+      allAssertions,
+      property,
+      orderID,
+      elState.el.goldenId,
+      (a) => {
+        return a.args[0];
+      },
+      (a) => {
+        return a.result[0];
       }
-    });
-    if (otherHigher) return;
+    );
 
-    console.log("CALC FP FOR:", elState.el.goldenId);
+    if (otherHigher) return;
     try {
       const masterProp =
         state.master!.coreDocStruct[elState.el.goldenId][property];
@@ -187,6 +230,7 @@ const updateFluidPropertyAssertionChain: AssertionChain<
       const actualValue = parseStyleValues(fluidPropertyState.value);
 
       assertStyleValues(actualValue, masterProp.computedValues.actual);
+      return true;
     } catch (e) {
       throw Error(
         `${args[2].windowWidth} = ${state.master!.coreDocStructWindowWidth} = ${
@@ -202,19 +246,32 @@ const computeValuesAssertionChain: AssertionChain<
   [FluidRange, FluidProperty, SerializedElementState],
   number[][]
 > = {
-  "should compute the values": (state, args, result) => {
+  "should compute the values": (state, args, result, allAssertions) => {
     const [, fluidProperty, serializedElState] = args;
 
     const masterProp =
       state.master!.coreDocStruct[serializedElState.el.goldenId][
         fluidProperty.metaData.property
       ];
-    if (
-      fluidProperty.metaData.orderID !== masterProp.computedValues.actualOrderID
-    )
-      return;
+
+    const otherHigher = findOtherHigher(
+      allAssertions,
+      fluidProperty.metaData.property,
+      fluidProperty.metaData.orderID,
+      serializedElState.el.goldenId,
+      (a) => {
+        return a.args[1];
+      },
+      (a) => {
+        return a.args[2];
+      }
+    );
+
+    if (otherHigher) return;
 
     assertStyleValues(result, masterProp.computedValues.actual);
+
+    return true;
   },
 };
 
@@ -223,19 +280,32 @@ const interpolateValuesAssertionChain: AssertionChain<
   { elState: SerializedElementState; fluidProperty: FluidProperty },
   number[][]
 > = {
-  "should interpolate the values": (state, args, result) => {
+  "should interpolate the values": (state, args, result, allAssertions) => {
     const { elState, fluidProperty } = args;
 
     const masterProp =
       state.master!.coreDocStruct[elState.el.goldenId][
         fluidProperty.metaData.property
       ];
-    if (
-      fluidProperty.metaData.orderID !== masterProp.computedValues.actualOrderID
-    )
-      return;
+
+    const otherHigher = findOtherHigher(
+      allAssertions,
+      fluidProperty.metaData.property,
+      fluidProperty.metaData.orderID,
+      elState.el.goldenId,
+      (a) => {
+        return a.args.fluidProperty;
+      },
+      (a) => {
+        return a.args.elState;
+      }
+    );
+
+    if (otherHigher) return;
 
     assertStyleValues(result, masterProp.computedValues.actual);
+
+    return true;
   },
 };
 
@@ -247,24 +317,35 @@ const computeFluidValueAssertionChain: AssertionChain<
   ],
   number
 > = {
-  "should compute the fluid value": (state, args, result) => {
+  "should compute the fluid value": (state, args, result, allAssertions) => {
     const [fluidValue, { elState, fluidProperty }] = args;
 
     const masterProp =
       state.master!.coreDocStruct[elState.el.goldenId][
         fluidProperty.metaData.property
       ];
-    if (
-      fluidProperty.metaData.orderID !== masterProp.computedValues.actualOrderID
-    )
-      return;
+    const otherHigher = findOtherHigher(
+      allAssertions,
+      fluidProperty.metaData.property,
+      fluidProperty.metaData.orderID,
+      elState.el.goldenId,
+      (a) => {
+        return a.args[1].fluidProperty;
+      },
+      (a) => {
+        return a.args[1].elState;
+      }
+    );
 
+    if (otherHigher) return;
     let key;
     if (fluidValue.type === "single") {
       const { value, unit } = fluidValue as FluidValueSingle;
       key = `${value}${unit}`;
     }
     expect(result).toBeCloseTo(masterProp.conversions[`${key}`], 1);
+
+    return true;
   },
 };
 
@@ -277,22 +358,39 @@ const convertToPixelsAssertionChain: AssertionChain<
   ],
   number
 > = {
-  "should convert the fluid value to pixels": (state, args, result) => {
+  "should convert the fluid value to pixels": (
+    state,
+    args,
+    result,
+    allAssertions
+  ) => {
     const [fluidValue, { elState, fluidProperty }] = args;
 
     const masterProp =
       state.master!.coreDocStruct[elState.el.goldenId][
         fluidProperty.metaData.property
       ];
-    if (
-      fluidProperty.metaData.orderID !== masterProp.computedValues.actualOrderID
-    )
-      return;
+    const otherHigher = findOtherHigher(
+      allAssertions,
+      fluidProperty.metaData.property,
+      fluidProperty.metaData.orderID,
+      elState.el.goldenId,
+      (a) => {
+        return a.args[1].fluidProperty;
+      },
+      (a) => {
+        return a.args[1].elState;
+      }
+    );
+
+    if (otherHigher) return;
 
     expect(result).toBeCloseTo(
       masterProp.conversions[`${fluidValue.value}${fluidValue.unit}`],
       1
     );
+
+    return true;
   },
 };
 

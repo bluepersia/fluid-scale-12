@@ -73,6 +73,7 @@ const initAssertionChain: AssertionChain<
     expect(result.elsObserving).toEqual(
       Object.keys(state.master!.docStructure)
     );
+    return true;
   },
 };
 
@@ -90,6 +91,7 @@ const addElementsAssertionChain: AssertionChain<
     expect(result.elsObserving).toEqual(
       Object.keys(state.master!.docStructure)
     );
+    return true;
   },
 };
 
@@ -100,6 +102,7 @@ const addElementsEngineAssertionChain: AssertionChain<
 > = {
   "should add elements to the engine (engine)": (state, args, result) => {
     assertElementStateStructureToDocStructure(result, state);
+    return true;
   },
 };
 
@@ -150,6 +153,7 @@ const insertFluidPropertiesForAnchorAssertionChain: AssertionChain<
     expect(sortFluidProperties(result)).toEqual(
       sortFluidProperties(resultFluidProperties)
     );
+    return true;
   },
 };
 
@@ -176,6 +180,8 @@ const loadParseDocResultsAssertionChain: AssertionChainForFunc<
     const { breakpoints, fluidData } = await result;
     expect(fluidData).toEqual(state.master!.parseDocMaster.fluidData);
     expect(breakpoints).toEqual(state.master!.parseDocMaster.breakpoints);
+
+    return true;
   },
 };
 

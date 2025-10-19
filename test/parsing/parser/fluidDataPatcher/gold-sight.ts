@@ -98,6 +98,7 @@ function assertChildFluidInsertions(
       state
     );
   }
+  return true;
 }
 
 const parseBatchesAssertions: AssertionChainForFunc<
@@ -117,10 +118,7 @@ const parseBatchesAssertions: AssertionChainForFunc<
       { result: result.fluidData, state, prevFluidData: fluidData }
     );
 
-    const ruleCount = batches.reduce(
-      (acc, batch) => acc + batch.rules.length,
-      0
-    );
+    return true;
   },
 };
 
@@ -141,6 +139,7 @@ const parseBatchAssertions: AssertionChainForFunc<State, typeof parseBatch> = {
       allAssertions,
       { result: result.fluidData, state, prevFluidData: fluidData }
     );
+    return true;
   },
 };
 
@@ -160,6 +159,7 @@ const parseStyleRuleAssertions: AssertionChainForFunc<
       allAssertions,
       { result: result.fluidData, state, prevFluidData: fluidData }
     );
+    return true;
   },
 };
 const parseSelectorAssertions: AssertionChainForFunc<
@@ -181,6 +181,7 @@ const parseSelectorAssertions: AssertionChainForFunc<
       allAssertions,
       { result: result.fluidData, state, prevFluidData: fluidData }
     );
+    return true;
   },
 };
 
@@ -205,6 +206,7 @@ const parsePropertyAssertions: AssertionChainForFunc<
       { ...ctx, anchor, property, fluidData },
       state
     );
+    return true;
   },
 };
 
@@ -224,6 +226,7 @@ const applySpanStartAssertions: AssertionChainForFunc<
     expect(result.spans[selector][property]).toBe(
       state.master!.spans[selector][property]
     );
+    return true;
   },
 };
 
@@ -245,6 +248,7 @@ const applyForceAssertions: AssertionChainForFunc<State, typeof applyForce> = {
       { ...ctx, anchor, property, fluidData },
       state
     );
+    return true;
   },
 };
 
@@ -269,6 +273,7 @@ const parseNextBatchesAssertions: AssertionChainForFunc<
       { ...ctx, anchor, property, fluidData },
       state
     );
+    return true;
   },
 };
 
@@ -293,6 +298,7 @@ const parseNextBatchAssertions: AssertionChainForFunc<
       { ...ctx, anchor, fluidData },
       state
     );
+    return true;
   },
 };
 
@@ -318,6 +324,7 @@ const parseNextRuleAssertions: AssertionChainForFunc<
       { ...ctx, anchor, fluidData },
       state
     );
+    return true;
   },
 };
 
@@ -332,6 +339,7 @@ const insertFluidDataAssertions: AssertionChainForFunc<
       docResultState: { fluidData },
     } = ctx;
     assertFluidRangeInsertion(result.fluidData, { ...ctx, fluidData }, state);
+    return true;
   },
 };
 
@@ -387,6 +395,7 @@ const cloneFluidDataAssertions: AssertionChain<
     } else {
       expect(resultClone[anchorArg]).toBeUndefined();
     }
+    return true;
   },
 };
 

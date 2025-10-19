@@ -49,6 +49,7 @@ const serializeDocAssertions: AssertionChainForFunc<
 > = {
   "should serialize the document": (state, args, result) => {
     expect(result).toEqual(clearNullsForDoc(state.master!.docClone));
+    return true;
   },
 };
 
@@ -58,6 +59,7 @@ const getAccessibleStyleSheetsAssertions: AssertionChainForFunc<
 > = {
   "should get the accessible style sheets": (state, args, result) => {
     expect(result.length).toBe(state.master!.docClone.styleSheets.length);
+    return true;
   },
 };
 const serializeStyleSheetsAssertions: AssertionChainForFunc<
@@ -68,6 +70,7 @@ const serializeStyleSheetsAssertions: AssertionChainForFunc<
     expect(result).toEqual(
       clearNullsForStyleSheets(state.master!.docClone.styleSheets)
     );
+    return true;
   },
 };
 
@@ -82,6 +85,7 @@ const serializeStyleSheetAssertions: AssertionChainForFunc<
         state.master!.docClone.styleSheets[state.sheetIndex]
       )
     );
+    return true;
   },
 };
 
@@ -95,6 +99,7 @@ const serializeRulesAssertions: AssertionChainForFunc<
     if (rules) rules = clearNullsForRules(rules);
 
     toBeEqualDefined(result, rules);
+    return true;
   },
 };
 
@@ -107,12 +112,13 @@ const serializeRuleAssertions: AssertionChainForFunc<
 
     if (result === null) {
       expect((masterRule as NullRule).null).toBeTruthy();
-      return;
+      return true;
     }
 
     if (masterRule) masterRule = clearNullsForRule(masterRule);
 
     toBeEqualDefined(result, masterRule);
+    return true;
   },
 };
 
@@ -127,9 +133,10 @@ const serializeStyleRuleAssertions: AssertionChainForFunc<
     );
     if (result === null) {
       expect((masterRule as unknown as NullRule).null).toBeTruthy();
-      return;
+      return true;
     }
     toBeEqualDefined(result, masterRule);
+    return true;
   },
 };
 
@@ -144,12 +151,13 @@ const serializeMediaRuleAssertions: AssertionChainForFunc<
     );
     if (result === null) {
       expect((masterRule as NullRule).null).toBeTruthy();
-      return;
+      return true;
     }
 
     if (masterRule) masterRule = clearNullsForRule(masterRule);
 
     toBeEqualDefined(result, masterRule);
+    return true;
   },
 };
 
@@ -170,11 +178,12 @@ const serializeStylePropsAssertions: AssertionChainForFunc<
       Object.keys(specialProps).length <= 0
     ) {
       expect((masterRule as unknown as NullRule).null).toBeTruthy();
-      return;
+      return true;
     }
 
     expect(style).toEqual(masterRule!.style);
     expect(specialProps).toEqual(masterRule!.specialProps);
+    return true;
   },
 };
 
@@ -201,6 +210,7 @@ const serializeStylePropAssertions: AssertionChainForFunc<
     } else if (SPECIAL_PROPERTIES.has(prop)) {
       expect(specialProps[prop]).toEqual(masterRule!.specialProps[prop]);
     }
+    return true;
   },
 };
 
@@ -225,6 +235,7 @@ function assertFluidProp(
   } else {
     toBeEqualDefined(style[prop], masterRule!.style[prop], msg);
   }
+  return true;
 }
 
 const serializeFluidPropAssertions: AssertionChainForFunc<
@@ -250,6 +261,7 @@ const serializeFluidPropAssertions: AssertionChainForFunc<
       masterRule,
       styleArg,
     });
+    return true;
   },
 };
 
@@ -277,6 +289,7 @@ const applyExplicitPropsFromShorthandAssertions: AssertionChainForFunc<
 
     expect(result).not.toEqual(styleArg);
     expect(masterRule!.style).toMatchObject(filteredResult);
+    return true;
   },
 };
 

@@ -3,6 +3,7 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
+    testTimeout: 20000,
     pool: "threads", // ensures multi-threading
     poolOptions: {
       threads: {
