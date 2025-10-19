@@ -151,7 +151,12 @@ let parseProperty = (
   if (shouldApplyForce(styleRule, property)) {
     return applyForce(styleRule, property, { ...ctx, minValue });
   }
-  return parseNextBatches(minValue, property, ctx);
+  const { docResultState, batchIndex } = ctx;
+  const newDocResultState = parseNextBatches(minValue, property, ctx);
+  if (newDocResultState === docResultState && batchIndex === 0)
+    return applyForce(styleRule, property, { ...ctx, minValue });
+
+  return docResultState;
 };
 
 let applySpanStart = (
