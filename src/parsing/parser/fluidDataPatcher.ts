@@ -148,10 +148,15 @@ let parseProperty = (
   const appliedSpanStart = applySpanStart(styleRule, property, ctx);
   if (appliedSpanStart) return appliedSpanStart;
 
-  const appliedForce = applyForce(styleRule, property, { ...ctx, minValue });
-  if (appliedForce) return appliedForce;
+  if (shouldApplyForce(styleRule, property)) {
+    return applyForce(styleRule, property, { ...ctx, minValue });
+  }
+  const { docResultState, batchIndex } = ctx;
+  const newDocResultState = parseNextBatches(minValue, property, ctx);
+  if (newDocResultState === docResultState && batchIndex === 0)
+    return applyForce(styleRule, property, { ...ctx, minValue });
 
-  return parseNextBatches(minValue, property, ctx);
+  return docResultState;
 };
 
 let applySpanStart = (
@@ -179,25 +184,29 @@ let applySpanStart = (
   return null;
 };
 
+function shouldApplyForce(styleRule: StyleRuleClone, property: string) {
+  const force = styleRule.specialProps["--force"];
+  if (force) {
+    const forceValues = parsePropsValues(force);
+    return propListContains(forceValues, property);
+  }
+  return false;
+}
+
 let applyForce = (
   styleRule: StyleRuleClone,
   property: string,
   ctx: ApplyForceContext
 ) => {
   const { docResultState, minValue, breakpoints } = ctx;
-  const force = styleRule.specialProps["--force"];
-  if (force) {
-    const forceValues = parsePropsValues(force);
-    if (propListContains(forceValues, property)) {
-      return parseNextRule(styleRule, {
-        ...ctx,
-        minValue,
-        property,
-        nextBatchWidth: breakpoints[breakpoints.length - 1],
-        docResultState,
-      });
-    }
-  }
+
+  return parseNextRule(styleRule, {
+    ...ctx,
+    minValue,
+    property,
+    nextBatchWidth: breakpoints[breakpoints.length - 1],
+    docResultState,
+  });
 };
 
 function parsePropsValues(value: string) {
@@ -359,6 +368,13 @@ function parseFluidValue1D(value: string): FluidValue[] {
 
 function parseFluidValue(strValue: string): FluidValue {
   const value = parseFloat(strValue);
+
+  if (isNaN(value))
+    return {
+      value: strValue,
+      unit: "",
+      type: "single",
+    } as FluidValueSingle;
 
   // Match any alphabetic characters after the number
   const match = strValue.match(/[a-z%]+$/i);

@@ -35,7 +35,7 @@ type FluidValue = {
 };
 type FluidValueSingle = FluidValue & {
   type: "single";
-  value: number;
+  value: number | string;
   unit: string;
 };
 
