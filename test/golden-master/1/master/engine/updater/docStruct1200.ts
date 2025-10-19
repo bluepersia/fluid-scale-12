@@ -55,7 +55,7 @@ const headerPaddingTop = {
     "1.5rem": 24,
   },
   computedValues: {
-    actual: [[24]],
+    actual: [[NaN]],
     actualOrderID: orderID,
   },
 };

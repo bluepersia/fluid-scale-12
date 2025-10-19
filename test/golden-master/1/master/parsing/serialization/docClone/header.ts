@@ -24,7 +24,7 @@ const docCloneHeader: StyleSheetClone = {
           style: {
             "padding-top": "1.5rem",
           },
-          specialProps: { "--force": "padding-top" },
+          specialProps: {},
         } as StyleRuleClone,
       ],
     } as MediaRuleClone,

@@ -280,28 +280,6 @@
               ],
               "minBpIndex": 0,
               "maxBpIndex": 1
-            },
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 1.5,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 1.5,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 1,
-              "maxBpIndex": 2
             }
           ]
         }
