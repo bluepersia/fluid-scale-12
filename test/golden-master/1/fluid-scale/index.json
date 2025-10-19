@@ -5,12 +5,12 @@
     1200
   ],
   "fluidData": {
-    "*": {
-      "*": {
-        "margin-top": {
+    ".u-container": {
+      ".u-container": {
+        "padding-top": {
           "metaData": {
             "orderID": 0,
-            "property": "margin-top"
+            "property": "padding-top"
           },
           "ranges": [
             {
@@ -33,14 +33,36 @@
                 ]
               ],
               "minBpIndex": 0,
+              "maxBpIndex": 1
+            },
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 0,
+                    "unit": "px",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 0,
+                    "unit": "px",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         },
-        "margin-right": {
+        "padding-bottom": {
           "metaData": {
             "orderID": 0,
-            "property": "margin-right"
+            "property": "padding-bottom"
           },
           "ranges": [
             {
@@ -63,22 +85,44 @@
                 ]
               ],
               "minBpIndex": 0,
+              "maxBpIndex": 1
+            },
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 0,
+                    "unit": "px",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 0,
+                    "unit": "px",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         },
-        "margin-bottom": {
+        "padding-right": {
           "metaData": {
             "orderID": 0,
-            "property": "margin-bottom"
+            "property": "padding-right"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 1,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
@@ -86,29 +130,51 @@
               "maxValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 2.4375,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
               "minBpIndex": 0,
+              "maxBpIndex": 1
+            },
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 2.4375,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 10.3125,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         },
-        "margin-left": {
+        "padding-left": {
           "metaData": {
             "orderID": 0,
-            "property": "margin-left"
+            "property": "padding-left"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 1,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
@@ -116,33 +182,55 @@
               "maxValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 2.4375,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
               "minBpIndex": 0,
+              "maxBpIndex": 1
+            },
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 2.4375,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 10.3125,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         }
       }
     },
-    "::before": {
-      "::before": {
-        "margin-top": {
+    ".site-logo": {
+      ".site-logo": {
+        "width": {
           "metaData": {
-            "orderID": 0,
-            "property": "margin-top"
+            "orderID": 1,
+            "property": "width"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 5.5625,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
@@ -150,123 +238,33 @@
               "maxValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 7.125,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
-        "margin-right": {
-          "metaData": {
-            "orderID": 0,
-            "property": "margin-right"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
-        "margin-bottom": {
-          "metaData": {
-            "orderID": 0,
-            "property": "margin-bottom"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
-        "margin-left": {
-          "metaData": {
-            "orderID": 0,
-            "property": "margin-left"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         }
       }
     },
-    "::after": {
-      "::after": {
-        "margin-top": {
+    ".header": {
+      ".header": {
+        "padding-top": {
           "metaData": {
-            "orderID": 0,
-            "property": "margin-top"
+            "orderID": 2,
+            "property": "padding-top"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 1,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
@@ -274,104 +272,14 @@
               "maxValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 1.5,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
               "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
-        "margin-right": {
-          "metaData": {
-            "orderID": 0,
-            "property": "margin-right"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
-        "margin-bottom": {
-          "metaData": {
-            "orderID": 0,
-            "property": "margin-bottom"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
-        "margin-left": {
-          "metaData": {
-            "orderID": 0,
-            "property": "margin-left"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
+              "maxBpIndex": 1
             }
           ]
         }
@@ -379,9 +287,95 @@
     },
     ".hero": {
       ".hero": {
+        "padding-top": {
+          "metaData": {
+            "orderID": 3,
+            "property": "padding-top"
+          },
+          "ranges": [
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 2.375,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 6.1875,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 0,
+              "maxBpIndex": 1
+            },
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 6.1875,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 10.75,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
+              "maxBpIndex": 2
+            }
+          ]
+        },
+        "padding-bottom": {
+          "metaData": {
+            "orderID": 4,
+            "property": "padding-bottom"
+          },
+          "ranges": [
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 11.625,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 14.125,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
+              "maxBpIndex": 2
+            }
+          ]
+        }
+      }
+    },
+    ".hero__title": {
+      ".hero__title": {
         "font-size": {
           "metaData": {
-            "orderID": 1,
+            "orderID": 5,
             "property": "font-size"
           },
           "ranges": [
@@ -389,8 +383,8 @@
               "minValue": [
                 [
                   {
-                    "value": 1,
-                    "unit": "rem",
+                    "value": 2.5,
+                    "unit": "em",
                     "type": "single"
                   }
                 ]
@@ -398,54 +392,20 @@
               "maxValue": [
                 [
                   {
-                    "value": 1,
-                    "unit": "rem",
+                    "value": 3.5,
+                    "unit": "em",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        }
-      }
-    },
-    ".hero__content": {
-      ".hero__content": {
-        "max-width": {
-          "metaData": {
-            "orderID": 2,
-            "property": "max-width"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 24.875,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 24.875,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         },
         "margin-bottom": {
           "metaData": {
-            "orderID": 2,
+            "orderID": 5,
             "property": "margin-bottom"
           },
           "ranges": [
@@ -453,7 +413,7 @@
               "minValue": [
                 [
                   {
-                    "value": 2.875,
+                    "value": 1.625,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -462,13 +422,13 @@
               "maxValue": [
                 [
                   {
-                    "value": 2.875,
+                    "value": 1.8125,
                     "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
@@ -477,73 +437,9 @@
     },
     ".hero__description": {
       ".hero__description": {
-        "line-height": {
-          "metaData": {
-            "orderID": 3,
-            "property": "line-height"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 1.625,
-                    "unit": "",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 1.625,
-                    "unit": "",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        }
-      }
-    },
-    ".hero__image--mobile": {
-      ".hero__image--mobile": {
-        "margin-top": {
-          "metaData": {
-            "orderID": 4,
-            "property": "margin-top"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
         "margin-bottom": {
           "metaData": {
-            "orderID": 4,
+            "orderID": 6,
             "property": "margin-bottom"
           },
           "ranges": [
@@ -551,8 +447,8 @@
               "minValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 1.5,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
@@ -560,29 +456,33 @@
               "maxValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 2.5,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
-        },
-        "margin-right": {
+        }
+      }
+    },
+    ".hero__image--tablet": {
+      ".hero__image--tablet": {
+        "right": {
           "metaData": {
-            "orderID": 4,
-            "property": "margin-right"
+            "orderID": 7,
+            "property": "right"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": null,
-                    "unit": "auto",
+                    "value": -18,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
@@ -590,29 +490,29 @@
               "maxValue": [
                 [
                   {
-                    "value": null,
-                    "unit": "auto",
+                    "value": -20,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         },
-        "margin-left": {
+        "top": {
           "metaData": {
-            "orderID": 4,
-            "property": "margin-left"
+            "orderID": 7,
+            "property": "top"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": null,
-                    "unit": "auto",
+                    "value": -9,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
@@ -620,13 +520,43 @@
               "maxValue": [
                 [
                   {
-                    "value": null,
-                    "unit": "auto",
+                    "value": -14,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
+              "maxBpIndex": 2
+            }
+          ]
+        },
+        "width": {
+          "metaData": {
+            "orderID": 7,
+            "property": "width"
+          },
+          "ranges": [
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 43.43,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 65,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
@@ -635,18 +565,18 @@
     },
     ".home-page__courses": {
       ".home-page__courses": {
-        "background-position-x": {
+        "padding-bottom": {
           "metaData": {
-            "orderID": 5,
-            "property": "background-position-x"
+            "orderID": 8,
+            "property": "padding-bottom"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": null,
-                    "unit": "initial",
+                    "value": 5,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
@@ -654,29 +584,21 @@
               "maxValue": [
                 [
                   {
-                    "value": null,
-                    "unit": "initial",
+                    "value": 5.375,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
               "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
-        "background-position-y": {
-          "metaData": {
-            "orderID": 5,
-            "property": "background-position-y"
-          },
-          "ranges": [
+              "maxBpIndex": 1
+            },
             {
               "minValue": [
                 [
                   {
-                    "value": null,
-                    "unit": "initial",
+                    "value": 5.375,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
@@ -684,13 +606,13 @@
               "maxValue": [
                 [
                   {
-                    "value": null,
-                    "unit": "initial",
+                    "value": 8.75,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
@@ -699,18 +621,18 @@
     },
     ".home-page__course-list": {
       ".home-page__course-list": {
-        "padding-left": {
+        "row-gap": {
           "metaData": {
-            "orderID": 6,
-            "property": "padding-left"
+            "orderID": 9,
+            "property": "row-gap"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 2.5,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
@@ -718,13 +640,79 @@
               "maxValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
+                    "value": 3.5,
+                    "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
               "minBpIndex": 0,
+              "maxBpIndex": 1
+            },
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 3.5,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 5,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
+              "maxBpIndex": 2
+            }
+          ]
+        },
+        "grid-template-columns": {
+          "metaData": {
+            "orderID": 9,
+            "property": "grid-template-columns"
+          },
+          "ranges": [
+            {
+              "minValue": "repeat(auto-fit, minmax(21.43rem, 1fr))",
+              "maxValue": "repeat(auto-fit, minmax(21.875rem, 1fr))",
+              "minBpIndex": 0,
+              "maxBpIndex": 2
+            }
+          ]
+        },
+        "column-gap": {
+          "metaData": {
+            "orderID": 10,
+            "property": "column-gap"
+          },
+          "ranges": [
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 0.624,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 1.875,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
@@ -733,17 +721,17 @@
     },
     ".course-card": {
       ".course-card": {
-        "border-top-left-radius": {
+        "padding-bottom": {
           "metaData": {
-            "orderID": 7,
-            "property": "border-top-left-radius"
+            "orderID": 11,
+            "property": "padding-bottom"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 0.625,
+                    "value": 2,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -752,7 +740,7 @@
               "maxValue": [
                 [
                   {
-                    "value": 0.625,
+                    "value": 2.5,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -763,17 +751,17 @@
             }
           ]
         },
-        "border-top-right-radius": {
+        "padding-right": {
           "metaData": {
-            "orderID": 7,
-            "property": "border-top-right-radius"
+            "orderID": 11,
+            "property": "padding-right"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 0.625,
+                    "value": 1.75,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -782,28 +770,28 @@
               "maxValue": [
                 [
                   {
-                    "value": 0.625,
+                    "value": 2,
                     "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
               "minBpIndex": 0,
-              "maxBpIndex": 2
+              "maxBpIndex": 1
             }
           ]
         },
-        "border-bottom-right-radius": {
+        "padding-left": {
           "metaData": {
-            "orderID": 7,
-            "property": "border-bottom-right-radius"
+            "orderID": 11,
+            "property": "padding-left"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 0.625,
+                    "value": 1.75,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -812,28 +800,28 @@
               "maxValue": [
                 [
                   {
-                    "value": 0.625,
+                    "value": 2,
                     "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
               "minBpIndex": 0,
-              "maxBpIndex": 2
+              "maxBpIndex": 1
             }
           ]
         },
-        "border-bottom-left-radius": {
+        "padding-top": {
           "metaData": {
-            "orderID": 7,
-            "property": "border-bottom-left-radius"
+            "orderID": 13,
+            "property": "padding-top"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 0.625,
+                    "value": 3.5,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -842,20 +830,24 @@
               "maxValue": [
                 [
                   {
-                    "value": 0.625,
+                    "value": 4,
                     "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
-        },
+        }
+      }
+    },
+    ".course-card__description": {
+      ".course-card__description": {
         "font-size": {
           "metaData": {
-            "orderID": 7,
+            "orderID": 12,
             "property": "font-size"
           },
           "ranges": [
@@ -864,7 +856,7 @@
                 [
                   {
                     "value": 1,
-                    "unit": "rem",
+                    "unit": "em",
                     "type": "single"
                   }
                 ]
@@ -872,38 +864,8 @@
               "maxValue": [
                 [
                   {
-                    "value": 1,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
-        "height": {
-          "metaData": {
-            "orderID": 7,
-            "property": "height"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 100,
-                    "unit": "%",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 100,
-                    "unit": "%",
+                    "value": 1.125,
+                    "unit": "em",
                     "type": "single"
                   }
                 ]
@@ -917,82 +879,18 @@
     },
     ".course-card__title": {
       ".course-card__title": {
-        "margin-bottom": {
+        "font-size": {
           "metaData": {
-            "orderID": 8,
-            "property": "margin-bottom"
+            "orderID": 14,
+            "property": "font-size"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 1,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 1,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        }
-      }
-    },
-    ".course-card__description": {
-      ".course-card__description": {
-        "line-height": {
-          "metaData": {
-            "orderID": 9,
-            "property": "line-height"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 1.625,
-                    "unit": "",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 1.625,
-                    "unit": "",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
-        "margin-bottom": {
-          "metaData": {
-            "orderID": 9,
-            "property": "margin-bottom"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 1.5,
-                    "unit": "rem",
+                    "value": 1.25,
+                    "unit": "em",
                     "type": "single"
                   }
                 ]
@@ -1001,23 +899,55 @@
                 [
                   {
                     "value": 1.5,
-                    "unit": "rem",
+                    "unit": "em",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
+              "maxBpIndex": 2
+            }
+          ]
+        }
+      },
+      ".course-card--intro .course-card__title": {
+        "font-size": {
+          "metaData": {
+            "orderID": 15,
+            "property": "font-size"
+          },
+          "ranges": [
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 1.5,
+                    "unit": "em",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 2,
+                    "unit": "em",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         }
       }
     },
-    ".course-card--intro": {
-      ".course-card--intro": {
+    ".footer": {
+      ".footer": {
         "padding-top": {
           "metaData": {
-            "orderID": 10,
+            "orderID": 16,
             "property": "padding-top"
           },
           "ranges": [
@@ -1025,7 +955,7 @@
               "minValue": [
                 [
                   {
-                    "value": 1.5,
+                    "value": 1,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -1034,62 +964,28 @@
               "maxValue": [
                 [
                   {
-                    "value": 1.5,
+                    "value": 2.25,
                     "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
               "minBpIndex": 0,
-              "maxBpIndex": 2
+              "maxBpIndex": 1
             }
           ]
         },
-        "margin-bottom": {
+        "padding-bottom": {
           "metaData": {
-            "orderID": 10,
-            "property": "margin-bottom"
+            "orderID": 16,
+            "property": "padding-bottom"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        }
-      }
-    },
-    ".course-card__image": {
-      ".course-card__image": {
-        "top": {
-          "metaData": {
-            "orderID": 11,
-            "property": "top"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": -1.75,
+                    "value": 1,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -1098,78 +994,14 @@
               "maxValue": [
                 [
                   {
-                    "value": -1.75,
+                    "value": 2.25,
                     "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
               "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        }
-      }
-    },
-    ".course-card__btn": {
-      ".course-card__btn": {
-        "margin-top": {
-          "metaData": {
-            "orderID": 12,
-            "property": "margin-top"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": null,
-                    "unit": "auto",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": null,
-                    "unit": "auto",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        },
-        "margin-bottom": {
-          "metaData": {
-            "orderID": 12,
-            "property": "margin-bottom"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
+              "maxBpIndex": 1
             }
           ]
         }
@@ -1177,17 +1009,17 @@
     },
     ".btn": {
       ".btn": {
-        "border-top-left-radius": {
+        "font-size": {
           "metaData": {
-            "orderID": 13,
-            "property": "border-top-left-radius"
+            "orderID": 17,
+            "property": "font-size"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 1.75,
+                    "value": 1,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -1196,28 +1028,28 @@
               "maxValue": [
                 [
                   {
-                    "value": 1.75,
+                    "value": 1.125,
                     "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         },
-        "border-top-right-radius": {
+        "padding-top": {
           "metaData": {
-            "orderID": 13,
-            "property": "border-top-right-radius"
+            "orderID": 17,
+            "property": "padding-top"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 1.75,
+                    "value": 0.625,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -1226,28 +1058,28 @@
               "maxValue": [
                 [
                   {
-                    "value": 1.75,
+                    "value": 0.875,
                     "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         },
-        "border-bottom-right-radius": {
+        "padding-bottom": {
           "metaData": {
-            "orderID": 13,
-            "property": "border-bottom-right-radius"
+            "orderID": 17,
+            "property": "padding-bottom"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 1.75,
+                    "value": 0.625,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -1256,28 +1088,28 @@
               "maxValue": [
                 [
                   {
-                    "value": 1.75,
+                    "value": 0.875,
                     "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
         },
-        "border-bottom-left-radius": {
+        "padding-right": {
           "metaData": {
-            "orderID": 13,
-            "property": "border-bottom-left-radius"
+            "orderID": 17,
+            "property": "padding-right"
           },
           "ranges": [
             {
               "minValue": [
                 [
                   {
-                    "value": 1.75,
+                    "value": 1.5,
                     "unit": "rem",
                     "type": "single"
                   }
@@ -1286,13 +1118,43 @@
               "maxValue": [
                 [
                   {
-                    "value": 1.75,
+                    "value": 2,
                     "unit": "rem",
                     "type": "single"
                   }
                 ]
               ],
-              "minBpIndex": 0,
+              "minBpIndex": 1,
+              "maxBpIndex": 2
+            }
+          ]
+        },
+        "padding-left": {
+          "metaData": {
+            "orderID": 17,
+            "property": "padding-left"
+          },
+          "ranges": [
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 1.5,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 2,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
               "maxBpIndex": 2
             }
           ]
@@ -1303,7 +1165,7 @@
       ".btn--radiant": {
         "padding-top": {
           "metaData": {
-            "orderID": 14,
+            "orderID": 18,
             "property": "padding-top"
           },
           "ranges": [
@@ -1333,7 +1195,7 @@
         },
         "padding-bottom": {
           "metaData": {
-            "orderID": 14,
+            "orderID": 18,
             "property": "padding-bottom"
           },
           "ranges": [
@@ -1363,7 +1225,7 @@
         },
         "padding-right": {
           "metaData": {
-            "orderID": 14,
+            "orderID": 18,
             "property": "padding-right"
           },
           "ranges": [
@@ -1393,7 +1255,7 @@
         },
         "padding-left": {
           "metaData": {
-            "orderID": 14,
+            "orderID": 18,
             "property": "padding-left"
           },
           "ranges": [
@@ -1427,7 +1289,7 @@
       ".btn--transparent": {
         "font-size": {
           "metaData": {
-            "orderID": 15,
+            "orderID": 19,
             "property": "font-size"
           },
           "ranges": [
@@ -1457,7 +1319,7 @@
         },
         "padding-top": {
           "metaData": {
-            "orderID": 15,
+            "orderID": 19,
             "property": "padding-top"
           },
           "ranges": [
@@ -1487,7 +1349,7 @@
         },
         "padding-right": {
           "metaData": {
-            "orderID": 15,
+            "orderID": 19,
             "property": "padding-right"
           },
           "ranges": [
@@ -1517,7 +1379,7 @@
         },
         "padding-bottom": {
           "metaData": {
-            "orderID": 15,
+            "orderID": 19,
             "property": "padding-bottom"
           },
           "ranges": [
@@ -1547,7 +1409,7 @@
         },
         "padding-left": {
           "metaData": {
-            "orderID": 15,
+            "orderID": 19,
             "property": "padding-left"
           },
           "ranges": [

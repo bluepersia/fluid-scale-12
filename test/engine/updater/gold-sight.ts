@@ -34,6 +34,7 @@ import {
 import {
   FluidRange,
   FluidValue,
+  FluidValueNumber,
   FluidValueSingle,
 } from "../../../src/parsing/parser/docParser.types";
 import { getState } from "../../../src/engine/engineState";
@@ -353,7 +354,7 @@ const computeFluidValueAssertionChain: AssertionChain<
 const convertToPixelsAssertionChain: AssertionChain<
   State,
   [
-    FluidValueSingle,
+    FluidValueNumber,
     { elState: SerializedElementState; fluidProperty: FluidProperty },
     ConvertToPixelsContext
   ],
