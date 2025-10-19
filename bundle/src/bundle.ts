@@ -27,7 +27,6 @@ import { init } from "../../src/index";
 import {
   engineUpdateAssertionMaster,
   wrapAll as wrapAllEngineUpdate,
-  onCompleted as engineUpdateOnCompleted,
 } from "../../test/engine/updater/gold-sight";
 
 wrapAllEngineUpdate();
@@ -55,5 +54,4 @@ export {
   getState,
   resetState,
   resetUpdateCounter,
-  engineUpdateOnCompleted,
 };

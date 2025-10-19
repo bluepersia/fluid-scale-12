@@ -5,5 +5,5 @@ import { userFlowMaster as userFlowMaster1 } from "../../golden-master/1/master/
 import { filterMasters } from "../../utils/masterFilter";
 const masterCollection = filterMasters([master0, master1]);
 const masterFlowCollection = filterMasters([userFlowMaster0, userFlowMaster1]);
-
-export { masterCollection, masterFlowCollection };
+const fullMasterFlowCollection = [userFlowMaster0, userFlowMaster1];
+export { masterCollection, masterFlowCollection, fullMasterFlowCollection };

@@ -7,7 +7,10 @@ import {
   onLoadBrowserPage,
 } from "../../setup";
 import { Browser, Page } from "playwright";
-import { masterCollection, masterFlowCollection } from "./masterCollection";
+import {
+  fullMasterFlowCollection,
+  masterFlowCollection,
+} from "./masterCollection";
 import { engineUpdateAssertionMaster } from "./gold-sight";
 import { PlaywrightPage } from "../../index.types";
 import { AssertionBlueprint } from "gold-sight";
@@ -77,7 +80,7 @@ describe("update", () => {
     }
   );
 
-  test.each(masterFlowCollection.slice(0, 1))(
+  test.each(fullMasterFlowCollection.slice(0, 1))(
     "should update the document in non-deterministic flow",
     async (master) => {
       const { index } = master;
@@ -100,18 +103,19 @@ describe("update", () => {
           height: 1000,
         });
         await page.evaluate(async (masterStep) => {
+          (window as any).updateCompleted = false;
           (window as any).engineUpdateAssertionMaster.master = masterStep;
           (window as any).resetUpdateCounter();
+          (window as any).engineUpdateOnCompleted.push(() => {
+            (window as any).updateCompleted = true;
+            (window as any).engineUpdateOnCompleted = [];
+          });
         }, masterStep);
+
+        await page.waitForFunction(() => (window as any).updateCompleted);
         const queue: [number, AssertionBlueprint][] = await page.evaluate(
           async () => {
-            await new Promise<void>((resolve) => {
-              (window as any).engineUpdateOnCompleted.push(() => {
-                (window as any).engineUpdateOnCompleted = [];
-                resolve();
-              });
-            });
-
+            (window as any).updateCompleted = false;
             const queue = (
               window as any
             ).engineUpdateAssertionMaster.getQueue();
