@@ -506,7 +506,9 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
     getId: (args) =>
       args[2].elState.el.dataset.goldenId +
       "/" +
-      args[2].fluidProperty.metaData.property,
+      args[2].fluidProperty.metaData.property +
+      "/" +
+      args[2].windowWidth,
     argsConverter: (args) => {
       const ctx = args[2];
       const { elState, fluidProperty } = ctx;
