@@ -196,7 +196,7 @@ function calcFluidArray(
     const { property } = fluidProperty.metaData;
     if (property.startsWith("grid-")) {
       const result = computeGridValues(values, ctx);
-      console.log(`GRID VALUES for width ${ctx.windowWidth}`, result);
+      console.log(`GRID VALUES for width ${ctx.windowWidth}`, result[0]);
       return result;
     }
     throw Error(`Unknown property: ${property}`);

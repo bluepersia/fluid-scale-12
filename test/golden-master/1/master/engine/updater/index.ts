@@ -6,6 +6,7 @@ import { docStruct550 } from "./docStruct550";
 import { docStruct1000 } from "./docStruct1000";
 import { docStruct375 } from "./docStruct375";
 import { docStruct768 } from "./docStruct768";
+import { docStruct1200 } from "./docStruct1200";
 
 const master: EngineUpdateMaster = {
   index: 1,
@@ -44,6 +45,13 @@ const userFlowMaster: EngineUpdateMasterFlow = {
       index: 1,
       coreDocStruct: docStruct768,
       coreDocStructWindowWidth: 768,
+      coreDocStructRange: 10,
+    },
+    {
+      step: 4,
+      index: 1,
+      coreDocStruct: docStruct1200,
+      coreDocStructWindowWidth: 1200,
       coreDocStructRange: 10,
     },
   ],

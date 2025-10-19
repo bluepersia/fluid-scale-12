@@ -495,6 +495,12 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
   getCurrentRange = this.wrapFn(getCurrentRange, "getCurrentRange");
 
   computeValues = this.wrapFn(computeValues, "computeValues", {
+    getId: (args) =>
+      args[2].elState.el.dataset.goldenId +
+      "/" +
+      args[1].metaData.property +
+      "/" +
+      args[2].windowWidth,
     argsConverter: (args) => {
       const [currentRange, fluidProperty, ctx] = args;
       const { elState } = ctx;
