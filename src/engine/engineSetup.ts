@@ -78,6 +78,9 @@ let addElements = (
       fluidProperties.push(...anchorRoute(el, ctx));
     }
 
+    fluidProperties = elState.fluidProperties =
+      filterForcedProperties(fluidProperties);
+
     if (fluidProperties.length <= 0) continue;
 
     toAddEls.push(elState);
@@ -108,6 +111,31 @@ let insertFluidPropertiesForAnchor = (
 
       const newFluidProperty = { metaData: propertyData.metaData, ranges };
       fluidProperties.push(newFluidProperty);
+    }
+  }
+
+  return fluidProperties;
+};
+
+let filterForcedProperties = (
+  fluidProperties: FluidProperty[]
+): FluidProperty[] => {
+  const uniqueFluidProperties = new Set(
+    fluidProperties.map((fp) => fp.metaData.property)
+  );
+
+  for (const property of uniqueFluidProperties) {
+    const count = fluidProperties.reduce(
+      (acc, fp) =>
+        fp.metaData.property === property && !fp.metaData.isForce
+          ? acc + 1
+          : acc,
+      0
+    );
+    if (count === 0) {
+      fluidProperties = fluidProperties.filter(
+        (fp) => fp.metaData.property !== property
+      );
     }
   }
 

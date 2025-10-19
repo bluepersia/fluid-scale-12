@@ -21,6 +21,7 @@ type FluidPropertyData = {
 type FluidPropertyMetaData = {
   orderID: number;
   property: string;
+  isForce?: boolean;
 };
 
 type FluidRange = {
@@ -102,6 +103,7 @@ type ParseNextBatchContext = ParsePropertyContext & {
 };
 type ParseNextRuleContext = ParseNextBatchContext & {
   nextBatchWidth: number;
+  isForce?: boolean;
 };
 
 type InsertFluidDataContext = ParseNextRuleContext & {

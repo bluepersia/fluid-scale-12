@@ -206,6 +206,7 @@ let applyForce = (
     property,
     nextBatchWidth: breakpoints[breakpoints.length - 1],
     docResultState,
+    isForce: true,
   });
 };
 
@@ -283,7 +284,7 @@ function getAnchor(selector: string) {
 }
 
 let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
-  const { anchor, selector, property, minValue, maxValue } = ctx;
+  const { anchor, selector, property, minValue, maxValue, isForce } = ctx;
   const { docResultState, breakpoints, batchWidth, nextBatchWidth } = ctx;
   const { orderID } = docResultState;
   const newFluidData = cloneFluidData(fluidData, anchor, selector, property);
@@ -296,6 +297,7 @@ let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
       metaData: {
         orderID,
         property,
+        isForce,
       },
       ranges: [],
     };
