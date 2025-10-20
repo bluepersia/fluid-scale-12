@@ -74,9 +74,11 @@ const heroPaddingTop = {
 orderID = counter.next();
 
 const heroPaddingBottom = {
-  conversions: {},
+  conversions: {
+    "0px": 0,
+  },
   computedValues: {
-    actual: [[NaN]],
+    actual: [[0]],
     actualOrderID: orderID,
   },
 };

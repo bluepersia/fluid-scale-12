@@ -201,9 +201,11 @@ const courseListGridTemplateColumns = {
 orderID = counter.next();
 
 const courseCardPaddingHorizontal = {
-  conversions: {},
+  conversions: {
+    "2rem": 32,
+  },
   computedValues: {
-    actual: [[NaN]],
+    actual: [[32]],
     actualOrderID: orderID,
   },
 };
@@ -268,9 +270,11 @@ const courseCardDescriptionFontSize550 = {
 orderID = counter.next();
 
 const footerVerticalPadding = {
-  conversions: {},
+  conversions: {
+    "2.25rem": 36,
+  },
   computedValues: {
-    actual: [[NaN]],
+    actual: [[36]],
     actualOrderID: orderID,
   },
 };

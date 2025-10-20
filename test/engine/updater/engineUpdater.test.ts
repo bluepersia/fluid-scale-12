@@ -264,7 +264,26 @@ describe("getCurrentRange", () => {
         breakpoints: [375, 768, 1200],
         windowWidth: 600,
       },
-      expected: undefined,
+      expected: null,
+    },
+    {
+      fluidProperty: {
+        ranges: [
+          null,
+          {
+            minBpIndex: 1,
+            maxBpIndex: 2,
+          },
+        ],
+      },
+      ctx: {
+        breakpoints: [375, 768, 1200],
+        windowWidth: 1400,
+      },
+      expected: {
+        minBpIndex: 1,
+        maxBpIndex: 2,
+      },
     },
   ];
 

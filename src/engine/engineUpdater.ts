@@ -115,7 +115,8 @@ let updateFluidProperty = (
 ): FluidPropertyState | undefined => {
   const { property, orderID } = fluidProperty.metaData;
 
-  if (currentPropertyState && currentPropertyState.orderID > orderID) return;
+  if (currentPropertyState?.value && currentPropertyState.orderID > orderID)
+    return;
 
   let value = "";
   const currentRange = getCurrentRange(fluidProperty, ctx);
@@ -147,14 +148,14 @@ let getCurrentRange = (
 ) => {
   const { breakpoints, windowWidth } = ctx;
 
-  return fluidProperty.ranges.find((range) => {
-    if (!range) return false;
-
-    const { minBpIndex, maxBpIndex } = range;
+  for (let i = fluidProperty.ranges.length - 1; i >= 0; i--) {
+    const range = fluidProperty.ranges[i];
+    if (!range) continue;
+    const { minBpIndex } = range;
     const minBp = breakpoints[minBpIndex];
-    const maxBp = breakpoints[maxBpIndex];
-    return windowWidth >= minBp && windowWidth <= maxBp;
-  });
+    if (windowWidth >= minBp) return range;
+  }
+  return null;
 };
 
 let computeValues = (
