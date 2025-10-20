@@ -29,6 +29,7 @@ function fillDocWithNullRanges(
     for (const selectorData of Object.values(anchorData)) {
       for (const [selector, fluidProperties] of Object.entries(selectorData)) {
         for (const fluidProperty of fluidProperties) {
+          if (!fluidProperty.ranges) continue;
           const fullRanges = new Array(breakpointsLength).fill(
             null
           ) as FluidRange[];

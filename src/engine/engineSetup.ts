@@ -105,11 +105,19 @@ let insertFluidPropertiesForAnchor = (
 
     for (const [, propertyData] of Object.entries(selectorData)) {
       const ranges = new Array(breakpoints.length).fill(null);
-      for (const range of propertyData.ranges) {
-        ranges[range.minBpIndex] = range;
+      const newFluidProperty: FluidProperty = {
+        metaData: propertyData.metaData,
+      };
+
+      if (propertyData.ranges) {
+        for (const range of propertyData.ranges) {
+          ranges[range.minBpIndex] = range;
+        }
+        newFluidProperty.ranges = ranges;
+      } else if (propertyData.forceValue) {
+        newFluidProperty.forceValue = propertyData.forceValue;
       }
 
-      const newFluidProperty = { metaData: propertyData.metaData, ranges };
       fluidProperties.push(newFluidProperty);
     }
   }

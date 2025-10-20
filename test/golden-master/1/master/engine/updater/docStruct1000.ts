@@ -55,7 +55,7 @@ const headerPaddingTop = {
     "1.5rem": 24,
   },
   computedValues: {
-    actual: [[NaN]],
+    actual: [[24]],
     actualOrderID: orderID,
   },
 };
@@ -320,6 +320,7 @@ const btnRadiantVerticalPadding550 = {
     "0.9375rem": 15,
   },
   computedValues: {
+    actualRaw: [[0.9375]],
     actual: [[15]],
     actualOrderID: orderID,
   },
@@ -330,6 +331,7 @@ const btnRadiantHorizontalPadding550 = {
     "2.375rem": 38,
   },
   computedValues: {
+    actualRaw: [[2.375]],
     actual: [[38]],
     actualOrderID: orderID,
   },
@@ -342,6 +344,7 @@ const btnTransparentFontSize = {
     "1.125rem": 18,
   },
   computedValues: {
+    actualRaw: [[1.125]],
     actual: [[18]],
     actualOrderID: orderID,
   },

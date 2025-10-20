@@ -285,7 +285,7 @@ function getAnchor(selector: string) {
 }
 
 let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
-  const { anchor, selector, property, minValue, maxValue } = ctx;
+  const { anchor, selector, property, minValue, maxValue, isForce } = ctx;
   const { docResultState, breakpoints, batchWidth, nextBatchWidth } = ctx;
   const { orderID } = docResultState;
   const newFluidData = cloneFluidData(fluidData, anchor, selector, property);
@@ -299,17 +299,22 @@ let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
         orderID,
         property,
       },
-      ranges: [],
     };
     isNew = true;
   }
 
-  newFluidData[anchor][selector][property].ranges.push({
-    minValue: parseFluidValue2D(minValue, ctx),
-    maxValue: parseFluidValue2D(maxValue, ctx),
-    minBpIndex: breakpoints.indexOf(batchWidth),
-    maxBpIndex: breakpoints.indexOf(nextBatchWidth),
-  });
+  const newFluidProperty = newFluidData[anchor][selector][property];
+
+  if (isForce) newFluidProperty.forceValue = minValue;
+  else {
+    if (!newFluidProperty.ranges) newFluidProperty.ranges = [];
+    newFluidProperty.ranges.push({
+      minValue: parseFluidValue2D(minValue, ctx),
+      maxValue: parseFluidValue2D(maxValue, ctx),
+      minBpIndex: breakpoints.indexOf(batchWidth),
+      maxBpIndex: breakpoints.indexOf(nextBatchWidth),
+    });
+  }
 
   return { ...docResultState, fluidData: newFluidData, isNew };
 };
@@ -328,10 +333,12 @@ let cloneFluidData = (
     newFluidData[anchor][selector][property] = {
       ...newFluidData[anchor][selector][property],
     };
+  }
+
+  if (newFluidData[anchor]?.[selector]?.[property]?.ranges)
     newFluidData[anchor][selector][property].ranges = [
       ...newFluidData[anchor][selector][property].ranges,
     ];
-  }
   return newFluidData;
 };
 

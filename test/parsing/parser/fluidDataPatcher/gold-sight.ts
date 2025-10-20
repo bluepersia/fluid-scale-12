@@ -56,13 +56,15 @@ function assertFluidRangeInsertion(
 
   expect(propResult.metaData.property).toBe(masterProp.metaData.property);
 
-  if (argsRanges)
-    expect(rangesResult.length).toBeGreaterThan(argsRanges.length);
-
-  toBeEqualDefined(
-    rangesResult[argRangesLength],
-    masterProp.ranges[argRangesLength]
-  );
+  if (masterProp.ranges) {
+    expect(rangesResult!.length).toBeGreaterThan((argsRanges || []).length);
+    toBeEqualDefined(
+      rangesResult![argRangesLength],
+      masterProp.ranges[argRangesLength]
+    );
+  } else if (masterProp.forceValue) {
+    expect(propResult.forceValue).toBe(masterProp.forceValue);
+  }
 }
 
 function assertChildFluidInsertions(

@@ -1168,120 +1168,28 @@
             "orderID": 18,
             "property": "padding-top"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0.9375,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0.9375,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "0.9375rem"
         },
         "padding-bottom": {
           "metaData": {
             "orderID": 18,
             "property": "padding-bottom"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0.9375,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0.9375,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "0.9375rem"
         },
         "padding-right": {
           "metaData": {
             "orderID": 18,
             "property": "padding-right"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 2.375,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 2.375,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "2.375rem"
         },
         "padding-left": {
           "metaData": {
             "orderID": 18,
             "property": "padding-left"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 2.375,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 2.375,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "2.375rem"
         }
       }
     },
@@ -1292,150 +1200,35 @@
             "orderID": 19,
             "property": "font-size"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 1.125,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 1.125,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "1.125rem"
         },
         "padding-top": {
           "metaData": {
             "orderID": 19,
             "property": "padding-top"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "0px"
         },
         "padding-right": {
           "metaData": {
             "orderID": 19,
             "property": "padding-right"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "0px"
         },
         "padding-bottom": {
           "metaData": {
             "orderID": 19,
             "property": "padding-bottom"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "0px"
         },
         "padding-left": {
           "metaData": {
             "orderID": 19,
             "property": "padding-left"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 0,
-                    "unit": "px",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "0px"
         }
       }
     }

@@ -127,12 +127,12 @@ btnRadiantPaddingVerticalRanges.push(btnRadiantPaddingVerticalRange0);
 
 const btnRadiantPaddingTopProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-top" },
-  ranges: btnRadiantPaddingVerticalRanges,
+  forceValue: "0.9375rem",
 };
 
 const btnRadiantPaddingBottomProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-bottom" },
-  ranges: btnRadiantPaddingVerticalRanges,
+  forceValue: "0.9375rem",
 };
 
 applyProperty(
@@ -168,12 +168,12 @@ btnRadiantPaddingHorizontalRanges.push(btnRadiantPaddingHorizontalRange0);
 
 const btnRadiantPaddingLeftProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-left" },
-  ranges: btnRadiantPaddingHorizontalRanges,
+  forceValue: "2.375rem",
 };
 
 const btnRadiantPaddingRightProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-right" },
-  ranges: btnRadiantPaddingHorizontalRanges,
+  forceValue: "2.375rem",
 };
 
 applyProperty(
@@ -211,7 +211,7 @@ btnTransparentFontSizeRanges.push(btnTransparentFontSizeRange0);
 
 const btnTransparentFontSizeProperty: FluidPropertyData = {
   metaData: { orderID, property: "font-size" },
-  ranges: btnTransparentFontSizeRanges,
+  forceValue: "1.125rem",
 };
 
 applyProperty(
@@ -235,7 +235,7 @@ btnTransparentPaddingRanges.push(btnTransparentPaddingRange0);
 
 const btnTransparentPaddingProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-top" },
-  ranges: btnTransparentPaddingRanges,
+  forceValue: "0px",
 };
 
 applyProperty(
@@ -248,7 +248,7 @@ applyProperty(
 
 const btnTransparentPaddingBottomProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-bottom" },
-  ranges: btnTransparentPaddingRanges,
+  forceValue: "0px",
 };
 
 applyProperty(
@@ -261,7 +261,7 @@ applyProperty(
 
 const btnTransparentPaddingLeftProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-left" },
-  ranges: btnTransparentPaddingRanges,
+  forceValue: "0px",
 };
 
 applyProperty(
@@ -274,7 +274,7 @@ applyProperty(
 
 const btnTransparentPaddingRightProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-right" },
-  ranges: btnTransparentPaddingRanges,
+  forceValue: "0px",
 };
 
 applyProperty(

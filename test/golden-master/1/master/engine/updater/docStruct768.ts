@@ -287,6 +287,7 @@ const btnTransparentFontSize = {
     "1.125rem": 18,
   },
   computedValues: {
+    actualRaw: [[1.125]],
     actual: [[18]],
     actualOrderID: orderID,
   },

@@ -119,22 +119,25 @@ let updateFluidProperty = (
     return;
 
   let value = "";
-  const currentRange = getCurrentRange(fluidProperty, ctx);
+  if (fluidProperty.ranges) {
+    const currentRange = getCurrentRange(fluidProperty, ctx);
 
-  if (currentRange) {
-    const result = computeValues(currentRange, fluidProperty, ctx);
+    if (currentRange) {
+      const result = computeValues(currentRange, fluidProperty, ctx);
 
-    value = result
-      .map((group) =>
-        group
-          .map((value) =>
-            typeof value === "string" ? value : `${value.toString()}px`
-          )
-          .join(" ")
-      )
-      .join(",");
+      value = result
+        .map((group) =>
+          group
+            .map((value) =>
+              typeof value === "string" ? value : `${value.toString()}px`
+            )
+            .join(" ")
+        )
+        .join(",");
+    }
+  } else if (fluidProperty.forceValue) {
+    value = fluidProperty.forceValue;
   }
-
   return {
     property,
     value,
@@ -148,8 +151,8 @@ let getCurrentRange = (
 ) => {
   const { breakpoints, windowWidth } = ctx;
 
-  for (let i = fluidProperty.ranges.length - 1; i >= 0; i--) {
-    const range = fluidProperty.ranges[i];
+  for (let i = fluidProperty.ranges!.length - 1; i >= 0; i--) {
+    const range = fluidProperty.ranges![i];
     if (!range) continue;
     const { minBpIndex } = range;
     const minBp = breakpoints[minBpIndex];
@@ -191,7 +194,6 @@ function calcFluidArray(
     const { property } = fluidProperty.metaData;
     if (property.startsWith("grid-")) {
       const result = computeGridValues(values, ctx);
-      console.log(`GRID VALUES for width ${ctx.windowWidth}`, result[0]);
       return result;
     }
     throw Error(`Unknown property: ${property}`);
@@ -236,15 +238,6 @@ let interpolateValues = (
 
   const maxValuesPx = calcFluidArray(maxValues, ctx);
 
-  if (ctx.fluidProperty.metaData.property.startsWith("grid-")) {
-    console.log(`ACTUAL ctx.windowWidth:`, ctx.windowWidth);
-    console.log(`GRID MIN for width ${ctx.windowWidth}`, minValuesPx[0]);
-    console.log(minValues);
-  }
-  if (ctx.fluidProperty.metaData.property.startsWith("grid-")) {
-    console.log(`GRID MAX for width ${ctx.windowWidth}`, maxValuesPx[0]);
-    console.log(maxValues);
-  }
   return minValuesPx.map((group, groupIndex) =>
     group.map((minValuePx, valueIndex) => {
       if (groupIndex >= maxValues.length || typeof minValuePx === "string")

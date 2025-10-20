@@ -8,6 +8,7 @@ type UpdateDocStruc = {
       };
       computedValues: {
         actual: number[][];
+        actualRaw?: number[][];
         actualOrderID: number;
       };
     };

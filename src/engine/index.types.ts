@@ -35,7 +35,8 @@ type FluidPropertyState = {
 
 type FluidProperty = {
   metaData: FluidPropertyMetaData;
-  ranges: (FluidRange | null)[];
+  ranges?: (FluidRange | null)[];
+  forceValue?: string;
 };
 
 type AddElementsContext = {

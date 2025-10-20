@@ -251,6 +251,7 @@ const btnRadiantVerticalPadding = {
     "0.9375rem": 15,
   },
   computedValues: {
+    actualRaw: [[0.9375]],
     actual: [[15]],
     actualOrderID: orderID,
   },
@@ -261,6 +262,7 @@ const btnRadiantHorizontalPadding = {
     "2.375rem": 38,
   },
   computedValues: {
+    actualRaw: [[2.375]],
     actual: [[38]],
     actualOrderID: orderID,
   },
@@ -273,6 +275,7 @@ const btnTransparentFontSize = {
     "1.125rem": 18,
   },
   computedValues: {
+    actualRaw: [[1.125]],
     actual: [[18]],
     actualOrderID: orderID,
   },

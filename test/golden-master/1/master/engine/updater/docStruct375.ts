@@ -74,9 +74,11 @@ const heroPaddingTop = {
 orderID = counter.next();
 
 const heroPaddingBottom = {
-  conversions: {},
+  conversions: {
+    "0px": 0,
+  },
   computedValues: {
-    actual: [[NaN]],
+    actual: [[0]],
     actualOrderID: orderID,
   },
 };
@@ -272,6 +274,7 @@ const btnTransparentFontSize = {
     "1.125rem": 18,
   },
   computedValues: {
+    actualRaw: [[1.125]],
     actual: [[18]],
     actualOrderID: orderID,
   },

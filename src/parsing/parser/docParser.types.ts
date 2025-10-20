@@ -15,7 +15,8 @@ type FluidData = {
 
 type FluidPropertyData = {
   metaData: FluidPropertyMetaData;
-  ranges: FluidRange[];
+  ranges?: FluidRange[];
+  forceValue?: string;
 };
 
 type FluidPropertyMetaData = {

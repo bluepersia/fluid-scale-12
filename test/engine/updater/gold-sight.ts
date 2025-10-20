@@ -148,7 +148,8 @@ const updateFluidPropertiesAssertionChain: AssertionChain<
       const actualValue = parseStyleValues(
         fluidPropertiesState.get(prop)!.value
       );
-      const expectedValue = value.computedValues.actual;
+      const expectedValue =
+        value.computedValues.actualRaw || value.computedValues.actual;
 
       assertStyleValues(
         actualValue,
@@ -200,7 +201,10 @@ const updateFluidPropertyAssertionChain: AssertionChain<
 
     const actualValue = parseStyleValues(fluidPropertyState.value);
 
-    assertStyleValues(actualValue, masterProp.computedValues.actual);
+    assertStyleValues(
+      actualValue,
+      masterProp.computedValues.actualRaw || masterProp.computedValues.actual
+    );
     return true;
   },
 };
