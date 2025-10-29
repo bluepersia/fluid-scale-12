@@ -441,82 +441,102 @@ const docStruct600: UpdateDocStruc = {
 const docStruct800: UpdateDocStruc = {
   "1": {
     "max-width": {
-      conversions: {},
+      conversions: {
+        "42.85rem": 599.9,
+      },
       computedValues: {
-        actual: [[NaN]],
+        actual: [[599.9]],
         actualOrderID: 5,
       },
     },
     "border-bottom-right-radius": {
-      conversions: {},
+      conversions: {
+        "0.71rem": 9.94,
+      },
       computedValues: {
-        actual: [[NaN]],
+        actual: [[9.94]],
         actualOrderID: 5,
       },
     },
   },
   "4": {
     "padding-top": {
-      conversions: {},
+      conversions: {
+        "2.28rem": 31.92,
+      },
       computedValues: {
-        actual: [[NaN]],
+        actual: [[31.92]],
         actualOrderID: 7,
       },
     },
     "padding-right": {
-      conversions: {},
+      conversions: {
+        "2.28rem": 31.92,
+      },
       computedValues: {
-        actual: [[NaN]],
+        actual: [[31.92]],
         actualOrderID: 7,
       },
     },
     "padding-bottom": {
-      conversions: {},
+      conversions: {
+        "2.28rem": 31.92,
+      },
       computedValues: {
-        actual: [[NaN]],
+        actual: [[31.92]],
         actualOrderID: 7,
       },
     },
     "padding-left": {
-      conversions: {},
+      conversions: {
+        "2.28rem": 31.92,
+      },
       computedValues: {
-        actual: [[NaN]],
+        actual: [[31.92]],
         actualOrderID: 7,
       },
     },
   },
   "5": {
     "margin-bottom": {
-      conversions: {},
+      conversions: {
+        "1.42rem": 19.88,
+      },
       computedValues: {
-        actual: [[NaN]],
+        actual: [[19.88]],
         actualOrderID: 8,
       },
     },
   },
   "6": {
     "margin-bottom": {
-      conversions: {},
+      conversions: {
+        "1.71rem": 23.94,
+      },
       computedValues: {
-        actual: [[NaN]],
+        actual: [[23.94]],
         actualOrderID: 9,
       },
     },
   },
   "7": {
     "margin-bottom": {
-      conversions: {},
+      conversions: {
+        "2.07rem": 28.98,
+      },
       computedValues: {
-        actual: [[NaN]],
+        actual: [[28.98]],
         actualOrderID: 10,
       },
     },
   },
   "11": {
     "margin-top": {
-      conversions: {},
+      conversions: {
+        "2.14rem": 29.96,
+      },
       computedValues: {
-        actual: [[NaN]],
+        actual: [[29.96]],
         actualOrderID: 14,
       },
     },

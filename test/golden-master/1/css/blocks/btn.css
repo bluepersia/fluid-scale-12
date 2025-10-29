@@ -37,7 +37,7 @@
   background: none;
   color: #f74780;
   font-size: 1.125rem;
-  --force: font-size;
+  --force: font-size, padding;
   padding: 0;
 }
 

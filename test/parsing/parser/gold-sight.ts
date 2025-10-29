@@ -45,7 +45,6 @@ import {
   parseSelector,
   parseStyleRule,
 } from "../../../src/parsing/parser/fluidDataPatcher";
-import { countStyleRulesInSheet } from "./masterController";
 import {
   parseBatchesAssertions,
   parseBatchAssertions,
@@ -61,16 +60,25 @@ import {
   applyForceAssertions,
   applySpanStartAssertions,
 } from "./fluidDataPatcher/gold-sight";
+import {
+  isAscendingOrderCorrect,
+  stripOrderIDsForFluidData,
+} from "./masterController";
 
 export type State = {
   sheetIndex: number;
   master?: ParseDocMaster;
+  orderID: number;
 };
 
 const parseDocAssertions: AssertionChainForFunc<State, typeof parseDocument> = {
   "should parse the document": (state, args, result) => {
     expect(result.breakpoints).toEqual(state.master!.breakpoints);
-    expect(result.fluidData).toEqual(state.master!.fluidData);
+    expect(isAscendingOrderCorrect(result.fluidData)).toBe(true);
+    expect(stripOrderIDsForFluidData(result.fluidData)).toEqual(
+      stripOrderIDsForFluidData(state.master!.fluidData)
+    );
+    return true;
   },
 };
 
@@ -79,7 +87,11 @@ const parseStyleSheetsAssertions: AssertionChainForFunc<
   typeof parseStyleSheets
 > = {
   "should parse the style sheets": (state, args, result) => {
-    expect(result).toEqual(state.master!.fluidData);
+    expect(isAscendingOrderCorrect(result)).toBe(true);
+    expect(stripOrderIDsForFluidData(result)).toEqual(
+      stripOrderIDsForFluidData(state.master!.fluidData)
+    );
+    return true;
   },
 };
 
@@ -97,7 +109,8 @@ const parseStyleSheetAssertions: AssertionChainForFunc<
     assertChildFluidInsertions(
       (assertion) => assertion.args[2].sheetIndex === ctx.sheetIndex,
       allAssertions,
-      { result: result.fluidData, state, prevFluidData: fluidData }
+      { result: result.fluidData, state, prevFluidData: fluidData },
+      orderID
     );
   },
 };
@@ -108,6 +121,7 @@ const batchStyleSheetAssertions: AssertionChainForFunc<
 > = {
   "should batch the style sheet": (state, args, result) => {
     toBeEqualDefined(result, state.master!.ruleBatches[state.sheetIndex - 1]);
+    return true;
   },
 };
 
@@ -123,6 +137,7 @@ const determineBaselineWidthAssertions: AssertionChainForFunc<
 const batchRulesAssertions: AssertionChainForFunc<State, typeof batchRules> = {
   "should batch the rules": (state, args, result) => {
     toBeEqualDefined(result, state.master!.ruleBatches[state.sheetIndex - 1]);
+    return true;
   },
 };
 
@@ -153,6 +168,8 @@ const batchRuleAssertions: AssertionChainForFunc<State, typeof batchRule> = {
     if (rule.type === MEDIA_RULE_TYPE) expect(result.currentBatch).toBeNull();
     else if (rule.type === STYLE_RULE_TYPE)
       expect(result.currentBatch).toBe(lastBatch);
+
+    return true;
   },
 };
 
@@ -175,6 +192,7 @@ const cloneBatchStateAssertions: AssertionChain<
     }
 
     expect(batchesRef).not.toBe(arg.batches);
+    return true;
   },
 };
 
@@ -209,6 +227,7 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
   newState(): State {
     return {
       sheetIndex: 0,
+      orderID: -1,
     };
   }
 
@@ -243,7 +262,11 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
 
   parseBatch = this.wrapFn(parseBatch, "parseBatch");
 
-  parseStyleRule = this.wrapFn(parseStyleRule, "parseStyleRule");
+  parseStyleRule = this.wrapFn(parseStyleRule, "parseStyleRule", {
+    post: (state, args) => {
+      state.orderID = args[1].docResultState.orderID;
+    },
+  });
 
   parseSelector = this.wrapFn(parseSelector, "parseSelector");
 
@@ -260,7 +283,7 @@ class ParseDocAssertionMaster extends AssertionMaster<State, ParseDocMaster> {
   parseNextRule = this.wrapFn(parseNextRule, "parseNextRule");
 
   insertFluidData = this.wrapFn(insertFluidData, "insertFluidData", {
-    getId: (args) => args[1].selector,
+    getId: (args) => args[1].selector + "/" + args[1].property,
   });
 
   cloneFluidData = this.wrapFn(cloneFluidData, "cloneFluidData", {

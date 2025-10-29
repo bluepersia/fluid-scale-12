@@ -11,6 +11,36 @@ const fluidDataHomePage: FluidData = {};
 
 let orderID = counter.next();
 
+const coursesBgPositionX = {
+  metaData: {
+    orderID,
+    property: "background-position-x",
+  },
+  forceValue: "initial",
+};
+applyProperty(
+  fluidDataHomePage,
+  ".home-page__courses",
+  ".home-page__courses",
+  "background-position-x",
+  coursesBgPositionX
+);
+
+const coursesBgPositionY = {
+  metaData: {
+    orderID,
+    property: "background-position-y",
+  },
+  forceValue: "initial",
+};
+applyProperty(
+  fluidDataHomePage,
+  ".home-page__courses",
+  ".home-page__courses",
+  "background-position-y",
+  coursesBgPositionY
+);
+
 const homePageCoursesPaddingBottomRanges: FluidRange[] = [];
 const homePageCoursesPaddingBottomRange0: FluidRange = {
   minBpIndex: 0,
@@ -78,6 +108,21 @@ applyProperty(
 );
 
 orderID = counter.next();
+
+const homepageCourseListPaddingLeft = {
+  metaData: {
+    orderID,
+    property: "padding-left",
+  },
+  forceValue: "0px",
+};
+applyProperty(
+  fluidDataHomePage,
+  ".home-page__course-list",
+  ".home-page__course-list",
+  "padding-left",
+  homepageCourseListPaddingLeft
+);
 
 const homepageCourseListRowGapRanges: FluidRange[] = [];
 

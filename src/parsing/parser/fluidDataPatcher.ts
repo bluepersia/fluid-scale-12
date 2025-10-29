@@ -148,10 +148,15 @@ let parseProperty = (
   const appliedSpanStart = applySpanStart(styleRule, property, ctx);
   if (appliedSpanStart) return appliedSpanStart;
 
-  const appliedForce = applyForce(styleRule, property, { ...ctx, minValue });
-  if (appliedForce) return appliedForce;
+  if (shouldApplyForce(styleRule, property)) {
+    return applyForce(styleRule, property, { ...ctx, minValue });
+  }
+  const { docResultState, batchIndex } = ctx;
+  const newDocResultState = parseNextBatches(minValue, property, ctx);
+  if (newDocResultState === docResultState && batchIndex === 0)
+    return applyForce(styleRule, property, { ...ctx, minValue });
 
-  return parseNextBatches(minValue, property, ctx);
+  return newDocResultState;
 };
 
 let applySpanStart = (
@@ -179,25 +184,30 @@ let applySpanStart = (
   return null;
 };
 
+function shouldApplyForce(styleRule: StyleRuleClone, property: string) {
+  const force = styleRule.specialProps["--force"];
+  if (force) {
+    const forceValues = parsePropsValues(force);
+    return propListContains(forceValues, property);
+  }
+  return false;
+}
+
 let applyForce = (
   styleRule: StyleRuleClone,
   property: string,
   ctx: ApplyForceContext
 ) => {
-  const { batches, docResultState, minValue } = ctx;
-  const force = styleRule.specialProps["--force"];
-  if (force) {
-    const forceValues = parsePropsValues(force);
-    if (propListContains(forceValues, property)) {
-      return parseNextRule(styleRule, {
-        ...ctx,
-        minValue,
-        property,
-        nextBatchWidth: Math.max(...batches.map((batch) => batch.width)),
-        docResultState,
-      });
-    }
-  }
+  const { docResultState, minValue, breakpoints } = ctx;
+
+  return parseNextRule(styleRule, {
+    ...ctx,
+    minValue,
+    property,
+    nextBatchWidth: breakpoints[breakpoints.length - 1],
+    docResultState,
+    isForce: true,
+  });
 };
 
 function parsePropsValues(value: string) {
@@ -210,13 +220,17 @@ let parseNextBatches = (
   ctx: ParsePropertyContext
 ) => {
   const { batchIndex, batches, docResultState } = ctx;
+  const { eventBus } = docResultState;
   for (
     let nextBatchIndex = batchIndex + 1;
     nextBatchIndex < batches.length;
     nextBatchIndex++
   ) {
     const nextBatch = batches[nextBatchIndex];
-    if (!nextBatch.isMediaQuery) return docResultState;
+    if (!nextBatch.isMediaQuery) {
+      eventBus?.emit("fluidDataNotAdded", { property, minValue, ...ctx });
+      return docResultState;
+    }
     const newDocResultState = parseNextBatch(nextBatch, {
       ...ctx,
       minValue,
@@ -257,9 +271,12 @@ let parseNextRule = (
   ctx: ParseNextRuleContext
 ): DocResultState => {
   const { docResultState, property, selector } = ctx;
-
+  const { eventBus } = docResultState;
   const maxValue = nextStyleRule.style[property];
-  if (!maxValue) return docResultState;
+  if (!maxValue) {
+    eventBus?.emit("fluidDataNotAdded", { ...ctx });
+    return docResultState;
+  }
 
   const selectorParts = selector.split(" ");
   const anchor = selectorParts[selectorParts.length - 1];
@@ -274,7 +291,7 @@ function getAnchor(selector: string) {
 }
 
 let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
-  const { anchor, selector, property, minValue, maxValue } = ctx;
+  const { anchor, selector, property, minValue, maxValue, isForce } = ctx;
   const { docResultState, breakpoints, batchWidth, nextBatchWidth } = ctx;
   const { orderID } = docResultState;
   const newFluidData = cloneFluidData(fluidData, anchor, selector, property);
@@ -288,17 +305,22 @@ let insertFluidData = (fluidData: FluidData, ctx: InsertFluidDataContext) => {
         orderID,
         property,
       },
-      ranges: [],
     };
     isNew = true;
   }
 
-  newFluidData[anchor][selector][property].ranges.push({
-    minValue: parseFluidValue2D(minValue, ctx),
-    maxValue: parseFluidValue2D(maxValue, ctx),
-    minBpIndex: breakpoints.indexOf(batchWidth),
-    maxBpIndex: breakpoints.indexOf(nextBatchWidth),
-  });
+  const newFluidProperty = newFluidData[anchor][selector][property];
+
+  if (isForce) newFluidProperty.forceValue = minValue;
+  else {
+    if (!newFluidProperty.ranges) newFluidProperty.ranges = [];
+    newFluidProperty.ranges.push({
+      minValue: parseFluidValue2D(minValue, ctx),
+      maxValue: parseFluidValue2D(maxValue, ctx),
+      minBpIndex: breakpoints.indexOf(batchWidth),
+      maxBpIndex: breakpoints.indexOf(nextBatchWidth),
+    });
+  }
 
   return { ...docResultState, fluidData: newFluidData, isNew };
 };
@@ -317,10 +339,12 @@ let cloneFluidData = (
     newFluidData[anchor][selector][property] = {
       ...newFluidData[anchor][selector][property],
     };
+  }
+
+  if (newFluidData[anchor]?.[selector]?.[property]?.ranges)
     newFluidData[anchor][selector][property].ranges = [
       ...newFluidData[anchor][selector][property].ranges,
     ];
-  }
   return newFluidData;
 };
 
@@ -359,6 +383,13 @@ function parseFluidValue1D(value: string): FluidValue[] {
 
 function parseFluidValue(strValue: string): FluidValue {
   const value = parseFloat(strValue);
+
+  if (isNaN(value))
+    return {
+      value: strValue,
+      unit: "",
+      type: "single",
+    } as FluidValueSingle;
 
   // Match any alphabetic characters after the number
   const match = strValue.match(/[a-z%]+$/i);

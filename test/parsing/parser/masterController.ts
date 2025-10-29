@@ -1,24 +1,48 @@
 import {
-  MediaRuleClone,
-  StyleSheetClone,
-} from "../../../src/parsing/serialization/docSerializer.types";
-import {
-  MEDIA_RULE_TYPE,
-  STYLE_RULE_TYPE,
-} from "../../../src/parsing/serialization/docSerializerConsts";
-function countStyleRulesInSheet(sheet: StyleSheetClone) {
-  let count = 0;
+  FluidData,
+  FluidPropertyData,
+} from "../../../src/parsing/parser/docParser.types";
+import { deepClone } from "../../utils/objectCloner";
 
-  for (const rule of sheet.cssRules) {
-    if (rule.type === STYLE_RULE_TYPE) count++;
-    if (rule.type === MEDIA_RULE_TYPE) {
-      for (const childRule of (rule as MediaRuleClone).cssRules) {
-        if (childRule.type === STYLE_RULE_TYPE) count++;
+function stripOrderIDsForFluidData(fluidData: FluidData): FluidData {
+  const newFluidData: FluidData = deepClone(fluidData);
+  for (const [anchor, anchorData] of Object.entries(newFluidData)) {
+    for (const [selector, selectorData] of Object.entries(anchorData)) {
+      for (const [property, propertyData] of Object.entries(selectorData)) {
+        newFluidData[anchor][selector][property] =
+          stripOrderIDsForFluidDataProp(propertyData);
       }
     }
   }
-
-  return count;
+  return newFluidData;
 }
 
-export { countStyleRulesInSheet };
+function stripOrderIDsForFluidDataProp(
+  prop: FluidPropertyData
+): FluidPropertyData {
+  return {
+    ...prop,
+    metaData: {
+      ...prop.metaData,
+      orderID: -1,
+    },
+  };
+}
+
+function isAscendingOrderCorrect(fluidData: FluidData): boolean {
+  let lastOrderID = -1;
+  for (const [anchor, anchorData] of Object.entries(fluidData)) {
+    for (const [selector, selectorData] of Object.entries(anchorData)) {
+      for (const [property, propertyData] of Object.entries(selectorData)) {
+        if (propertyData.metaData.orderID <= lastOrderID) return false;
+      }
+    }
+  }
+  return true;
+}
+
+export {
+  stripOrderIDsForFluidData,
+  stripOrderIDsForFluidDataProp,
+  isAscendingOrderCorrect,
+};

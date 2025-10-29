@@ -10,6 +10,68 @@ let orderID = counter.next();
 
 const fluidDataBtn: FluidData = {};
 
+const btnBorderRadiusTopLeft = {
+  metaData: {
+    orderID,
+    property: "border-top-left-radius",
+  },
+  forceValue: "1.75rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "border-top-left-radius",
+  btnBorderRadiusTopLeft
+);
+
+const btnBorderRadiusTopRight = {
+  metaData: {
+    orderID,
+    property: "border-top-right-radius",
+  },
+  forceValue: "1.75rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "border-top-right-radius",
+  btnBorderRadiusTopRight
+);
+
+const btnBorderRadiusBottomLeft = {
+  metaData: {
+    orderID,
+    property: "border-bottom-left-radius",
+  },
+  forceValue: "1.75rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "border-bottom-left-radius",
+  btnBorderRadiusBottomLeft
+);
+
+const btnBorderRadiusBottomRight = {
+  metaData: {
+    orderID,
+    property: "border-bottom-right-radius",
+  },
+  forceValue: "1.75rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "border-bottom-right-radius",
+  btnBorderRadiusBottomRight
+);
+
+orderID = counter.next();
+
 const btnFontSizeRanges: FluidRange[] = [];
 
 const btnFontSizeRange1: FluidRange = {
@@ -110,6 +172,68 @@ applyProperty(
 
 orderID = counter.next();
 
+const btnRadiantBorderRadiusTopLeft = {
+  metaData: {
+    orderID,
+    property: "border-top-left-radius",
+  },
+  forceValue: "1.96rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn--radiant",
+  ".btn--radiant",
+  "border-top-left-radius",
+  btnRadiantBorderRadiusTopLeft
+);
+
+const btnRadiantBorderRadiusTopRight = {
+  metaData: {
+    orderID,
+    property: "border-top-right-radius",
+  },
+  forceValue: "1.96rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn--radiant",
+  ".btn--radiant",
+  "border-top-right-radius",
+  btnRadiantBorderRadiusTopRight
+);
+
+const btnRadiantBorderRadiusBottomLeft = {
+  metaData: {
+    orderID,
+    property: "border-bottom-left-radius",
+  },
+  forceValue: "1.96rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn--radiant",
+  ".btn--radiant",
+  "border-bottom-left-radius",
+  btnRadiantBorderRadiusBottomLeft
+);
+
+const btnRadiantBorderRadiusBottomRight = {
+  metaData: {
+    orderID,
+    property: "border-bottom-right-radius",
+  },
+  forceValue: "1.96rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn--radiant",
+  ".btn--radiant",
+  "border-bottom-right-radius",
+  btnRadiantBorderRadiusBottomRight
+);
+
+orderID = counter.next();
+
 const btnRadiantPaddingVerticalRanges: FluidRange[] = [];
 
 const btnRadiantPaddingVerticalRange0: FluidRange = {
@@ -127,12 +251,12 @@ btnRadiantPaddingVerticalRanges.push(btnRadiantPaddingVerticalRange0);
 
 const btnRadiantPaddingTopProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-top" },
-  ranges: btnRadiantPaddingVerticalRanges,
+  forceValue: "0.9375rem",
 };
 
 const btnRadiantPaddingBottomProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-bottom" },
-  ranges: btnRadiantPaddingVerticalRanges,
+  forceValue: "0.9375rem",
 };
 
 applyProperty(
@@ -168,12 +292,12 @@ btnRadiantPaddingHorizontalRanges.push(btnRadiantPaddingHorizontalRange0);
 
 const btnRadiantPaddingLeftProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-left" },
-  ranges: btnRadiantPaddingHorizontalRanges,
+  forceValue: "2.375rem",
 };
 
 const btnRadiantPaddingRightProperty: FluidPropertyData = {
   metaData: { orderID, property: "padding-right" },
-  ranges: btnRadiantPaddingHorizontalRanges,
+  forceValue: "2.375rem",
 };
 
 applyProperty(
@@ -211,7 +335,7 @@ btnTransparentFontSizeRanges.push(btnTransparentFontSizeRange0);
 
 const btnTransparentFontSizeProperty: FluidPropertyData = {
   metaData: { orderID, property: "font-size" },
-  ranges: btnTransparentFontSizeRanges,
+  forceValue: "1.125rem",
 };
 
 applyProperty(
@@ -222,4 +346,66 @@ applyProperty(
   btnTransparentFontSizeProperty
 );
 
+const btnTransparentPaddingRanges: FluidRange[] = [];
+
+const btnTransparentPaddingRange0: FluidRange = {
+  minBpIndex: 0,
+  maxBpIndex: 2,
+  minValue: [[{ value: 0, unit: "px", type: "single" } as FluidValueSingle]],
+  maxValue: [[{ value: 0, unit: "px", type: "single" } as FluidValueSingle]],
+};
+
+btnTransparentPaddingRanges.push(btnTransparentPaddingRange0);
+
+const btnTransparentPaddingProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-top" },
+  forceValue: "0px",
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn--transparent",
+  ".btn--transparent",
+  "padding-top",
+  btnTransparentPaddingProperty
+);
+
+const btnTransparentPaddingBottomProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-bottom" },
+  forceValue: "0px",
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn--transparent",
+  ".btn--transparent",
+  "padding-bottom",
+  btnTransparentPaddingBottomProperty
+);
+
+const btnTransparentPaddingLeftProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-left" },
+  forceValue: "0px",
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn--transparent",
+  ".btn--transparent",
+  "padding-left",
+  btnTransparentPaddingLeftProperty
+);
+
+const btnTransparentPaddingRightProperty: FluidPropertyData = {
+  metaData: { orderID, property: "padding-right" },
+  forceValue: "0px",
+};
+
+applyProperty(
+  fluidDataBtn,
+  ".btn--transparent",
+  ".btn--transparent",
+  "padding-right",
+  btnTransparentPaddingRightProperty
+);
 export { fluidDataBtn };

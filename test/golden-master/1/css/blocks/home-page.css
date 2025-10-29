@@ -11,6 +11,7 @@
   column-gap: 0.624rem;
   --span-start: column-gap;
   grid-template-columns: repeat(auto-fit, minmax(21.43rem, 1fr));
+  align-items: stretch;
 }
 @media (min-width: 768px) {
   .home-page__courses {

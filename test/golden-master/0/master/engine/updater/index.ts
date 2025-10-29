@@ -12,6 +12,7 @@ import {
 } from "./docStruct";
 const master: EngineUpdateMaster = {
   index: 0,
+  step: 0,
   coreDocStruct: docStruct400,
   coreDocStructWindowWidth: 400,
   coreDocStructRange: 0,

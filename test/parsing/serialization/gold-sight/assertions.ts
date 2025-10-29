@@ -21,14 +21,7 @@ import {
   getRulesByAbsIndex,
   getRuleByAbsIndex,
   getStyleRuleByAbsIndex,
-  normalizeDoc,
-  normalizeStyleSheets,
-  normalizeStyleSheet,
-  normalizeRules,
-  normalizeRule,
-  normalizeStyle,
 } from "../masterController";
-
 import {
   FLUID_PROPERTY_NAMES,
   SHORTHAND_PROPERTIES,
@@ -55,8 +48,8 @@ const serializeDocAssertions: AssertionChainForFunc<
   typeof serializeDocument
 > = {
   "should serialize the document": (state, args, result) => {
-    result = normalizeDoc(result);
     expect(result).toEqual(clearNullsForDoc(state.master!.docClone));
+    return true;
   },
 };
 
@@ -66,6 +59,7 @@ const getAccessibleStyleSheetsAssertions: AssertionChainForFunc<
 > = {
   "should get the accessible style sheets": (state, args, result) => {
     expect(result.length).toBe(state.master!.docClone.styleSheets.length);
+    return true;
   },
 };
 const serializeStyleSheetsAssertions: AssertionChainForFunc<
@@ -73,10 +67,10 @@ const serializeStyleSheetsAssertions: AssertionChainForFunc<
   typeof serializeStyleSheets
 > = {
   "should serialize the style sheets": (state, args, result) => {
-    result = normalizeStyleSheets(result);
     expect(result).toEqual(
       clearNullsForStyleSheets(state.master!.docClone.styleSheets)
     );
+    return true;
   },
 };
 
@@ -85,13 +79,13 @@ const serializeStyleSheetAssertions: AssertionChainForFunc<
   typeof serializeStyleSheet
 > = {
   "should serialize the style sheet": (state, args, result) => {
-    result = normalizeStyleSheet(result);
     toBeEqualDefined(
       result,
       clearNullsForStyleSheet(
         state.master!.docClone.styleSheets[state.sheetIndex]
       )
     );
+    return true;
   },
 };
 
@@ -100,12 +94,12 @@ const serializeRulesAssertions: AssertionChainForFunc<
   typeof serializeRules
 > = {
   "should serialize the rules": (state, args, result) => {
-    result = normalizeRules(result);
     let rules = getRulesByAbsIndex(state.master!.docClone, state.rulesIndex);
 
     if (rules) rules = clearNullsForRules(rules);
 
     toBeEqualDefined(result, rules);
+    return true;
   },
 };
 
@@ -114,17 +108,17 @@ const serializeRuleAssertions: AssertionChainForFunc<
   typeof serializeRule
 > = {
   "should serialize the rule": (state, args, result) => {
-    result = result ? normalizeRule(result) : null;
     let masterRule = getRuleByAbsIndex(state.master!.docClone, state.ruleIndex);
 
     if (result === null) {
       expect((masterRule as NullRule).null).toBeTruthy();
-      return;
+      return true;
     }
 
     if (masterRule) masterRule = clearNullsForRule(masterRule);
 
     toBeEqualDefined(result, masterRule);
+    return true;
   },
 };
 
@@ -133,17 +127,16 @@ const serializeStyleRuleAssertions: AssertionChainForFunc<
   typeof serializeStyleRule
 > = {
   "should serialize the style rule": (state, args, result) => {
-    result = result ? (normalizeRule(result) as StyleRuleClone) : null;
-
     const masterRule = getStyleRuleByAbsIndex(
       state.master!.docClone,
       state.styleRuleIndex
     );
     if (result === null) {
       expect((masterRule as unknown as NullRule).null).toBeTruthy();
-      return;
+      return true;
     }
     toBeEqualDefined(result, masterRule);
+    return true;
   },
 };
 
@@ -152,20 +145,19 @@ const serializeMediaRuleAssertions: AssertionChainForFunc<
   typeof serializeMediaRule
 > = {
   "should serialize the media rule": (state, args, result) => {
-    result = result ? (normalizeRule(result) as MediaRuleClone) : null;
-
     let masterRule = getMediaRuleByAbsIndex(
       state.master!.docClone,
       state.mediaRuleIndex
     );
     if (result === null) {
       expect((masterRule as NullRule).null).toBeTruthy();
-      return;
+      return true;
     }
 
     if (masterRule) masterRule = clearNullsForRule(masterRule);
 
     toBeEqualDefined(result, masterRule);
+    return true;
   },
 };
 
@@ -175,8 +167,6 @@ const serializeStylePropsAssertions: AssertionChainForFunc<
 > = {
   "should clone the style props": (state, args, result) => {
     let { style, specialProps } = result;
-
-    style = normalizeStyle(style);
 
     const masterRule = getStyleRuleByAbsIndex(
       state.master!.docClone,
@@ -188,11 +178,12 @@ const serializeStylePropsAssertions: AssertionChainForFunc<
       Object.keys(specialProps).length <= 0
     ) {
       expect((masterRule as unknown as NullRule).null).toBeTruthy();
-      return;
+      return true;
     }
 
     expect(style).toEqual(masterRule!.style);
     expect(specialProps).toEqual(masterRule!.specialProps);
+    return true;
   },
 };
 
@@ -209,8 +200,6 @@ const serializeStylePropAssertions: AssertionChainForFunc<
 
     let { style, specialProps } = result;
 
-    style = normalizeStyle(style);
-
     let masterRule = getStyleRuleByAbsIndex(
       state.master!.docClone,
       state.styleRuleIndex - 1
@@ -221,6 +210,7 @@ const serializeStylePropAssertions: AssertionChainForFunc<
     } else if (SPECIAL_PROPERTIES.has(prop)) {
       expect(specialProps[prop]).toEqual(masterRule!.specialProps[prop]);
     }
+    return true;
   },
 };
 
@@ -245,6 +235,7 @@ function assertFluidProp(
   } else {
     toBeEqualDefined(style[prop], masterRule!.style[prop], msg);
   }
+  return true;
 }
 
 const serializeFluidPropAssertions: AssertionChainForFunc<
@@ -263,8 +254,6 @@ const serializeFluidPropAssertions: AssertionChainForFunc<
       state.styleRuleIndex - 1
     );
 
-    result = normalizeStyle(result);
-
     assertFluidProp(prop, {
       rule,
       isBrowser,
@@ -272,6 +261,7 @@ const serializeFluidPropAssertions: AssertionChainForFunc<
       masterRule,
       styleArg,
     });
+    return true;
   },
 };
 
@@ -290,8 +280,6 @@ const applyExplicitPropsFromShorthandAssertions: AssertionChainForFunc<
       state.styleRuleIndex - 1
     );
 
-    result = normalizeStyle(result);
-
     const filteredResult = { ...result };
     for (const key in filteredResult) {
       if (rule.style.getPropertyValue(key)) {
@@ -301,6 +289,7 @@ const applyExplicitPropsFromShorthandAssertions: AssertionChainForFunc<
 
     expect(result).not.toEqual(styleArg);
     expect(masterRule!.style).toMatchObject(filteredResult);
+    return true;
   },
 };
 

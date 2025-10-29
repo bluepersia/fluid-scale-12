@@ -1,9 +1,19 @@
 import { describe, it, test, expect } from "vitest";
+import fs from "fs";
+import { masterCollection } from "../parsing/parser/masterCollection";
 import {
+  build,
   generateJSDOMDocument,
+  loadConfig,
   resolvePath,
 } from "../../src/parsing/json-builder";
 import path from "path";
+import { FluidScaleConfig } from "../../src/index.types";
+import { ParseDocResults } from "../../src/parsing/parser/docParser.types";
+import {
+  isAscendingOrderCorrect,
+  stripOrderIDsForFluidData,
+} from "./parser/masterController";
 
 const resolvePathTests = [
   {
@@ -44,5 +54,47 @@ describe("generateJSDOMDocument", () => {
     expect(document.styleSheets[0].cssRules).toHaveLength(6);
     expect(document.styleSheets[1].cssRules).toHaveLength(1);
     expect(document.styleSheets[2].cssRules).toHaveLength(14);
+  });
+});
+
+describe("loadConfig", () => {
+  it("should load the config", () => {
+    const config = loadConfig("test/golden-master/0/fluid-scale.config.json");
+    expect(config).toBeDefined();
+  });
+});
+
+describe("build", () => {
+  test.each(masterCollection)("should build the document", (master) => {
+    const { index } = master;
+    const configPath = `test/golden-master/${index}/fluid-scale.config.json`;
+    const config = JSON.parse(
+      fs.readFileSync(configPath, "utf8")
+    ) as FluidScaleConfig;
+
+    build(configPath);
+
+    for (const [key, value] of Object.entries(config.inputFiles)) {
+      const outputFile = path.resolve(
+        process.cwd(),
+        config.outputDir!,
+        `${key}.json`
+      );
+
+      const fluidScaleJson: ParseDocResults = JSON.parse(
+        fs.readFileSync(outputFile, "utf8")
+      ) as ParseDocResults;
+
+      expect(isAscendingOrderCorrect(fluidScaleJson.fluidData)).toBe(true);
+
+      fluidScaleJson.fluidData = stripOrderIDsForFluidData(
+        fluidScaleJson.fluidData
+      );
+
+      expect(fluidScaleJson).toEqual({
+        breakpoints: master.breakpoints,
+        fluidData: stripOrderIDsForFluidData(master.fluidData),
+      });
+    }
   });
 });

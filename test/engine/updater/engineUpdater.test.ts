@@ -7,11 +7,19 @@ import {
   onLoadBrowserPage,
 } from "../../setup";
 import { Browser, Page } from "playwright";
-import { masterCollection, masterFlowCollection } from "./masterCollection";
+import {
+  fullMasterFlowCollection,
+  masterFlowCollection,
+} from "./masterCollection";
 import { engineUpdateAssertionMaster } from "./gold-sight";
 import { PlaywrightPage } from "../../index.types";
 import { AssertionBlueprint } from "gold-sight";
-import { getFlushProps } from "../../../src/engine/engineUpdater";
+import {
+  getCurrentRange,
+  getFlushProps,
+} from "../../../src/engine/engineUpdater";
+import { engineAssertionMaster } from "../gold-sight";
+import { waitUntil } from "../../../src/utils/waitUntil";
 
 let playwrightPages: PlaywrightPage[] = [];
 
@@ -24,41 +32,70 @@ afterAll(async () => {
 });
 
 describe("update", () => {
-  test.each(masterCollection)("should update the document", async (master) => {
-    const { index, coreDocStructWindowWidth: width } = master;
-    const { page, blueprint } = playwrightPages[index];
-
-    await page.reload();
-    await onLoadBrowserPage(page, blueprint);
-
-    await page.evaluate(async () => {
-      (window as any).init({ startEngine: false });
-
-      await (window as any).waitUntil(
-        () => (window as any).getState().interObserverIsInitialized
-      );
-    });
-
-    await page.setViewportSize({ width, height: 1000 });
-
-    const queue: [number, AssertionBlueprint][] = await page.evaluate(
-      (master) => {
-        (window as any).engineUpdateAssertionMaster.master = master;
-        (window as any).update();
-
-        const queue = (window as any).engineUpdateAssertionMaster.getQueue();
-
-        return Array.from(queue.entries());
-      },
-      master
-    );
-
-    engineUpdateAssertionMaster.setQueueFromArray(queue);
-    engineUpdateAssertionMaster.assertQueue({ master: { index } });
-  });
-
   test.each(masterFlowCollection)(
-    "should update the document in flow",
+    "should update the document in determnistic flow",
+    async (master) => {
+      const { index, steps } = master;
+      const { page, blueprint } = playwrightPages[index];
+
+      await page.reload();
+      await onLoadBrowserPage(page, blueprint);
+
+      await page.evaluate(async () => {
+        (window as any).dontStartEngine = true;
+        (window as any).init();
+
+        await (window as any).waitUntil(
+          () => (window as any).getState().interObserverIsInitialized
+        );
+      });
+
+      for (const masterStep of steps) {
+        await page.evaluate((masterStep) => {
+          (window as any).engineUpdateAssertionMaster.master = masterStep;
+        }, masterStep);
+
+        await page.setViewportSize({
+          width: masterStep.coreDocStructWindowWidth,
+          height: 1000,
+        });
+
+        const queue: [number, AssertionBlueprint][] = await page.evaluate(
+          async () => {
+            function scrollToPercentage(percent) {
+              const scrollableHeight =
+                document.body.scrollHeight - window.innerHeight;
+              const targetY = (percent / 100) * scrollableHeight;
+              window.scrollTo({ top: targetY, behavior: "smooth" });
+            }
+            scrollToPercentage(0);
+            (window as any).update();
+
+            scrollToPercentage(50);
+            (window as any).update();
+
+            scrollToPercentage(100);
+            (window as any).update();
+
+            const queue = (
+              window as any
+            ).engineUpdateAssertionMaster.getQueue();
+
+            return Array.from(queue.entries());
+          }
+        );
+
+        engineUpdateAssertionMaster.setQueueFromArray(queue);
+        engineUpdateAssertionMaster.assertQueue({
+          master: masterStep,
+          logMasterName: "deterministic update",
+        });
+      }
+    }
+  );
+
+  test.each(fullMasterFlowCollection.slice(0, 1))(
+    "should call update 10 times",
     async (master) => {
       const { index } = master;
       const { page, blueprint } = playwrightPages[index];
@@ -66,40 +103,19 @@ describe("update", () => {
       await page.reload();
       await onLoadBrowserPage(page, blueprint);
 
-      await page.evaluate(async () => {
-        (window as any).init({ startEngine: true });
-
-        await (window as any).waitUntil(
-          () => (window as any).getState().interObserverIsInitialized
-        );
+      const callCount = await page.evaluate(async () => {
+        (window as any).init();
+        let callCount = 0;
+        while (callCount < 10) {
+          await (window as any).waitUntil(
+            () => (window as any).updateState.hasUpdateBeenCalled
+          );
+          callCount++;
+          (window as any).updateState.hasUpdateBeenCalled = false;
+        }
+        return callCount;
       });
-
-      for (const masterStep of master.steps) {
-        await page.evaluate((masterStep) => {
-          (window as any).engineUpdateAssertionMaster.master = masterStep;
-        }, masterStep);
-        await page.setViewportSize({
-          width: masterStep.coreDocStructWindowWidth,
-          height: 1000,
-        });
-        const queue: [number, AssertionBlueprint][] = await page.evaluate(
-          () => {
-            return new Promise((resolve) => {
-              // Wait two frames to ensure any async layout/render work finishes
-              requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                  const queue = (
-                    window as any
-                  ).engineUpdateAssertionMaster.getQueue();
-                  resolve(Array.from(queue.entries()));
-                });
-              });
-            });
-          }
-        );
-        engineUpdateAssertionMaster.setQueueFromArray(queue);
-        engineUpdateAssertionMaster.assertQueue({ master: masterStep });
-      }
+      expect(callCount).toBe(10);
     }
   );
 });
@@ -131,7 +147,13 @@ describe("getFlushProps", () => {
 });
 
 describe("readPropertyValue", () => {
-  let browserCtx: { browser: Browser; page: Page } | undefined;
+  let browserCtx:
+    | {
+        browser: Browser;
+        page: Page;
+        server: { url: string; close: () => void };
+      }
+    | undefined;
   beforeAll(async () => {
     browserCtx = await startBrowserPage();
   });
@@ -185,5 +207,90 @@ describe("readPropertyValue", () => {
     );
 
     expect(result).toBe(testCase.expected);
+  });
+});
+
+describe("getCurrentRange", () => {
+  const testCases = [
+    {
+      fluidProperty: {
+        ranges: [
+          {
+            minBpIndex: 0,
+            maxBpIndex: 1,
+          },
+          null,
+        ],
+      },
+      ctx: {
+        breakpoints: [375, 768, 1200],
+        windowWidth: 500,
+      },
+      expected: {
+        minBpIndex: 0,
+        maxBpIndex: 1,
+      },
+    },
+    {
+      fluidProperty: {
+        ranges: [
+          null,
+          {
+            minBpIndex: 1,
+            maxBpIndex: 2,
+          },
+        ],
+      },
+      ctx: {
+        breakpoints: [375, 768, 1200],
+        windowWidth: 1000,
+      },
+      expected: {
+        minBpIndex: 1,
+        maxBpIndex: 2,
+      },
+    },
+    {
+      fluidProperty: {
+        ranges: [
+          null,
+          {
+            minBpIndex: 1,
+            maxBpIndex: 2,
+          },
+        ],
+      },
+      ctx: {
+        breakpoints: [375, 768, 1200],
+        windowWidth: 600,
+      },
+      expected: null,
+    },
+    {
+      fluidProperty: {
+        ranges: [
+          null,
+          {
+            minBpIndex: 1,
+            maxBpIndex: 2,
+          },
+        ],
+      },
+      ctx: {
+        breakpoints: [375, 768, 1200],
+        windowWidth: 1400,
+      },
+      expected: {
+        minBpIndex: 1,
+        maxBpIndex: 2,
+      },
+    },
+  ];
+
+  test.each(testCases)("should get the current range", (testCase) => {
+    const { ctx, fluidProperty, expected } = testCase;
+    const result = getCurrentRange(fluidProperty as any, ctx as any);
+
+    expect(result).toEqual(expected);
   });
 });

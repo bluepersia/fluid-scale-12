@@ -14,7 +14,6 @@ const courseCardProperties = [
   fluidData[".course-card"][".course-card"]["padding-bottom"],
   fluidData[".course-card"][".course-card"]["padding-left"],
   fluidData[".course-card"][".course-card"]["padding-top"],
-  fluidData[".course-card"][".course-card"]["height"],
 ];
 
 const courseCardTitleProperties = [
@@ -148,6 +147,15 @@ const docStructureBase: RuntimeGoldenDoc = {
       ".course-card__title": courseCardTitleProperties,
     },
   },
+  "course-card-description-2": {
+    ".course-card__description": {
+      ".course-card__description": [
+        fluidData[".course-card__description"][".course-card__description"][
+          "font-size"
+        ],
+      ],
+    },
+  },
   "course-card-btn-2": {
     ".btn": {
       ".btn": btnProperties,
@@ -155,6 +163,10 @@ const docStructureBase: RuntimeGoldenDoc = {
     ".btn--transparent": {
       ".btn--transparent": [
         fluidData[".btn--transparent"][".btn--transparent"]["font-size"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-top"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-right"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-bottom"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-left"],
       ],
     },
   },
@@ -168,6 +180,15 @@ const docStructureBase: RuntimeGoldenDoc = {
       ".course-card__title": courseCardTitleProperties,
     },
   },
+  "course-card-description-3": {
+    ".course-card__description": {
+      ".course-card__description": [
+        fluidData[".course-card__description"][".course-card__description"][
+          "font-size"
+        ],
+      ],
+    },
+  },
   "course-card-btn-3": {
     ".btn": {
       ".btn": btnProperties,
@@ -175,6 +196,10 @@ const docStructureBase: RuntimeGoldenDoc = {
     ".btn--transparent": {
       ".btn--transparent": [
         fluidData[".btn--transparent"][".btn--transparent"]["font-size"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-top"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-right"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-bottom"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-left"],
       ],
     },
   },
@@ -188,6 +213,15 @@ const docStructureBase: RuntimeGoldenDoc = {
       ".course-card__title": courseCardTitleProperties,
     },
   },
+  "course-card-description-4": {
+    ".course-card__description": {
+      ".course-card__description": [
+        fluidData[".course-card__description"][".course-card__description"][
+          "font-size"
+        ],
+      ],
+    },
+  },
   "course-card-btn-4": {
     ".btn": {
       ".btn": btnProperties,
@@ -195,6 +229,10 @@ const docStructureBase: RuntimeGoldenDoc = {
     ".btn--transparent": {
       ".btn--transparent": [
         fluidData[".btn--transparent"][".btn--transparent"]["font-size"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-top"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-right"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-bottom"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-left"],
       ],
     },
   },
@@ -208,6 +246,15 @@ const docStructureBase: RuntimeGoldenDoc = {
       ".course-card__title": courseCardTitleProperties,
     },
   },
+  "course-card-description-5": {
+    ".course-card__description": {
+      ".course-card__description": [
+        fluidData[".course-card__description"][".course-card__description"][
+          "font-size"
+        ],
+      ],
+    },
+  },
   "course-card-btn-5": {
     ".btn": {
       ".btn": btnProperties,
@@ -215,6 +262,10 @@ const docStructureBase: RuntimeGoldenDoc = {
     ".btn--transparent": {
       ".btn--transparent": [
         fluidData[".btn--transparent"][".btn--transparent"]["font-size"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-top"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-right"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-bottom"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-left"],
       ],
     },
   },
@@ -228,6 +279,15 @@ const docStructureBase: RuntimeGoldenDoc = {
       ".course-card__title": courseCardTitleProperties,
     },
   },
+  "course-card-description-6": {
+    ".course-card__description": {
+      ".course-card__description": [
+        fluidData[".course-card__description"][".course-card__description"][
+          "font-size"
+        ],
+      ],
+    },
+  },
   "course-card-btn-6": {
     ".btn": {
       ".btn": btnProperties,
@@ -235,6 +295,10 @@ const docStructureBase: RuntimeGoldenDoc = {
     ".btn--transparent": {
       ".btn--transparent": [
         fluidData[".btn--transparent"][".btn--transparent"]["font-size"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-top"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-right"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-bottom"],
+        fluidData[".btn--transparent"][".btn--transparent"]["padding-left"],
       ],
     },
   },

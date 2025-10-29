@@ -15,6 +15,7 @@ type GlobalState = {
   hiddenEls: Set<ElementState>;
   windowWidth: number;
   interObserverIsInitialized: boolean;
+  updateCounter: number;
   config: Config;
 };
 
@@ -34,7 +35,8 @@ type FluidPropertyState = {
 
 type FluidProperty = {
   metaData: FluidPropertyMetaData;
-  ranges: (FluidRange | null)[];
+  ranges?: (FluidRange | null)[];
+  forceValue?: string;
 };
 
 type AddElementsContext = {

@@ -1,5 +1,12 @@
 type Config = {
-  startEngine?: boolean;
+  jsonID?: string;
 };
 
-export type { Config };
+type FluidScaleConfig = {
+  inputFiles: {
+    [key: string]: string[];
+  };
+  outputDir?: string;
+};
+
+export type { Config, FluidScaleConfig };

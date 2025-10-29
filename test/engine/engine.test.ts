@@ -13,7 +13,7 @@ import { AssertionBlueprint } from "gold-sight";
 import { serializeDocAssertionMaster } from "../parsing/serialization/gold-sight/gold-sight";
 import { parseDocAssertionMaster } from "../parsing/parser/gold-sight";
 import { engineAssertionMaster } from "./gold-sight";
-import { getState, resetState } from "../../src/engine/engineState";
+import { getState } from "../../src/engine/engineState";
 import { handleIntersection } from "../../src/engine/engineSetup";
 
 let playwrightPages: PlaywrightPage[] = [];
@@ -26,47 +26,54 @@ afterAll(async () => {
   await teardownPlaywrightPages(playwrightPages);
 });
 
-beforeEach(() => {
-  resetState();
-});
-
 describe("init", () => {
   test.each(masterCollection)("should initialize engine", async (master) => {
     const { index } = master;
     const { page } = playwrightPages[index];
     const queues: [number, AssertionBlueprint][][] = await page.evaluate(
-      (master) => {
+      async (master) => {
         (window as any).engineAssertionMaster.master = master;
-        (window as any).parseDocAssertionMaster.master = master.parseDocMaster;
-        (window as any).serializeDocAssertionMaster.master =
-          master.serializeDocMaster;
 
-        (window as any).FluidScale.init();
-
+        await (window as any).FluidScale.init();
         const engineQueue = (window as any).engineAssertionMaster.getQueue();
-        const serializeQueue = (
-          window as any
-        ).serializeDocAssertionMaster.getQueue();
-        const parseQueue = (window as any).parseDocAssertionMaster.getQueue();
-
-        return [
-          Array.from(engineQueue.entries()),
-          Array.from(serializeQueue.entries()),
-          Array.from(parseQueue.entries()),
-        ];
+        return [Array.from(engineQueue.entries())];
       },
       master
     );
 
-    const [engineQueue, serializeQueue, parseQueue] = queues;
+    const [engineQueue] = queues;
 
     engineAssertionMaster.setQueueFromArray(engineQueue);
     engineAssertionMaster.assertQueue({ master: { index } });
-    serializeDocAssertionMaster.setQueueFromArray(serializeQueue);
-    serializeDocAssertionMaster.assertQueue({ master: { index } });
-    parseDocAssertionMaster.setQueueFromArray(parseQueue);
-    parseDocAssertionMaster.assertQueue({ master: { index } });
   });
+
+  test.each(masterCollection)(
+    "should initialize engine with JSDOM",
+    async (master) => {
+      const { index } = master;
+      const { page } = playwrightPages[index];
+      await page.evaluate(async () => {
+        (window as any).resetState();
+      });
+      const queues: [number, AssertionBlueprint][][] = await page.evaluate(
+        async (master) => {
+          (window as any).engineAssertionMaster.master = master;
+
+          await (window as any).FluidScale.init({
+            jsonID: "index",
+          });
+
+          const engineQueue = (window as any).engineAssertionMaster.getQueue();
+          return [Array.from(engineQueue.entries())];
+        },
+        master
+      );
+      const [engineQueue] = queues;
+
+      engineAssertionMaster.setQueueFromArray(engineQueue);
+      engineAssertionMaster.assertQueue({ master: { index } });
+    }
+  );
 });
 
 describe("handleIntersection", () => {

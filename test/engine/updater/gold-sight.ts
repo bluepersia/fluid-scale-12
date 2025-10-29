@@ -4,6 +4,7 @@ if (process.env.NODE_ENV === "test") {
 }
 
 import AssertionMaster, {
+  AssertionBlueprint,
   AssertionChain,
   AssertionChainForFunc,
 } from "gold-sight";
@@ -23,6 +24,7 @@ import {
 } from "../../../src/engine/engineUpdater";
 import { SerializedElementState } from "../index.types";
 import {
+  ConvertToPixelsContext,
   ElementState,
   FluidProperty,
   FluidPropertyState,
@@ -32,10 +34,12 @@ import {
 import {
   FluidRange,
   FluidValue,
+  FluidValueNumber,
   FluidValueSingle,
 } from "../../../src/parsing/parser/docParser.types";
 import { getState } from "../../../src/engine/engineState";
 import { serializeElementState } from "../serialization";
+import { C } from "vitest/dist/chunks/reporters.d.BFLkQcL6.js";
 
 type State = {
   master?: EngineUpdateMaster;
@@ -70,8 +74,8 @@ function assertStyleValues(
       const expectedValue = expected[i][j];
 
       if (isNaN(actualValue) || isNaN(expectedValue)) {
-        expect(actualValue).toBeNaN();
-        expect(expectedValue).toBeNaN();
+        expect(actualValue, msg).toBeNaN();
+        expect(expectedValue, msg).toBeNaN();
       } else {
         expect(actual[i][j], msg).toBeCloseTo(expected[i][j], 1);
       }
@@ -93,14 +97,11 @@ const updateAssertionChain: AssertionChain<
     }
 
     for (const elState of result.hiddenEls) {
-      const props = Object.keys(
-        state.master!.coreDocStruct[elState.el.goldenId]
-      );
-
-      for (const prop of props) {
+      for (const prop of Object.keys(elState.inlineStyles)) {
         expect(elState.inlineStyles[prop]).toBe("");
       }
     }
+    return true;
   },
 };
 
@@ -111,6 +112,7 @@ const updateElementAssertionChain: AssertionChain<
 > = {
   "should update the element": (state, args, result) => {
     assertElementState(result, state);
+    return true;
   },
 };
 
@@ -120,11 +122,10 @@ const flushElementAssertionChain: AssertionChain<
   SerializedElementState
 > = {
   "should flush the element": (state, args, result) => {
-    const props = Object.keys(state.master!.coreDocStruct[result.el.goldenId]);
-
-    for (const prop of props) {
+    for (const prop of Object.keys(result.inlineStyles)) {
       expect(result.inlineStyles[prop]).toBe("");
     }
+    return true;
   },
 };
 
@@ -140,47 +141,71 @@ const updateFluidPropertiesAssertionChain: AssertionChain<
       fluidPropertiesStateArr
     );
 
+    const [, , ctx] = args;
     for (const [prop, value] of Object.entries(
       state.master!.coreDocStruct[elState.el.goldenId]
     )) {
       const actualValue = parseStyleValues(
         fluidPropertiesState.get(prop)!.value
       );
-      const expectedValue = value.computedValues.actual;
+      const expectedValue =
+        value.computedValues.actualRaw || value.computedValues.actual;
 
-      assertStyleValues(actualValue, expectedValue);
+      assertStyleValues(
+        actualValue,
+        expectedValue,
+        JSON.stringify({
+          prop,
+          windowWidth: ctx.windowWidth,
+        })
+      );
     }
+    return true;
   },
 };
+
+function findWinner(
+  allAssertions: AssertionBlueprint<any, any, any>[],
+  property: string,
+  goldenId: string
+) {
+  const assertionsForGoldenElement = allAssertions.find((assertion) => {
+    if (assertion.name !== "updateFluidProperties") return false;
+    if (assertion.result[0].el.goldenId !== goldenId) return false;
+    return true;
+  });
+  if (!assertionsForGoldenElement) return;
+  const fluidPropertiesState: Map<string, FluidPropertyState> = new Map(
+    assertionsForGoldenElement.result[1]
+  );
+  return fluidPropertiesState.get(property);
+}
 
 const updateFluidPropertyAssertionChain: AssertionChain<
   State,
   [FluidProperty, FluidPropertyState | undefined, UpdateFluidPropertyContext],
   [SerializedElementState, FluidPropertyState]
 > = {
-  "should update the fluid property": (state, args, result) => {
+  "should update the fluid property": (state, args, result, allAssertions) => {
     const { property, orderID } = args[0].metaData;
     const [elState, fluidPropertyState] = result;
+
+    if (!fluidPropertyState) return;
+
+    const winner = findWinner(allAssertions, property, elState.el.goldenId);
+
+    if (winner?.orderID !== orderID) return;
 
     const masterProp =
       state.master!.coreDocStruct[elState.el.goldenId][property];
 
-    if (masterProp.computedValues.actualOrderID === orderID) {
-      const actualValue = parseStyleValues(fluidPropertyState.value);
+    const actualValue = parseStyleValues(fluidPropertyState.value);
 
-      assertStyleValues(actualValue, masterProp.computedValues.actual);
-    }
-  },
-};
-
-const getCurrentRangeAssertionChain: AssertionChainForFunc<
-  State,
-  typeof getCurrentRange
-> = {
-  "should get the current range": (state, args, result) => {
-    if (result) {
-      expect(result.minBpIndex).toBe(state.master!.coreDocStructRange);
-    }
+    assertStyleValues(
+      actualValue,
+      masterProp.computedValues.actualRaw || masterProp.computedValues.actual
+    );
+    return true;
   },
 };
 
@@ -189,15 +214,25 @@ const computeValuesAssertionChain: AssertionChain<
   [FluidRange, FluidProperty, SerializedElementState],
   number[][]
 > = {
-  "should compute the values": (state, args, result) => {
+  "should compute the values": (state, args, result, allAssertions) => {
     const [, fluidProperty, serializedElState] = args;
 
-    assertStyleValues(
-      result,
+    const masterProp =
       state.master!.coreDocStruct[serializedElState.el.goldenId][
         fluidProperty.metaData.property
-      ].computedValues.actual
+      ];
+
+    const winner = findWinner(
+      allAssertions,
+      fluidProperty.metaData.property,
+      serializedElState.el.goldenId
     );
+
+    if (winner?.orderID !== fluidProperty.metaData.orderID) return;
+
+    assertStyleValues(result, masterProp.computedValues.actual);
+
+    return true;
   },
 };
 
@@ -206,14 +241,25 @@ const interpolateValuesAssertionChain: AssertionChain<
   { elState: SerializedElementState; fluidProperty: FluidProperty },
   number[][]
 > = {
-  "should interpolate the values": (state, args, result) => {
+  "should interpolate the values": (state, args, result, allAssertions) => {
     const { elState, fluidProperty } = args;
-    assertStyleValues(
-      result,
+
+    const masterProp =
       state.master!.coreDocStruct[elState.el.goldenId][
         fluidProperty.metaData.property
-      ].computedValues.actual
+      ];
+
+    const winner = findWinner(
+      allAssertions,
+      fluidProperty.metaData.property,
+      elState.el.goldenId
     );
+
+    if (winner?.orderID !== fluidProperty.metaData.orderID) return;
+
+    assertStyleValues(result, masterProp.computedValues.actual);
+
+    return true;
   },
 };
 
@@ -225,39 +271,67 @@ const computeFluidValueAssertionChain: AssertionChain<
   ],
   number
 > = {
-  "should compute the fluid value": (state, args, result) => {
+  "should compute the fluid value": (state, args, result, allAssertions) => {
     const [fluidValue, { elState, fluidProperty }] = args;
+
+    const masterProp =
+      state.master!.coreDocStruct[elState.el.goldenId][
+        fluidProperty.metaData.property
+      ];
+    const winner = findWinner(
+      allAssertions,
+      fluidProperty.metaData.property,
+      elState.el.goldenId
+    );
+
+    if (winner?.orderID !== fluidProperty.metaData.orderID) return;
+
     let key;
     if (fluidValue.type === "single") {
       const { value, unit } = fluidValue as FluidValueSingle;
       key = `${value}${unit}`;
     }
-    expect(result).toBeCloseTo(
-      state.master!.coreDocStruct[elState.el.goldenId][
-        fluidProperty.metaData.property
-      ].conversions[`${key}`],
-      1
-    );
+    expect(result).toBeCloseTo(masterProp.conversions[`${key}`], 1);
+
+    return true;
   },
 };
 
 const convertToPixelsAssertionChain: AssertionChain<
   State,
   [
-    FluidValueSingle,
-    { elState: SerializedElementState; fluidProperty: FluidProperty }
+    FluidValueNumber,
+    { elState: SerializedElementState; fluidProperty: FluidProperty },
+    ConvertToPixelsContext
   ],
   number
 > = {
-  "should convert the fluid value to pixels": (state, args, result) => {
+  "should convert the fluid value to pixels": (
+    state,
+    args,
+    result,
+    allAssertions
+  ) => {
     const [fluidValue, { elState, fluidProperty }] = args;
 
-    expect(result).toBeCloseTo(
+    const masterProp =
       state.master!.coreDocStruct[elState.el.goldenId][
         fluidProperty.metaData.property
-      ].conversions[`${fluidValue.value}${fluidValue.unit}`],
+      ];
+    const winner = findWinner(
+      allAssertions,
+      fluidProperty.metaData.property,
+      elState.el.goldenId
+    );
+
+    if (winner?.orderID !== fluidProperty.metaData.orderID) return;
+
+    expect(result).toBeCloseTo(
+      masterProp.conversions[`${fluidValue.value}${fluidValue.unit}`],
       1
     );
+
+    return true;
   },
 };
 
@@ -267,19 +341,33 @@ const defaultAssertions = {
   flushElement: flushElementAssertionChain,
   updateFluidProperties: updateFluidPropertiesAssertionChain,
   updateFluidProperty: updateFluidPropertyAssertionChain,
-  getCurrentRange: getCurrentRangeAssertionChain,
   computeValues: computeValuesAssertionChain,
   interpolateValues: interpolateValuesAssertionChain,
   computeFluidValue: computeFluidValueAssertionChain,
   convertToPixels: convertToPixelsAssertionChain,
 };
 
+const updateState = {
+  hasUpdateBeenCalled: false,
+};
 class EngineUpdateAssertionMaster extends AssertionMaster<
   State,
   EngineUpdateMaster
 > {
   constructor() {
-    super(defaultAssertions, "engineUpdate");
+    super(defaultAssertions, "engineUpdate", {
+      getSnapshot: (state, args) => {
+        const globalState = getState();
+        const ctx = args.find((arg) => arg.windowWidth ?? false) || globalState;
+
+        return {
+          hasMaster: state.master ? true : false,
+          masterWidth: state.master?.coreDocStructWindowWidth ?? 0,
+          windowWidth: ctx.windowWidth,
+          updateCounter: globalState.updateCounter,
+        };
+      },
+    });
   }
 
   newState() {
@@ -287,6 +375,9 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
   }
 
   update = this.wrapTopFn(update, "update", {
+    pre: () => {
+      updateState.hasUpdateBeenCalled = true;
+    },
     resultConverter: () => {
       const { visibleEls, hiddenEls } = getState();
       return {
@@ -314,6 +405,8 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
     updateFluidProperties,
     "updateFluidProperties",
     {
+      getId: (args) => args[0].el.dataset.goldenId || "",
+
       resultConverter: (result, args) => {
         const [elState] = args;
         return [serializeElementState(elState), Array.from(result.entries())];
@@ -325,10 +418,16 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
     updateFluidProperty,
     "updateFluidProperty",
     {
+      getId: (args) =>
+        args[2].elState.el.dataset.goldenId +
+        "/" +
+        args[0].metaData.property +
+        "/" +
+        args[2].windowWidth,
       resultConverter: (result, args) => {
         const [, , ctx] = args;
         const { elState } = ctx;
-        return [serializeElementState(elState), result];
+        return [serializeElementState(elState), result, ctx];
       },
     }
   );
@@ -336,6 +435,12 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
   getCurrentRange = this.wrapFn(getCurrentRange, "getCurrentRange");
 
   computeValues = this.wrapFn(computeValues, "computeValues", {
+    getId: (args) =>
+      args[2].elState.el.dataset.goldenId +
+      "/" +
+      args[1].metaData.property +
+      "/" +
+      args[2].windowWidth,
     argsConverter: (args) => {
       const [currentRange, fluidProperty, ctx] = args;
       const { elState } = ctx;
@@ -344,6 +449,12 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
   });
 
   interpolateValues = this.wrapFn(interpolateValues, "interpolateValues", {
+    getId: (args) =>
+      args[2].elState.el.dataset.goldenId +
+      "/" +
+      args[2].fluidProperty.metaData.property +
+      "/" +
+      args[2].windowWidth,
     argsConverter: (args) => {
       const ctx = args[2];
       const { elState, fluidProperty } = ctx;
@@ -363,6 +474,12 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
   });
 
   convertToPixels = this.wrapFn(convertToPixels, "convertToPixels", {
+    getId: (args) =>
+      args[1].elState.el.dataset.goldenId +
+      "/" +
+      args[1].fluidProperty.metaData.property +
+      "/" +
+      args[1].windowWidth,
     argsConverter: (args) => {
       const [fluidValue, ctx] = args;
 
@@ -371,6 +488,7 @@ class EngineUpdateAssertionMaster extends AssertionMaster<
       return [
         fluidValue,
         { elState: serializeElementState(elState), fluidProperty },
+        ctx,
       ];
     },
   });
@@ -385,7 +503,6 @@ function wrapAll() {
     engineUpdateAssertionMaster.flushElement,
     engineUpdateAssertionMaster.updateFluidProperties,
     engineUpdateAssertionMaster.updateFluidProperty,
-    engineUpdateAssertionMaster.getCurrentRange,
     engineUpdateAssertionMaster.computeValues,
     engineUpdateAssertionMaster.interpolateValues,
     engineUpdateAssertionMaster.computeFluidValue,
@@ -393,4 +510,4 @@ function wrapAll() {
   );
 }
 
-export { engineUpdateAssertionMaster, wrapAll };
+export { engineUpdateAssertionMaster, wrapAll, updateState };

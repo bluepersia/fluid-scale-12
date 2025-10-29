@@ -15,12 +15,14 @@ type FluidData = {
 
 type FluidPropertyData = {
   metaData: FluidPropertyMetaData;
-  ranges: FluidRange[];
+  ranges?: FluidRange[];
+  forceValue?: string;
 };
 
 type FluidPropertyMetaData = {
   orderID: number;
   property: string;
+  isForce?: boolean;
 };
 
 type FluidRange = {
@@ -35,8 +37,11 @@ type FluidValue = {
 };
 type FluidValueSingle = FluidValue & {
   type: "single";
-  value: number;
+  value: number | string;
   unit: string;
+};
+type FluidValueNumber = FluidValueSingle & {
+  value: number;
 };
 
 type FluidValueString = FluidValue & {
@@ -99,6 +104,7 @@ type ParseNextBatchContext = ParsePropertyContext & {
 };
 type ParseNextRuleContext = ParseNextBatchContext & {
   nextBatchWidth: number;
+  isForce?: boolean;
 };
 
 type InsertFluidDataContext = ParseNextRuleContext & {
@@ -129,4 +135,5 @@ export {
   FluidValueString,
   ApplyForceContext,
   DocSpans,
+  FluidValueNumber,
 };

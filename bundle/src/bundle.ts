@@ -26,6 +26,7 @@ import { init } from "../../src/index";
 
 import {
   engineUpdateAssertionMaster,
+  updateState,
   wrapAll as wrapAllEngineUpdate,
 } from "../../test/engine/updater/gold-sight";
 
@@ -34,7 +35,11 @@ wrapAllEngineUpdate();
 import { readPropertyValue, update } from "../../src/engine/engineUpdater";
 
 import { waitUntil } from "../../src/utils/waitUntil";
-import { getState } from "../../src/engine/engineState";
+import {
+  getState,
+  resetState,
+  resetUpdateCounter,
+} from "../../src/engine/engineState";
 
 export {
   getQueue,
@@ -48,4 +53,7 @@ export {
   engineUpdateAssertionMaster,
   waitUntil,
   getState,
+  resetState,
+  resetUpdateCounter,
+  updateState,
 };

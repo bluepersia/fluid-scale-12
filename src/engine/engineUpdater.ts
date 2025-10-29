@@ -1,9 +1,14 @@
 import {
   FluidRange,
   FluidValue,
+  FluidValueNumber,
   FluidValueSingle,
 } from "../parsing/parser/docParser.types";
-import { getState, updateWindowWidth } from "./engineState";
+import {
+  getState,
+  incrementUpdateCounter,
+  updateWindowWidth,
+} from "./engineState";
 import { removeElement } from "./engineState";
 import {
   ConvertToPixelsContext,
@@ -34,10 +39,8 @@ let update = () => {
       documentElement: document.documentElement,
     });
   }
-
-  if (globalState.config.startEngine) {
-    requestAnimationFrame(update);
-  }
+  incrementUpdateCounter();
+  if (!(window as any).dontStartEngine) requestAnimationFrame(update);
 };
 
 let flushElement = (elState: ElementState) => {
@@ -111,19 +114,30 @@ let updateFluidProperty = (
   ctx: UpdateFluidPropertyContext
 ): FluidPropertyState | undefined => {
   const { property, orderID } = fluidProperty.metaData;
-  if (currentPropertyState?.value) return;
+
+  if (currentPropertyState?.value && currentPropertyState.orderID > orderID)
+    return;
 
   let value = "";
-  const currentRange = getCurrentRange(fluidProperty, ctx);
+  if (fluidProperty.ranges) {
+    const currentRange = getCurrentRange(fluidProperty, ctx);
 
-  if (currentRange) {
-    const result = computeValues(currentRange, fluidProperty, ctx);
+    if (currentRange) {
+      const result = computeValues(currentRange, fluidProperty, ctx);
 
-    value = result
-      .map((group) => group.map((value) => `${value.toString()}px`).join(" "))
-      .join(",");
+      value = result
+        .map((group) =>
+          group
+            .map((value) =>
+              typeof value === "string" ? value : `${value.toString()}px`
+            )
+            .join(" ")
+        )
+        .join(",");
+    }
+  } else if (fluidProperty.forceValue) {
+    value = fluidProperty.forceValue;
   }
-
   return {
     property,
     value,
@@ -137,14 +151,14 @@ let getCurrentRange = (
 ) => {
   const { breakpoints, windowWidth } = ctx;
 
-  return fluidProperty.ranges.find((range) => {
-    if (!range) return false;
-
-    const { minBpIndex, maxBpIndex } = range;
+  for (let i = fluidProperty.ranges!.length - 1; i >= 0; i--) {
+    const range = fluidProperty.ranges![i];
+    if (!range) continue;
+    const { minBpIndex } = range;
     const minBp = breakpoints[minBpIndex];
-    const maxBp = breakpoints[maxBpIndex];
-    return windowWidth >= minBp && windowWidth <= maxBp;
-  });
+    if (windowWidth >= minBp) return range;
+  }
+  return null;
 };
 
 let computeValues = (
@@ -159,7 +173,7 @@ let computeValues = (
   const progress = (windowWidth - minBp) / (maxBp - minBp);
 
   const childCtx = { ...ctx, fluidProperty };
-  let result: number[][];
+  let result: (number | string)[][];
   if (progress <= 0) result = calcFluidArray(currentRange.minValue, childCtx);
   else if (progress >= 1)
     result = calcFluidArray(currentRange.maxValue, childCtx);
@@ -175,12 +189,43 @@ function calcFluidArray(
   values: FluidValue[][] | string,
   ctx: ConvertToPixelsContext
 ) {
-  if (typeof values === "string")
-    throw Error("Absolute strings not implemented yet");
+  if (typeof values === "string") {
+    const { fluidProperty } = ctx;
+    const { property } = fluidProperty.metaData;
+    if (property.startsWith("grid-")) {
+      const result = computeGridValues(values, ctx);
+      return result;
+    }
+    throw Error(`Unknown property: ${property}`);
+  }
 
   return values.map((group) =>
     group.map((value) => computeFluidValue(value, ctx))
   );
+}
+
+function computeGridValues(
+  value: string,
+  ctx: ConvertToPixelsContext
+): number[][] {
+  const {
+    elState,
+    fluidProperty: {
+      metaData: { property },
+    },
+  } = ctx;
+  const { el } = elState;
+  const prevValue = el.style.getPropertyValue(property);
+  el.style.setProperty(property, value);
+
+  const computedStyle = window.getComputedStyle(el);
+  const gridTemplate = computedStyle.getPropertyValue(property);
+  el.style.setProperty(property, prevValue);
+  const gridTemplateArray = gridTemplate.split(" ");
+  const gridTemplateValues = gridTemplateArray.map((value) => {
+    return parseFloat(value);
+  });
+  return [gridTemplateValues];
 }
 
 let interpolateValues = (
@@ -189,21 +234,23 @@ let interpolateValues = (
   ctx: InterpolateValuesContext
 ) => {
   const { progress } = ctx;
-  if (typeof minValues === "string")
-    throw Error("Absolute strings not implemented yet");
-  if (typeof maxValues === "string")
-    throw Error("Absolute strings not implemented yet");
-  return minValues.map((group, groupIndex) =>
-    group.map((minValue, valueIndex) => {
-      const minValuePx = computeFluidValue(minValue, ctx);
-      if (groupIndex >= maxValues.length) return minValuePx;
+  const minValuesPx = calcFluidArray(minValues, ctx);
 
-      const maxGroup = maxValues[groupIndex];
+  const maxValuesPx = calcFluidArray(maxValues, ctx);
+
+  return minValuesPx.map((group, groupIndex) =>
+    group.map((minValuePx, valueIndex) => {
+      if (groupIndex >= maxValues.length || typeof minValuePx === "string")
+        return minValuePx;
+
+      const maxGroup = maxValuesPx[groupIndex];
 
       if (valueIndex >= maxGroup.length) return minValuePx;
 
-      const maxValue = maxGroup[valueIndex];
-      const maxValuePx = computeFluidValue(maxValue, ctx);
+      const maxValuePx = maxGroup[valueIndex];
+
+      if (typeof maxValuePx === "string") return minValuePx;
+
       return minValuePx + (maxValuePx - minValuePx) * progress;
     })
   );
@@ -220,12 +267,39 @@ function readPropertyValue(property: string, elState: ElementState) {
 let computeFluidValue = (
   fluidValue: FluidValue,
   ctx: ConvertToPixelsContext
-): number => {
+): number | string => {
   if (fluidValue.type === "single") {
-    return convertToPixels(fluidValue as FluidValueSingle, ctx);
+    const fluidValueSingle = fluidValue as FluidValueSingle;
+    if (typeof fluidValueSingle.value === "string") {
+      return measureKeyword(fluidValueSingle.value, ctx);
+    }
+    return convertToPixels(fluidValueSingle as FluidValueNumber, ctx);
   }
   throw Error(`Unknown fluid value type: ${fluidValue.type}`);
 };
+
+function measureKeyword(
+  value: string,
+  ctx: ConvertToPixelsContext
+): string | number {
+  const {
+    elState: { el },
+    fluidProperty: {
+      metaData: { property },
+    },
+  } = ctx;
+
+  if (property.startsWith("margin") && value === "auto") return "auto";
+
+  const prevValue = el.style.getPropertyValue(property);
+  el.style.setProperty(property, value);
+
+  const px = window.getComputedStyle(el).getPropertyValue(property);
+
+  el.style.setProperty(property, prevValue);
+
+  return parseFloat(px) || px;
+}
 
 const unitConversionRouter: Record<
   string,
@@ -238,7 +312,7 @@ const unitConversionRouter: Record<
 };
 
 let convertToPixels = (
-  value: FluidValueSingle,
+  value: FluidValueNumber,
   ctx: ConvertToPixelsContext
 ) => {
   const route = unitConversionRouter[value.unit];
@@ -281,7 +355,9 @@ function calcEm(value: number, ctx: ConvertToPixelsContext) {
   if (property === "font-size")
     return (
       value *
-      parseFloat((elState.el.parentElement || documentElement).style.fontSize)
+      parseFloat(
+        getComputedStyle(elState.el.parentElement || documentElement).fontSize
+      )
     );
   else return value * readPropertyValue(property, elState);
 }
@@ -297,7 +373,6 @@ function wrap(
   flushElementWrapped: typeof flushElement,
   updateFluidPropertiesWrapped: typeof updateFluidProperties,
   updateFluidPropertyWrapped: typeof updateFluidProperty,
-  getCurrentRangeWrapped: typeof getCurrentRange,
   computeValuesWrapped: typeof computeValues,
   interpolateValuesWrapped: typeof interpolateValues,
   computeFluidValueWrapped: typeof computeFluidValue,
@@ -308,7 +383,6 @@ function wrap(
   flushElement = flushElementWrapped;
   updateFluidProperties = updateFluidPropertiesWrapped;
   updateFluidProperty = updateFluidPropertyWrapped;
-  getCurrentRange = getCurrentRangeWrapped;
   computeValues = computeValuesWrapped;
   interpolateValues = interpolateValuesWrapped;
   computeFluidValue = computeFluidValueWrapped;

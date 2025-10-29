@@ -2,9 +2,14 @@ let expect;
 if (process.env.NODE_ENV === "test") {
   expect = (await import("vitest")).expect;
 }
-import AssertionMaster, { AssertionChain } from "gold-sight";
+import AssertionMaster, {
+  AssertionChain,
+  AssertionChainForFunc,
+} from "gold-sight";
 import {
   EngineMaster,
+  RuntimeGoldenDoc,
+  RuntimeGoldenDocFlat,
   SerializedElement,
   SerializedElementState,
 } from "./index.types";
@@ -14,7 +19,7 @@ import {
   assignParentEls,
 } from "../../src/engine/engineSetup";
 import { getState } from "../../src/engine/engineState";
-import init, { addElements, wrap } from "../../src";
+import init, { addElements, loadParseDocResults, wrap } from "../../src";
 import {
   AddElementsContext,
   ElementState,
@@ -36,9 +41,22 @@ function assertElementStateStructureToDocStructure(
   result: SerializedElementState[],
   state: State
 ) {
-  const goldenStruct = parseGoldenStructFluidProperties(result);
+  const actualStruct = parseGoldenStructFluidProperties(result);
+  const masterStruct = convertToFlat(state.master!.docStructure);
 
-  expect(goldenStruct).toEqual(convertToFlat(state.master!.docStructure));
+  expect(sortDocStructure(actualStruct)).toEqual(
+    sortDocStructure(masterStruct)
+  );
+}
+
+function sortDocStructure(
+  docStructure: RuntimeGoldenDocFlat
+): RuntimeGoldenDocFlat {
+  const sortedDocStructure: RuntimeGoldenDocFlat = {};
+  for (const [goldenId, fluidProperties] of Object.entries(docStructure)) {
+    sortedDocStructure[goldenId] = sortFluidProperties(fluidProperties);
+  }
+  return sortedDocStructure;
 }
 
 const initAssertionChain: AssertionChain<
@@ -55,6 +73,7 @@ const initAssertionChain: AssertionChain<
     expect(result.elsObserving).toEqual(
       Object.keys(state.master!.docStructure)
     );
+    return true;
   },
 };
 
@@ -72,6 +91,7 @@ const addElementsAssertionChain: AssertionChain<
     expect(result.elsObserving).toEqual(
       Object.keys(state.master!.docStructure)
     );
+    return true;
   },
 };
 
@@ -82,8 +102,21 @@ const addElementsEngineAssertionChain: AssertionChain<
 > = {
   "should add elements to the engine (engine)": (state, args, result) => {
     assertElementStateStructureToDocStructure(result, state);
+    return true;
   },
 };
+
+function sortFluidProperties(
+  fluidProperties: FluidProperty[]
+): FluidProperty[] {
+  // Sort by orderID first, then by property name to ensure consistent ordering
+  return fluidProperties.sort((a, b) => {
+    const orderDiff = a.metaData.orderID - b.metaData.orderID;
+    if (orderDiff !== 0) return orderDiff;
+    // If orderID is the same, sort by property name alphabetically
+    return a.metaData.property.localeCompare(b.metaData.property);
+  });
+}
 
 const insertFluidPropertiesForAnchorAssertionChain: AssertionChain<
   State,
@@ -117,13 +150,10 @@ const insertFluidPropertiesForAnchorAssertionChain: AssertionChain<
       resultFluidProperties.push(...goldenFluidProperties[anchor][selector]);
     }
 
-    expect(
-      result,
-      JSON.stringify({
-        anchor,
-        result: result.map((property) => property.metaData.property),
-      })
-    ).toEqual(resultFluidProperties);
+    expect(sortFluidProperties(result)).toEqual(
+      sortFluidProperties(resultFluidProperties)
+    );
+    return true;
   },
 };
 
@@ -139,6 +169,20 @@ const assignParentElsAssertionChain: AssertionChain<
     for (const { parentGoldenIdVanilla, parentGoldenIdState } of result) {
       expect(parentGoldenIdVanilla).toEqual(parentGoldenIdState);
     }
+    return true;
+  },
+};
+
+const loadParseDocResultsAssertionChain: AssertionChainForFunc<
+  State,
+  typeof loadParseDocResults
+> = {
+  "should load parse doc results": async (state, args, result) => {
+    const { breakpoints, fluidData } = await result;
+    expect(fluidData).toEqual(state.master!.parseDocMaster.fluidData);
+    expect(breakpoints).toEqual(state.master!.parseDocMaster.breakpoints);
+
+    return true;
   },
 };
 
@@ -148,6 +192,7 @@ const defaultAssertions = {
   addElements: addElementsAssertionChain,
   addElementsEngine: addElementsEngineAssertionChain,
   assignParentEls: assignParentElsAssertionChain,
+  loadParseDocResults: loadParseDocResultsAssertionChain,
 };
 
 class EngineAssertionMaster extends AssertionMaster<State, EngineMaster> {
@@ -176,6 +221,7 @@ class EngineAssertionMaster extends AssertionMaster<State, EngineMaster> {
     insertFluidPropertiesForAnchor,
     "insertFluidPropertiesForAnchor",
     {
+      getId: (args) => args[0] + "/" + args[1].dataset.goldenId,
       argsConverter: (args) => {
         const [anchor, el, ctx] = args;
         const anchorData = ctx.fluidData[anchor];
@@ -232,6 +278,8 @@ class EngineAssertionMaster extends AssertionMaster<State, EngineMaster> {
       });
     },
   });
+
+  loadParseDocResults = this.wrapFn(loadParseDocResults, "loadParseDocResults");
 }
 
 const engineAssertionMaster = new EngineAssertionMaster();
@@ -242,7 +290,8 @@ function wrapAll() {
     engineAssertionMaster.init,
     engineAssertionMaster.addElementsEngine,
     engineAssertionMaster.insertFluidPropertiesForAnchor,
-    engineAssertionMaster.assignParentEls
+    engineAssertionMaster.assignParentEls,
+    engineAssertionMaster.loadParseDocResults
   );
 }
 

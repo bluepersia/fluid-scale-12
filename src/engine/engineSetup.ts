@@ -1,3 +1,4 @@
+import { ParseDocResults } from "../parsing/parser/docParser.types";
 import { getState, setInterObserverIsInitialized } from "./engineState";
 import {
   addHiddenElement,
@@ -71,16 +72,20 @@ let addElements = (
       parentEl: undefined,
       fluidPropertiesState: new Map(),
     };
-    const fluidProperties: FluidProperty[] = elState.fluidProperties;
+    let fluidProperties: FluidProperty[] = elState.fluidProperties;
 
     for (const anchorRoute of insertFluidPropertiesForAnchorRouter) {
       fluidProperties.push(...anchorRoute(el, ctx));
     }
 
+    fluidProperties = elState.fluidProperties =
+      filterForcedProperties(fluidProperties);
+
     if (fluidProperties.length <= 0) continue;
 
     toAddEls.push(elState);
   }
+
   return toAddEls;
 };
 
@@ -100,12 +105,45 @@ let insertFluidPropertiesForAnchor = (
 
     for (const [, propertyData] of Object.entries(selectorData)) {
       const ranges = new Array(breakpoints.length).fill(null);
-      for (const range of propertyData.ranges) {
-        ranges[range.minBpIndex] = range;
+      const newFluidProperty: FluidProperty = {
+        metaData: propertyData.metaData,
+      };
+
+      if (propertyData.ranges) {
+        for (const range of propertyData.ranges) {
+          ranges[range.minBpIndex] = range;
+        }
+        newFluidProperty.ranges = ranges;
+      } else if (propertyData.forceValue) {
+        newFluidProperty.forceValue = propertyData.forceValue;
       }
 
-      const newFluidProperty = { metaData: propertyData.metaData, ranges };
       fluidProperties.push(newFluidProperty);
+    }
+  }
+
+  return fluidProperties;
+};
+
+let filterForcedProperties = (
+  fluidProperties: FluidProperty[]
+): FluidProperty[] => {
+  const uniqueFluidProperties = new Set(
+    fluidProperties.map((fp) => fp.metaData.property)
+  );
+
+  for (const property of uniqueFluidProperties) {
+    const count = fluidProperties.reduce(
+      (acc, fp) =>
+        fp.metaData.property === property && !fp.metaData.isForce
+          ? acc + 1
+          : acc,
+      0
+    );
+    if (count === 0) {
+      fluidProperties = fluidProperties.filter(
+        (fp) => fp.metaData.property !== property
+      );
     }
   }
 
@@ -122,6 +160,12 @@ let assignParentEls = () => {
     }
   }
 };
+
+async function loadJSDOMData(jsonID: string): Promise<ParseDocResults> {
+  const raw = await fetch(`/fluid-scale/${jsonID}.json`);
+  const json = await raw.json();
+  return json as ParseDocResults;
+}
 
 function wrap(
   addElementsWrapped: typeof addElements,
@@ -141,4 +185,5 @@ export {
   assignParentEls,
   intersectionObserver,
   wrap,
+  loadJSDOMData,
 };

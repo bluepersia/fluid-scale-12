@@ -93,7 +93,7 @@ const docCloneBtn: StyleSheetClone = {
         "background-position-x": "initial",
       },
       specialProps: {
-        "--force": "font-size",
+        "--force": "font-size, padding",
       },
     } as StyleRuleClone,
     {

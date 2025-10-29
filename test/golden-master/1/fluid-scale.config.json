@@ -1,0 +1,6 @@
+{
+  "inputFiles": {
+    "index": ["test/golden-master/1/index.html"]
+  },
+  "outputDir": "test/golden-master/1/fluid-scale"
+}
