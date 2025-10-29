@@ -10,6 +10,68 @@ let orderID = counter.next();
 
 const fluidDataBtn: FluidData = {};
 
+const btnBorderRadiusTopLeft = {
+  metaData: {
+    orderID,
+    property: "border-top-left-radius",
+  },
+  forceValue: "1.75rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "border-top-left-radius",
+  btnBorderRadiusTopLeft
+);
+
+const btnBorderRadiusTopRight = {
+  metaData: {
+    orderID,
+    property: "border-top-right-radius",
+  },
+  forceValue: "1.75rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "border-top-right-radius",
+  btnBorderRadiusTopRight
+);
+
+const btnBorderRadiusBottomLeft = {
+  metaData: {
+    orderID,
+    property: "border-bottom-left-radius",
+  },
+  forceValue: "1.75rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "border-bottom-left-radius",
+  btnBorderRadiusBottomLeft
+);
+
+const btnBorderRadiusBottomRight = {
+  metaData: {
+    orderID,
+    property: "border-bottom-right-radius",
+  },
+  forceValue: "1.75rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn",
+  ".btn",
+  "border-bottom-right-radius",
+  btnBorderRadiusBottomRight
+);
+
+orderID = counter.next();
+
 const btnFontSizeRanges: FluidRange[] = [];
 
 const btnFontSizeRange1: FluidRange = {
@@ -106,6 +168,68 @@ applyProperty(
   ".btn",
   "padding-bottom",
   btnPaddingBottomProperty
+);
+
+orderID = counter.next();
+
+const btnRadiantBorderRadiusTopLeft = {
+  metaData: {
+    orderID,
+    property: "border-top-left-radius",
+  },
+  forceValue: "1.96rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn--radiant",
+  ".btn--radiant",
+  "border-top-left-radius",
+  btnRadiantBorderRadiusTopLeft
+);
+
+const btnRadiantBorderRadiusTopRight = {
+  metaData: {
+    orderID,
+    property: "border-top-right-radius",
+  },
+  forceValue: "1.96rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn--radiant",
+  ".btn--radiant",
+  "border-top-right-radius",
+  btnRadiantBorderRadiusTopRight
+);
+
+const btnRadiantBorderRadiusBottomLeft = {
+  metaData: {
+    orderID,
+    property: "border-bottom-left-radius",
+  },
+  forceValue: "1.96rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn--radiant",
+  ".btn--radiant",
+  "border-bottom-left-radius",
+  btnRadiantBorderRadiusBottomLeft
+);
+
+const btnRadiantBorderRadiusBottomRight = {
+  metaData: {
+    orderID,
+    property: "border-bottom-right-radius",
+  },
+  forceValue: "1.96rem",
+};
+applyProperty(
+  fluidDataBtn,
+  ".btn--radiant",
+  ".btn--radiant",
+  "border-bottom-right-radius",
+  btnRadiantBorderRadiusBottomRight
 );
 
 orderID = counter.next();

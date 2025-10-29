@@ -4,11 +4,242 @@
     600
   ],
   "fluidData": {
-    ".product-card": {
-      ".product-card": {
-        "max-width": {
+    "html": {
+      "html": {
+        "font-size": {
           "metaData": {
             "orderID": 0,
+            "property": "font-size"
+          },
+          "forceValue": "14px"
+        }
+      }
+    },
+    "body": {
+      "body": {
+        "margin-top": {
+          "metaData": {
+            "orderID": 1,
+            "property": "margin-top"
+          },
+          "forceValue": "0px"
+        },
+        "margin-right": {
+          "metaData": {
+            "orderID": 1,
+            "property": "margin-right"
+          },
+          "forceValue": "0px"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 1,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        },
+        "margin-left": {
+          "metaData": {
+            "orderID": 1,
+            "property": "margin-left"
+          },
+          "forceValue": "0px"
+        },
+        "padding-top": {
+          "metaData": {
+            "orderID": 1,
+            "property": "padding-top"
+          },
+          "forceValue": "0px"
+        },
+        "padding-right": {
+          "metaData": {
+            "orderID": 1,
+            "property": "padding-right"
+          },
+          "forceValue": "0px"
+        },
+        "padding-bottom": {
+          "metaData": {
+            "orderID": 1,
+            "property": "padding-bottom"
+          },
+          "forceValue": "0px"
+        },
+        "padding-left": {
+          "metaData": {
+            "orderID": 1,
+            "property": "padding-left"
+          },
+          "forceValue": "0px"
+        },
+        "min-height": {
+          "metaData": {
+            "orderID": 1,
+            "property": "min-height"
+          },
+          "forceValue": "100vh"
+        }
+      }
+    },
+    "*": {
+      "*": {
+        "margin-top": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-top"
+          },
+          "forceValue": "0px"
+        },
+        "margin-right": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-right"
+          },
+          "forceValue": "0px"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        },
+        "margin-left": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-left"
+          },
+          "forceValue": "0px"
+        }
+      }
+    },
+    "::before": {
+      "::before": {
+        "margin-top": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-top"
+          },
+          "forceValue": "0px"
+        },
+        "margin-right": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-right"
+          },
+          "forceValue": "0px"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        },
+        "margin-left": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-left"
+          },
+          "forceValue": "0px"
+        }
+      }
+    },
+    "::after": {
+      "::after": {
+        "margin-top": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-top"
+          },
+          "forceValue": "0px"
+        },
+        "margin-right": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-right"
+          },
+          "forceValue": "0px"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        },
+        "margin-left": {
+          "metaData": {
+            "orderID": 2,
+            "property": "margin-left"
+          },
+          "forceValue": "0px"
+        }
+      }
+    },
+    "img": {
+      "img": {
+        "max-width": {
+          "metaData": {
+            "orderID": 3,
+            "property": "max-width"
+          },
+          "forceValue": "100%"
+        },
+        "height": {
+          "metaData": {
+            "orderID": 3,
+            "property": "height"
+          },
+          "forceValue": "auto"
+        }
+      }
+    },
+    ".u-container": {
+      ".u-container": {
+        "padding-top": {
+          "metaData": {
+            "orderID": 4,
+            "property": "padding-top"
+          },
+          "forceValue": "0px"
+        },
+        "padding-bottom": {
+          "metaData": {
+            "orderID": 4,
+            "property": "padding-bottom"
+          },
+          "forceValue": "0px"
+        },
+        "padding-right": {
+          "metaData": {
+            "orderID": 4,
+            "property": "padding-right"
+          },
+          "forceValue": "1.14rem"
+        },
+        "padding-left": {
+          "metaData": {
+            "orderID": 4,
+            "property": "padding-left"
+          },
+          "forceValue": "1.14rem"
+        }
+      }
+    },
+    ".product-card": {
+      ".product-card": {
+        "font-size": {
+          "metaData": {
+            "orderID": 5,
+            "property": "font-size"
+          },
+          "forceValue": "1rem"
+        },
+        "max-width": {
+          "metaData": {
+            "orderID": 5,
             "property": "max-width"
           },
           "ranges": [
@@ -36,9 +267,16 @@
             }
           ]
         },
+        "border-bottom-left-radius": {
+          "metaData": {
+            "orderID": 5,
+            "property": "border-bottom-left-radius"
+          },
+          "forceValue": "0.71rem"
+        },
         "border-bottom-right-radius": {
           "metaData": {
-            "orderID": 0,
+            "orderID": 5,
             "property": "border-bottom-right-radius"
           },
           "ranges": [
@@ -68,11 +306,50 @@
         }
       }
     },
+    ".product-card__img--mobile": {
+      ".product-card__img--mobile": {
+        "border-top-left-radius": {
+          "metaData": {
+            "orderID": 6,
+            "property": "border-top-left-radius"
+          },
+          "forceValue": "0.71rem"
+        },
+        "border-top-right-radius": {
+          "metaData": {
+            "orderID": 6,
+            "property": "border-top-right-radius"
+          },
+          "forceValue": "0.71rem"
+        },
+        "width": {
+          "metaData": {
+            "orderID": 6,
+            "property": "width"
+          },
+          "forceValue": "100%"
+        },
+        "object-position": {
+          "metaData": {
+            "orderID": 6,
+            "property": "object-position"
+          },
+          "forceValue": "0px -5rem"
+        },
+        "max-height": {
+          "metaData": {
+            "orderID": 6,
+            "property": "max-height"
+          },
+          "forceValue": "17.14rem"
+        }
+      }
+    },
     ".product-card__content": {
       ".product-card__content": {
         "padding-top": {
           "metaData": {
-            "orderID": 1,
+            "orderID": 7,
             "property": "padding-top"
           },
           "ranges": [
@@ -102,7 +379,7 @@
         },
         "padding-right": {
           "metaData": {
-            "orderID": 1,
+            "orderID": 7,
             "property": "padding-right"
           },
           "ranges": [
@@ -132,7 +409,7 @@
         },
         "padding-bottom": {
           "metaData": {
-            "orderID": 1,
+            "orderID": 7,
             "property": "padding-bottom"
           },
           "ranges": [
@@ -162,7 +439,7 @@
         },
         "padding-left": {
           "metaData": {
-            "orderID": 1,
+            "orderID": 7,
             "property": "padding-left"
           },
           "ranges": [
@@ -194,9 +471,23 @@
     },
     ".product-card__category": {
       ".product-card__category": {
+        "font-size": {
+          "metaData": {
+            "orderID": 8,
+            "property": "font-size"
+          },
+          "forceValue": "0.85em"
+        },
+        "letter-spacing": {
+          "metaData": {
+            "orderID": 8,
+            "property": "letter-spacing"
+          },
+          "forceValue": "0.41rem"
+        },
         "margin-bottom": {
           "metaData": {
-            "orderID": 2,
+            "orderID": 8,
             "property": "margin-bottom"
           },
           "ranges": [
@@ -228,9 +519,23 @@
     },
     ".product-card__title": {
       ".product-card__title": {
+        "font-size": {
+          "metaData": {
+            "orderID": 9,
+            "property": "font-size"
+          },
+          "forceValue": "2.28em"
+        },
+        "line-height": {
+          "metaData": {
+            "orderID": 9,
+            "property": "line-height"
+          },
+          "forceValue": "1em"
+        },
         "margin-bottom": {
           "metaData": {
-            "orderID": 3,
+            "orderID": 9,
             "property": "margin-bottom"
           },
           "ranges": [
@@ -262,9 +567,16 @@
     },
     ".product-card__description": {
       ".product-card__description": {
+        "line-height": {
+          "metaData": {
+            "orderID": 10,
+            "property": "line-height"
+          },
+          "forceValue": "1.64em"
+        },
         "margin-bottom": {
           "metaData": {
-            "orderID": 4,
+            "orderID": 10,
             "property": "margin-bottom"
           },
           "ranges": [
@@ -291,14 +603,131 @@
               "maxBpIndex": 1
             }
           ]
+        },
+        "font-size": {
+          "metaData": {
+            "orderID": 10,
+            "property": "font-size"
+          },
+          "forceValue": "1em"
+        }
+      }
+    },
+    ".product-card__price": {
+      ".product-card__price": {
+        "column-gap": {
+          "metaData": {
+            "orderID": 11,
+            "property": "column-gap"
+          },
+          "forceValue": "1.35rem"
+        },
+        "row-gap": {
+          "metaData": {
+            "orderID": 11,
+            "property": "row-gap"
+          },
+          "forceValue": "1.35rem"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 11,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        }
+      }
+    },
+    ".product-card__price--actual": {
+      ".product-card__price--actual": {
+        "font-size": {
+          "metaData": {
+            "orderID": 12,
+            "property": "font-size"
+          },
+          "forceValue": "2.28em"
+        }
+      }
+    },
+    ".product-card__price--original": {
+      ".product-card__price--original": {
+        "font-size": {
+          "metaData": {
+            "orderID": 13,
+            "property": "font-size"
+          },
+          "forceValue": "0.92em"
         }
       }
     },
     ".product-card__button": {
       ".product-card__button": {
+        "width": {
+          "metaData": {
+            "orderID": 14,
+            "property": "width"
+          },
+          "forceValue": "100%"
+        },
+        "border-top-left-radius": {
+          "metaData": {
+            "orderID": 14,
+            "property": "border-top-left-radius"
+          },
+          "forceValue": "0.57rem"
+        },
+        "border-top-right-radius": {
+          "metaData": {
+            "orderID": 14,
+            "property": "border-top-right-radius"
+          },
+          "forceValue": "0.57rem"
+        },
+        "border-bottom-right-radius": {
+          "metaData": {
+            "orderID": 14,
+            "property": "border-bottom-right-radius"
+          },
+          "forceValue": "0.57rem"
+        },
+        "border-bottom-left-radius": {
+          "metaData": {
+            "orderID": 14,
+            "property": "border-bottom-left-radius"
+          },
+          "forceValue": "0.57rem"
+        },
+        "padding-top": {
+          "metaData": {
+            "orderID": 14,
+            "property": "padding-top"
+          },
+          "forceValue": "1.07rem"
+        },
+        "padding-right": {
+          "metaData": {
+            "orderID": 14,
+            "property": "padding-right"
+          },
+          "forceValue": "1.07rem"
+        },
+        "padding-bottom": {
+          "metaData": {
+            "orderID": 14,
+            "property": "padding-bottom"
+          },
+          "forceValue": "1.07rem"
+        },
+        "padding-left": {
+          "metaData": {
+            "orderID": 14,
+            "property": "padding-left"
+          },
+          "forceValue": "1.07rem"
+        },
         "margin-top": {
           "metaData": {
-            "orderID": 5,
+            "orderID": 14,
             "property": "margin-top"
           },
           "ranges": [
@@ -325,6 +754,20 @@
               "maxBpIndex": 1
             }
           ]
+        },
+        "column-gap": {
+          "metaData": {
+            "orderID": 14,
+            "property": "column-gap"
+          },
+          "forceValue": "0.85rem"
+        },
+        "row-gap": {
+          "metaData": {
+            "orderID": 14,
+            "property": "row-gap"
+          },
+          "forceValue": "0.85rem"
         }
       }
     }

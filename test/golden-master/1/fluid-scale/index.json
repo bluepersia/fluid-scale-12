@@ -5,11 +5,107 @@
     1200
   ],
   "fluidData": {
+    "*": {
+      "*": {
+        "margin-top": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-top"
+          },
+          "forceValue": "0px"
+        },
+        "margin-right": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-right"
+          },
+          "forceValue": "0px"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        },
+        "margin-left": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-left"
+          },
+          "forceValue": "0px"
+        }
+      }
+    },
+    "::before": {
+      "::before": {
+        "margin-top": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-top"
+          },
+          "forceValue": "0px"
+        },
+        "margin-right": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-right"
+          },
+          "forceValue": "0px"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        },
+        "margin-left": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-left"
+          },
+          "forceValue": "0px"
+        }
+      }
+    },
+    "::after": {
+      "::after": {
+        "margin-top": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-top"
+          },
+          "forceValue": "0px"
+        },
+        "margin-right": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-right"
+          },
+          "forceValue": "0px"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        },
+        "margin-left": {
+          "metaData": {
+            "orderID": 0,
+            "property": "margin-left"
+          },
+          "forceValue": "0px"
+        }
+      }
+    },
     ".u-container": {
       ".u-container": {
         "padding-top": {
           "metaData": {
-            "orderID": 0,
+            "orderID": 1,
             "property": "padding-top"
           },
           "ranges": [
@@ -61,7 +157,7 @@
         },
         "padding-bottom": {
           "metaData": {
-            "orderID": 0,
+            "orderID": 1,
             "property": "padding-bottom"
           },
           "ranges": [
@@ -113,7 +209,7 @@
         },
         "padding-right": {
           "metaData": {
-            "orderID": 0,
+            "orderID": 1,
             "property": "padding-right"
           },
           "ranges": [
@@ -165,7 +261,7 @@
         },
         "padding-left": {
           "metaData": {
-            "orderID": 0,
+            "orderID": 1,
             "property": "padding-left"
           },
           "ranges": [
@@ -221,7 +317,7 @@
       ".site-logo": {
         "width": {
           "metaData": {
-            "orderID": 1,
+            "orderID": 2,
             "property": "width"
           },
           "ranges": [
@@ -255,7 +351,7 @@
       ".header": {
         "padding-top": {
           "metaData": {
-            "orderID": 2,
+            "orderID": 3,
             "property": "padding-top"
           },
           "ranges": [
@@ -287,9 +383,16 @@
     },
     ".hero": {
       ".hero": {
+        "font-size": {
+          "metaData": {
+            "orderID": 4,
+            "property": "font-size"
+          },
+          "forceValue": "1rem"
+        },
         "padding-top": {
           "metaData": {
-            "orderID": 3,
+            "orderID": 4,
             "property": "padding-top"
           },
           "ranges": [
@@ -341,7 +444,7 @@
         },
         "padding-bottom": {
           "metaData": {
-            "orderID": 4,
+            "orderID": 8,
             "property": "padding-bottom"
           },
           "ranges": [
@@ -371,75 +474,36 @@
         }
       }
     },
-    ".hero__title": {
-      ".hero__title": {
-        "font-size": {
+    ".hero__content": {
+      ".hero__content": {
+        "max-width": {
           "metaData": {
             "orderID": 5,
-            "property": "font-size"
+            "property": "max-width"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 2.5,
-                    "unit": "em",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 3.5,
-                    "unit": "em",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 1,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "24.875rem"
         },
         "margin-bottom": {
           "metaData": {
             "orderID": 5,
             "property": "margin-bottom"
           },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 1.625,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 1.8125,
-                    "unit": "rem",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 1,
-              "maxBpIndex": 2
-            }
-          ]
+          "forceValue": "2.875rem"
         }
       }
     },
     ".hero__description": {
       ".hero__description": {
-        "margin-bottom": {
+        "line-height": {
           "metaData": {
             "orderID": 6,
+            "property": "line-height"
+          },
+          "forceValue": "1.625"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 10,
             "property": "margin-bottom"
           },
           "ranges": [
@@ -469,11 +533,107 @@
         }
       }
     },
+    ".hero__image--mobile": {
+      ".hero__image--mobile": {
+        "margin-top": {
+          "metaData": {
+            "orderID": 7,
+            "property": "margin-top"
+          },
+          "forceValue": "0px"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 7,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        },
+        "margin-right": {
+          "metaData": {
+            "orderID": 7,
+            "property": "margin-right"
+          },
+          "forceValue": "auto"
+        },
+        "margin-left": {
+          "metaData": {
+            "orderID": 7,
+            "property": "margin-left"
+          },
+          "forceValue": "auto"
+        }
+      }
+    },
+    ".hero__title": {
+      ".hero__title": {
+        "font-size": {
+          "metaData": {
+            "orderID": 9,
+            "property": "font-size"
+          },
+          "ranges": [
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 2.5,
+                    "unit": "em",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 3.5,
+                    "unit": "em",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
+              "maxBpIndex": 2
+            }
+          ]
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 9,
+            "property": "margin-bottom"
+          },
+          "ranges": [
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 1.625,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 1.8125,
+                    "unit": "rem",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 1,
+              "maxBpIndex": 2
+            }
+          ]
+        }
+      }
+    },
     ".hero__image--tablet": {
       ".hero__image--tablet": {
         "right": {
           "metaData": {
-            "orderID": 7,
+            "orderID": 11,
             "property": "right"
           },
           "ranges": [
@@ -503,7 +663,7 @@
         },
         "top": {
           "metaData": {
-            "orderID": 7,
+            "orderID": 11,
             "property": "top"
           },
           "ranges": [
@@ -533,7 +693,7 @@
         },
         "width": {
           "metaData": {
-            "orderID": 7,
+            "orderID": 11,
             "property": "width"
           },
           "ranges": [
@@ -565,9 +725,23 @@
     },
     ".home-page__courses": {
       ".home-page__courses": {
+        "background-position-x": {
+          "metaData": {
+            "orderID": 12,
+            "property": "background-position-x"
+          },
+          "forceValue": "initial"
+        },
+        "background-position-y": {
+          "metaData": {
+            "orderID": 12,
+            "property": "background-position-y"
+          },
+          "forceValue": "initial"
+        },
         "padding-bottom": {
           "metaData": {
-            "orderID": 8,
+            "orderID": 12,
             "property": "padding-bottom"
           },
           "ranges": [
@@ -621,9 +795,16 @@
     },
     ".home-page__course-list": {
       ".home-page__course-list": {
+        "padding-left": {
+          "metaData": {
+            "orderID": 13,
+            "property": "padding-left"
+          },
+          "forceValue": "0px"
+        },
         "row-gap": {
           "metaData": {
-            "orderID": 9,
+            "orderID": 13,
             "property": "row-gap"
           },
           "ranges": [
@@ -675,7 +856,7 @@
         },
         "grid-template-columns": {
           "metaData": {
-            "orderID": 9,
+            "orderID": 13,
             "property": "grid-template-columns"
           },
           "ranges": [
@@ -689,7 +870,7 @@
         },
         "column-gap": {
           "metaData": {
-            "orderID": 10,
+            "orderID": 14,
             "property": "column-gap"
           },
           "ranges": [
@@ -723,7 +904,7 @@
       ".course-card": {
         "padding-bottom": {
           "metaData": {
-            "orderID": 11,
+            "orderID": 15,
             "property": "padding-bottom"
           },
           "ranges": [
@@ -753,7 +934,7 @@
         },
         "padding-right": {
           "metaData": {
-            "orderID": 11,
+            "orderID": 15,
             "property": "padding-right"
           },
           "ranges": [
@@ -783,7 +964,7 @@
         },
         "padding-left": {
           "metaData": {
-            "orderID": 11,
+            "orderID": 15,
             "property": "padding-left"
           },
           "ranges": [
@@ -811,9 +992,51 @@
             }
           ]
         },
+        "border-top-left-radius": {
+          "metaData": {
+            "orderID": 15,
+            "property": "border-top-left-radius"
+          },
+          "forceValue": "0.625rem"
+        },
+        "border-top-right-radius": {
+          "metaData": {
+            "orderID": 15,
+            "property": "border-top-right-radius"
+          },
+          "forceValue": "0.625rem"
+        },
+        "border-bottom-right-radius": {
+          "metaData": {
+            "orderID": 15,
+            "property": "border-bottom-right-radius"
+          },
+          "forceValue": "0.625rem"
+        },
+        "border-bottom-left-radius": {
+          "metaData": {
+            "orderID": 15,
+            "property": "border-bottom-left-radius"
+          },
+          "forceValue": "0.625rem"
+        },
+        "font-size": {
+          "metaData": {
+            "orderID": 15,
+            "property": "font-size"
+          },
+          "forceValue": "1rem"
+        },
+        "height": {
+          "metaData": {
+            "orderID": 15,
+            "property": "height"
+          },
+          "forceValue": "100%"
+        },
         "padding-top": {
           "metaData": {
-            "orderID": 13,
+            "orderID": 21,
             "property": "padding-top"
           },
           "ranges": [
@@ -843,45 +1066,18 @@
         }
       }
     },
-    ".course-card__description": {
-      ".course-card__description": {
-        "font-size": {
-          "metaData": {
-            "orderID": 12,
-            "property": "font-size"
-          },
-          "ranges": [
-            {
-              "minValue": [
-                [
-                  {
-                    "value": 1,
-                    "unit": "em",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "maxValue": [
-                [
-                  {
-                    "value": 1.125,
-                    "unit": "em",
-                    "type": "single"
-                  }
-                ]
-              ],
-              "minBpIndex": 0,
-              "maxBpIndex": 2
-            }
-          ]
-        }
-      }
-    },
     ".course-card__title": {
       ".course-card__title": {
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 16,
+            "property": "margin-bottom"
+          },
+          "forceValue": "1rem"
+        },
         "font-size": {
           "metaData": {
-            "orderID": 14,
+            "orderID": 22,
             "property": "font-size"
           },
           "ranges": [
@@ -913,7 +1109,7 @@
       ".course-card--intro .course-card__title": {
         "font-size": {
           "metaData": {
-            "orderID": 15,
+            "orderID": 23,
             "property": "font-size"
           },
           "ranges": [
@@ -943,11 +1139,106 @@
         }
       }
     },
+    ".course-card__description": {
+      ".course-card__description": {
+        "line-height": {
+          "metaData": {
+            "orderID": 17,
+            "property": "line-height"
+          },
+          "forceValue": "1.625"
+        },
+        "font-size": {
+          "metaData": {
+            "orderID": 17,
+            "property": "font-size"
+          },
+          "ranges": [
+            {
+              "minValue": [
+                [
+                  {
+                    "value": 1,
+                    "unit": "em",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "maxValue": [
+                [
+                  {
+                    "value": 1.125,
+                    "unit": "em",
+                    "type": "single"
+                  }
+                ]
+              ],
+              "minBpIndex": 0,
+              "maxBpIndex": 2
+            }
+          ]
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 17,
+            "property": "margin-bottom"
+          },
+          "forceValue": "1.5rem"
+        }
+      }
+    },
+    ".course-card--intro": {
+      ".course-card--intro": {
+        "padding-top": {
+          "metaData": {
+            "orderID": 18,
+            "property": "padding-top"
+          },
+          "forceValue": "1.5rem"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 18,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        }
+      }
+    },
+    ".course-card__image": {
+      ".course-card__image": {
+        "top": {
+          "metaData": {
+            "orderID": 19,
+            "property": "top"
+          },
+          "forceValue": "-1.75rem"
+        }
+      }
+    },
+    ".course-card__btn": {
+      ".course-card__btn": {
+        "margin-top": {
+          "metaData": {
+            "orderID": 20,
+            "property": "margin-top"
+          },
+          "forceValue": "auto"
+        },
+        "margin-bottom": {
+          "metaData": {
+            "orderID": 20,
+            "property": "margin-bottom"
+          },
+          "forceValue": "0px"
+        }
+      }
+    },
     ".footer": {
       ".footer": {
         "padding-top": {
           "metaData": {
-            "orderID": 16,
+            "orderID": 24,
             "property": "padding-top"
           },
           "ranges": [
@@ -977,7 +1268,7 @@
         },
         "padding-bottom": {
           "metaData": {
-            "orderID": 16,
+            "orderID": 24,
             "property": "padding-bottom"
           },
           "ranges": [
@@ -1009,9 +1300,37 @@
     },
     ".btn": {
       ".btn": {
+        "border-top-left-radius": {
+          "metaData": {
+            "orderID": 25,
+            "property": "border-top-left-radius"
+          },
+          "forceValue": "1.75rem"
+        },
+        "border-top-right-radius": {
+          "metaData": {
+            "orderID": 25,
+            "property": "border-top-right-radius"
+          },
+          "forceValue": "1.75rem"
+        },
+        "border-bottom-right-radius": {
+          "metaData": {
+            "orderID": 25,
+            "property": "border-bottom-right-radius"
+          },
+          "forceValue": "1.75rem"
+        },
+        "border-bottom-left-radius": {
+          "metaData": {
+            "orderID": 25,
+            "property": "border-bottom-left-radius"
+          },
+          "forceValue": "1.75rem"
+        },
         "font-size": {
           "metaData": {
-            "orderID": 17,
+            "orderID": 26,
             "property": "font-size"
           },
           "ranges": [
@@ -1041,7 +1360,7 @@
         },
         "padding-top": {
           "metaData": {
-            "orderID": 17,
+            "orderID": 26,
             "property": "padding-top"
           },
           "ranges": [
@@ -1071,7 +1390,7 @@
         },
         "padding-bottom": {
           "metaData": {
-            "orderID": 17,
+            "orderID": 26,
             "property": "padding-bottom"
           },
           "ranges": [
@@ -1101,7 +1420,7 @@
         },
         "padding-right": {
           "metaData": {
-            "orderID": 17,
+            "orderID": 26,
             "property": "padding-right"
           },
           "ranges": [
@@ -1131,7 +1450,7 @@
         },
         "padding-left": {
           "metaData": {
-            "orderID": 17,
+            "orderID": 26,
             "property": "padding-left"
           },
           "ranges": [
@@ -1165,28 +1484,28 @@
       ".btn--radiant": {
         "padding-top": {
           "metaData": {
-            "orderID": 18,
+            "orderID": 27,
             "property": "padding-top"
           },
           "forceValue": "0.9375rem"
         },
         "padding-bottom": {
           "metaData": {
-            "orderID": 18,
+            "orderID": 27,
             "property": "padding-bottom"
           },
           "forceValue": "0.9375rem"
         },
         "padding-right": {
           "metaData": {
-            "orderID": 18,
+            "orderID": 27,
             "property": "padding-right"
           },
           "forceValue": "2.375rem"
         },
         "padding-left": {
           "metaData": {
-            "orderID": 18,
+            "orderID": 27,
             "property": "padding-left"
           },
           "forceValue": "2.375rem"
@@ -1197,35 +1516,35 @@
       ".btn--transparent": {
         "font-size": {
           "metaData": {
-            "orderID": 19,
+            "orderID": 28,
             "property": "font-size"
           },
           "forceValue": "1.125rem"
         },
         "padding-top": {
           "metaData": {
-            "orderID": 19,
+            "orderID": 28,
             "property": "padding-top"
           },
           "forceValue": "0px"
         },
         "padding-right": {
           "metaData": {
-            "orderID": 19,
+            "orderID": 28,
             "property": "padding-right"
           },
           "forceValue": "0px"
         },
         "padding-bottom": {
           "metaData": {
-            "orderID": 19,
+            "orderID": 28,
             "property": "padding-bottom"
           },
           "forceValue": "0px"
         },
         "padding-left": {
           "metaData": {
-            "orderID": 19,
+            "orderID": 28,
             "property": "padding-left"
           },
           "forceValue": "0px"

@@ -10,6 +10,15 @@ let orderID = counter.next();
 
 const fluidDataHero: FluidData = {};
 
+const heroFontSize = {
+  metaData: {
+    orderID,
+    property: "font-size",
+  },
+  forceValue: "1rem",
+};
+applyProperty(fluidDataHero, ".hero", ".hero", "font-size", heroFontSize);
+
 const heroPaddingTopRanges: FluidRange[] = [];
 
 const heroPaddingTopRange0: FluidRange = {
@@ -121,6 +130,38 @@ applyProperty(
 
 orderID = counter.next();
 
+const heroContentMaxWidth = {
+  metaData: {
+    orderID,
+    property: "max-width",
+  },
+  forceValue: "24.875rem",
+};
+applyProperty(
+  fluidDataHero,
+  ".hero__content",
+  ".hero__content",
+  "max-width",
+  heroContentMaxWidth
+);
+
+const heroContentMarginBottom = {
+  metaData: {
+    orderID,
+    property: "margin-bottom",
+  },
+  forceValue: "2.875rem",
+};
+applyProperty(
+  fluidDataHero,
+  ".hero__content",
+  ".hero__content",
+  "margin-bottom",
+  heroContentMarginBottom
+);
+
+orderID = counter.next();
+
 const heroTitleFontSizeRanges: FluidRange[] = [];
 
 const heroTitleFontSizeRange1: FluidRange = {
@@ -204,6 +245,21 @@ applyProperty(
 
 orderID = counter.next();
 
+const heroDescriptionLineHeight = {
+  metaData: {
+    orderID,
+    property: "line-height",
+  },
+  forceValue: "1.625",
+};
+applyProperty(
+  fluidDataHero,
+  ".hero__description",
+  ".hero__description",
+  "line-height",
+  heroDescriptionLineHeight
+);
+
 const heroDescriptionMarginBottomRanges: FluidRange[] = [];
 
 const heroDescriptionMarginBottomRange1: FluidRange = {
@@ -243,6 +299,68 @@ applyProperty(
   ".hero__description",
   "margin-bottom",
   heroDescriptionMarginBottomProperty
+);
+
+orderID = counter.next();
+
+const heroImageMobileMarginTop = {
+  metaData: {
+    orderID,
+    property: "margin-top",
+  },
+  forceValue: "0px",
+};
+applyProperty(
+  fluidDataHero,
+  ".hero__image--mobile",
+  ".hero__image--mobile",
+  "margin-top",
+  heroImageMobileMarginTop
+);
+
+const heroImageMobileMarginBottom = {
+  metaData: {
+    orderID,
+    property: "margin-bottom",
+  },
+  forceValue: "0px",
+};
+applyProperty(
+  fluidDataHero,
+  ".hero__image--mobile",
+  ".hero__image--mobile",
+  "margin-bottom",
+  heroImageMobileMarginBottom
+);
+
+const heroImageMobileMarginLeft = {
+  metaData: {
+    orderID,
+    property: "margin-left",
+  },
+  forceValue: "auto",
+};
+applyProperty(
+  fluidDataHero,
+  ".hero__image--mobile",
+  ".hero__image--mobile",
+  "margin-left",
+  heroImageMobileMarginLeft
+);
+
+const heroImageMobileMarginRight = {
+  metaData: {
+    orderID,
+    property: "margin-right",
+  },
+  forceValue: "auto",
+};
+applyProperty(
+  fluidDataHero,
+  ".hero__image--mobile",
+  ".hero__image--mobile",
+  "margin-right",
+  heroImageMobileMarginRight
 );
 
 orderID = counter.next();

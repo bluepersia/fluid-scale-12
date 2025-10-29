@@ -156,7 +156,7 @@ let parseProperty = (
   if (newDocResultState === docResultState && batchIndex === 0)
     return applyForce(styleRule, property, { ...ctx, minValue });
 
-  return docResultState;
+  return newDocResultState;
 };
 
 let applySpanStart = (
@@ -220,13 +220,17 @@ let parseNextBatches = (
   ctx: ParsePropertyContext
 ) => {
   const { batchIndex, batches, docResultState } = ctx;
+  const { eventBus } = docResultState;
   for (
     let nextBatchIndex = batchIndex + 1;
     nextBatchIndex < batches.length;
     nextBatchIndex++
   ) {
     const nextBatch = batches[nextBatchIndex];
-    if (!nextBatch.isMediaQuery) return docResultState;
+    if (!nextBatch.isMediaQuery) {
+      eventBus?.emit("fluidDataNotAdded", { property, minValue, ...ctx });
+      return docResultState;
+    }
     const newDocResultState = parseNextBatch(nextBatch, {
       ...ctx,
       minValue,
@@ -267,9 +271,12 @@ let parseNextRule = (
   ctx: ParseNextRuleContext
 ): DocResultState => {
   const { docResultState, property, selector } = ctx;
-
+  const { eventBus } = docResultState;
   const maxValue = nextStyleRule.style[property];
-  if (!maxValue) return docResultState;
+  if (!maxValue) {
+    eventBus?.emit("fluidDataNotAdded", { ...ctx });
+    return docResultState;
+  }
 
   const selectorParts = selector.split(" ");
   const anchor = selectorParts[selectorParts.length - 1];

@@ -104,12 +104,16 @@ let serializeStyleProps = (
   rule: CSSStyleRule,
   ctx: SerializeDocContext
 ): StyleResults => {
+  const { event } = ctx;
   let styleResults: StyleResults = { style: {}, specialProps: {} };
 
   for (let i = 0; i < rule.style.length; i++) {
     const prop = rule.style[i];
     styleResults = serializeStyleProp(rule, prop, { ...ctx, styleResults });
   }
+  const propsCopied = getEventByPayload(event, "propsCopied", { rule });
+  if (propsCopied) event?.emitOnce("stylePropsMutated");
+
   return styleResults;
 };
 const serializeStylePropRouter: {

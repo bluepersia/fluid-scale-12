@@ -10,6 +10,10 @@ import {
 import path from "path";
 import { FluidScaleConfig } from "../../src/index.types";
 import { ParseDocResults } from "../../src/parsing/parser/docParser.types";
+import {
+  isAscendingOrderCorrect,
+  stripOrderIDsForFluidData,
+} from "./parser/masterController";
 
 const resolvePathTests = [
   {
@@ -77,13 +81,19 @@ describe("build", () => {
         `${key}.json`
       );
 
-      const fluidScaleJson = JSON.parse(
+      const fluidScaleJson: ParseDocResults = JSON.parse(
         fs.readFileSync(outputFile, "utf8")
       ) as ParseDocResults;
 
+      expect(isAscendingOrderCorrect(fluidScaleJson.fluidData)).toBe(true);
+
+      fluidScaleJson.fluidData = stripOrderIDsForFluidData(
+        fluidScaleJson.fluidData
+      );
+
       expect(fluidScaleJson).toEqual({
         breakpoints: master.breakpoints,
-        fluidData: master.fluidData,
+        fluidData: stripOrderIDsForFluidData(master.fluidData),
       });
     }
   });

@@ -221,6 +221,7 @@ class EngineAssertionMaster extends AssertionMaster<State, EngineMaster> {
     insertFluidPropertiesForAnchor,
     "insertFluidPropertiesForAnchor",
     {
+      getId: (args) => args[0] + "/" + args[1].dataset.goldenId,
       argsConverter: (args) => {
         const [anchor, el, ctx] = args;
         const anchorData = ctx.fluidData[anchor];
